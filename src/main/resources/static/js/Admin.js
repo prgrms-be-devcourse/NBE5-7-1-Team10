@@ -37,9 +37,9 @@ function showEditForm(id) {
 
     selectedCoffeeId = id;
 
+    // 기본 값을 넣어준다.
     document.getElementById("updateCoffeeName").value = coffee.name;
     document.getElementById("updateCoffeePrice").value = coffee.price;
-
     document.getElementById("editForm").style.display = "block";
 }
 
@@ -51,11 +51,21 @@ function addCoffee() {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(data)
-    }).then(loadCoffees)
-        .catch(err => {
-            alert("에러발생!!");
-            console.log(err);
+    }).then(res => {
+        if (!res.ok) {
+            throw new Error("서버 응답 오류");
+        }
+        return res.json();
+    })
+        .then(newCoffee => {
+            alert("추가 완료!");
+            clearPostForm();
+            loadCoffees();
         })
+        .catch(err => {
+            alert("에러 발생!!");
+            console.error(err);
+        });
 }
 
 function updateCoffee() {

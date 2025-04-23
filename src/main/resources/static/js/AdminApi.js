@@ -11,3 +11,13 @@ function getPostValues() {
         price: Number(document.getElementById("newCoffeePrice").value)
     }
 }
+
+function clearPostForm() {
+    document.getElementById("newCoffeeName").value = "";
+    document.getElementById("newCoffeePrice").value = "";
+}
+
+function clearUpdateForm() {
+    document.getElementById("updateCoffeeName").value = "";
+    document.getElementById("updateCoffeePrice").value = "";
+}
