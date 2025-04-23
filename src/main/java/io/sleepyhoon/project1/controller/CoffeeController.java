@@ -40,32 +40,15 @@ public class CoffeeController {
 
     @GetMapping("/all")
     public ResponseEntity<ApiResponse<List<CoffeeResponseDto>>> getAllCoffees() {
-        List<Coffee> everyCoffee = coffeeService.findEveryCoffee();
-        List<CoffeeResponseDto> coffeeListDto = new ArrayList<>();
-        for(Coffee coffee : everyCoffee) {
-            CoffeeResponseDto responseCoffeeDto = CoffeeResponseDto.builder()
-                    .id(coffee.getId())
-                    .name(coffee.getName())
-                    .price(coffee.getPrice())
-                    .build();
-
-            coffeeListDto.add(responseCoffeeDto);
-        }
-
-        return ResponseEntity.ok(new ApiResponse<>(coffeeListDto, "조회 성공",200));
+        List<CoffeeResponseDto> responseCoffeeDto = coffeeService.findEveryCoffee();
+        return ResponseEntity.ok(new ApiResponse<>(responseCoffeeDto, "조회 성공",200));
     }
 
     @PostMapping
     public ResponseEntity<ApiResponse<Long>> saveCoffee(@RequestBody CoffeeRequestDto requestDto) {
-        Coffee newCoffee = Coffee.builder()
-                .name(requestDto.getName())
-                .price(requestDto.getPrice())
-                .img(requestDto.getImg())
-                .build();
 
-
-        Coffee save = coffeeService.save(newCoffee);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse<>(save.getId(), "생성 성공", 201));
+        Long newId = coffeeService.save(requestDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse<>(newId, "생성 성공", 201));
     }
 
     @PutMapping("/{id}")

@@ -2,12 +2,14 @@ package io.sleepyhoon.project1.service;
 
 import io.sleepyhoon.project1.dao.CoffeeRepository;
 import io.sleepyhoon.project1.dto.CoffeeRequestDto;
+import io.sleepyhoon.project1.dto.CoffeeResponseDto;
 import io.sleepyhoon.project1.entity.Coffee;
 import io.sleepyhoon.project1.exception.CoffeeNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,13 +25,31 @@ public class CoffeeService {
                .orElseThrow(() -> new CoffeeNotFoundException(id));
     }
 
-    public List<Coffee> findEveryCoffee() {
-        return coffeeRepository.findAll();
+    public List<CoffeeResponseDto> findEveryCoffee() {
+        List<Coffee> coffeeList = coffeeRepository.findAll();
+        List<CoffeeResponseDto> coffeeListDto = new ArrayList<>();
+        for(Coffee coffee : coffeeList) {
+            CoffeeResponseDto responseCoffeeDto = CoffeeResponseDto.builder()
+                    .id(coffee.getId())
+                    .name(coffee.getName())
+                    .price(coffee.getPrice())
+                    .build();
+
+            coffeeListDto.add(responseCoffeeDto);
+        }
+        return coffeeListDto;
     }
 
     //Coffee 저장하는 메소드
-    public Coffee save(Coffee coffee) {
-        return coffeeRepository.save(coffee);
+    public Long save(CoffeeRequestDto requestDto) {
+
+        Coffee newCoffee = Coffee.builder()
+                .name(requestDto.getName())
+                .price(requestDto.getPrice())
+                .img(requestDto.getImg())
+                .build();
+        return coffeeRepository.save(newCoffee).getId();
+
     }
 
     //Coffee 삭제하는 메소드
