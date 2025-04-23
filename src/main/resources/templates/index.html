@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+
+  <!-- style 부분만 분리 -->
+  <link rel="stylesheet" href="/css/example_style.css">
+
+  <title>Grids & Circle | 주문 페이지</title>
+</head>
+
+<body class="container-fluid">
+<div class="row justify-content-center m-4">
+  <h1 class="text-center">Grids & Circle</h1>
+</div>
+
+<div class="card">
+  <div class="row">
+    <div class="col-md-8 mt-4 d-flex flex-column align-items-start p-3 pt-0">
+      <h5 class="flex-grow-0"><b>상품 목록</b></h5>
+      <ul class="list-group products">
+
+        <li class="list-group-item d-flex mt-3" data-name="columbia">
+          <div class="col-2"><img class="img-fluid" src="https://i.imgur.com/HKOFQYa.jpeg" alt=""></div>
+          <div class="col">
+            <div class="row text-muted">커피콩</div>
+            <div class="row">Columbia Nariñó</div>
+          </div>
+          <div class="col text-center price">5000원</div>
+          <div class="col text-end action">
+            <a class="btn btn-small btn-outline-dark del-button" href="">-</a>
+            <a class="btn btn-small btn-outline-dark add-button" href="">+</a>
+          </div>
+        </li>
+
+        <li class="list-group-item d-flex mt-2" data-name="brazil">
+          <div class="col-2"><img class="img-fluid" src="https://i.imgur.com/HKOFQYa.jpeg" alt=""></div>
+          <div class="col">
+            <div class="row text-muted">커피콩</div>
+            <div class="row">Brazil Serra Do Caparaó</div>
+          </div>
+          <div class="col text-center price">5000원</div>
+          <div class="col text-end action">
+            <a class="btn btn-small btn-outline-dark del-button" href="">-</a>
+            <a class="btn btn-small btn-outline-dark add-button" href="">+</a>
+          </div>
+        </li>
+
+        <li class="list-group-item d-flex mt-2" data-name="arabica">
+          <div class="col-2"><img class="img-fluid" src="https://i.imgur.com/HKOFQYa.jpeg" alt=""></div>
+          <div class="col">
+            <div class="row text-muted">커피콩</div>
+            <div class="row">Arabica</div>
+          </div>
+          <div class="col text-center price">5000원</div>
+          <div class="col text-end action">
+            <a class="btn btn-small btn-outline-dark del-button" href="">-</a>
+            <a class="btn btn-small btn-outline-dark add-button" href="">+</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="col-md-4 summary p-4">
+      <div>
+        <h5 class="m-0 p-0"><b>Summary</b></h5>
+      </div>
+      <hr>
+      <div class="row">
+        <h6 class="p-0">Columbia Nariñó <span class="product-count badge bg-dark text-" data-name="columbia">0개</span></h6>
+      </div>
+      <div class="row">
+        <h6 class="p-0">Brazil Serra Do Caparaó <span class="product-count badge bg-dark" data-name="brazil">0개</span></h6>
+      </div>
+      <div class="row">
+        <h6 class="p-0">Arabica <span class="product-count badge bg-dark" data-name="arabica">0개</span></h6>
+      </div>
+
+      <form>
+        <div class="mb-3">
+          <label for="email" class="form-label">이메일</label>
+          <input type="email" class="form-control mb-1" id="email">
+        </div>
+        <div class="mb-3">
+          <label for="address" class="form-label">주소</label>
+          <input type="text" class="form-control mb-1" id="address">
+        </div>
+        <div class="mb-3">
+          <label for="postcode" class="form-label">우편번호</label>
+          <input type="text" class="form-control" id="postcode">
+        </div>
+        <div class="inform">당일 오후 2시 이후의 주문은 다음날 배송을 시작합니다.</div>
+      </form>
+
+      <div class="row pt-2 pb-2 border-top">
+        <h5 class="col">총 금액</h5>
+        <h5 class="col text-end">15000원</h5>
+      </div>
+
+      <button class="btn btn-dark col-12 order-btn">결제하기</button>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  // + 누르면 개수 증가
+  document.querySelectorAll('.add-button').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault(); // a태그 새로고침 방지
+
+      // 1. 어떤 커피인지 data-name으로 구분
+      // (li에 data-name이 있다면)
+      const li = btn.closest('li');
+      const coffeeName = li.getAttribute('data-name');
+
+      // 2. summary에서 같은 data-name을 가진 .product-count 찾기
+      const summaryCount = document.querySelector('.summary .product-count[data-name="' + coffeeName + '"]');
+      if (summaryCount) {
+        // "2개" → 2
+        let count = parseInt(summaryCount.textContent);
+        summaryCount.textContent = (count + 1) + "개";
+      }
+    });
+  });
+
+  // - 누르면 개수 증가
+  document.querySelectorAll('.del-button').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault(); // a태그 새로고침 방지
+
+      const li = btn.closest('li');
+      const coffeeName = li.getAttribute('data-name');
+
+      const summaryCount = document.querySelector('.summary .product-count[data-name="' + coffeeName + '"]');
+      if (summaryCount) {
+        let count = parseInt(summaryCount.textContent);
+        if (count >= 1){
+          summaryCount.textContent = (count - 1) + "개";
+        }
+      }
+    });
+  });
+
+  // 결제하기 눌렀을 떄 팝업 메세지 생성
+  document.querySelector('.order-btn').addEventListener('click', function() {
+    const counts = {};
+    document.querySelectorAll('.product-count').forEach(function(span) {
+      const name = span.dataset.name;
+      counts[name] = parseInt(span.textContent);
+    });
+
+    const message = "주문이 성공적으로 완료되었습니다.\n\n" +
+        "----- 주문 내역 -----\n";
+
+    const contents = [];
+    for (const [key, value] of Object.entries(counts)) {
+      contents.push(key + ":" + value + "개");
+    }
+
+
+    const deliveryMessage = "\n\n ----- 배송 정보 확인 -----\n"
+    const deliveryInfo = [];
+    deliveryInfo.push("이메일 : " + document.getElementById('email').value);
+    deliveryInfo.push("주소 : " + document.getElementById('address').value);
+    deliveryInfo.push("우편번호 : " + document.getElementById('postcode').value);
+
+    const orderJson = message + contents.join("\n") + deliveryMessage + deliveryInfo.join("\n");
+
+    alert(orderJson);
+  });
+
+</script>
+
+</body>
+</html>
