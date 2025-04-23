@@ -61,7 +61,7 @@ public class CoffeeController {
         return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse<>(save.getId(), "생성 성공", 201));
     }
 
-    @PatchMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<CoffeeResponseDto>> updateCoffee(@PathVariable long id, @RequestBody CoffeeRequestDto requestDto) {
         Coffee updated = coffeeService.update(id, requestDto);
         CoffeeResponseDto coffeeResponseDto = CoffeeResponseDto.builder()
@@ -71,5 +71,11 @@ public class CoffeeController {
                 .build();
 
         return ResponseEntity.ok(new ApiResponse<>(coffeeResponseDto,"수정 성공",200));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse<Long>> deleteCoffee(@PathVariable long id) {
+        coffeeService.deleteById(id);
+        return ResponseEntity.ok(new ApiResponse<>(id, "삭제 성공", 200));
     }
 }
