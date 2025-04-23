@@ -10,11 +10,13 @@ public class CoffeeResponseDto {
     private Long id;
     private String name;
     private Integer price;
+    private String img;
 
     @Builder
-    public CoffeeResponseDto(Long id, String name, Integer price) {
+    public CoffeeResponseDto(Long id, String name, Integer price, String img) {
         this.id = id;
         this.name = name;
         this.price = price;
+        this.img = img;
     }
 }

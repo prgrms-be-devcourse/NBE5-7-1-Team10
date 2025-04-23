@@ -9,11 +9,12 @@ import lombok.NoArgsConstructor;
 public class CoffeeRequestDto {
     private String name;
     private Integer price;
-//    private String img;
+    private String img;
 
     @Builder
-    public CoffeeRequestDto(String name, Integer price) {
+    public CoffeeRequestDto(String name, Integer price, String img) {
         this.name = name;
         this.price = price;
+        this.img = img;
     }
 }

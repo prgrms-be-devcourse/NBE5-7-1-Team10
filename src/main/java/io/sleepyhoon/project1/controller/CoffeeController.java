@@ -32,6 +32,7 @@ public class CoffeeController {
                 .id(findCoffee.getId())
                 .name(findCoffee.getName())
                 .price(findCoffee.getPrice())
+                .img(findCoffee.getImg())
                 .build();
 
         return ResponseEntity.ok(new ApiResponse<>(coffeeResponseDto,"조회 성공",200));
@@ -56,7 +57,13 @@ public class CoffeeController {
 
     @PostMapping
     public ResponseEntity<ApiResponse<Long>> saveCoffee(@RequestBody CoffeeRequestDto requestDto) {
-        Coffee newCoffee = new Coffee(requestDto.getName(), requestDto.getPrice());
+        Coffee newCoffee = Coffee.builder()
+                .name(requestDto.getName())
+                .price(requestDto.getPrice())
+                .img(requestDto.getImg())
+                .build();
+
+
         Coffee save = coffeeService.save(newCoffee);
         return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse<>(save.getId(), "생성 성공", 201));
     }
@@ -68,6 +75,7 @@ public class CoffeeController {
                 .id(updated.getId())
                 .name(updated.getName())
                 .price(updated.getPrice())
+                .img(updated.getImg())
                 .build();
 
         return ResponseEntity.ok(new ApiResponse<>(coffeeResponseDto,"수정 성공",200));
