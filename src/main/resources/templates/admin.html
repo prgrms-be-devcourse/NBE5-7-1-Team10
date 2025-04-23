@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <title>카페 관리자 페이지</title>
+    <script src="/admin.js"></script>
+    <script src="/adminApi.js"></script>
+</head>
+<body>
+<h1>카페 관리자 페이지</h1>
+
+<!-- 새로운 커피 추가 -->
+<h2>커피 추가</h2>
+<label for="newCoffeeName">
+    <input type="text" id="newCoffeeName" placeholder="커피 이름" />
+</label>
+<label for="newCoffeePrice">
+    <input type="number" id="newCoffeePrice" placeholder="가격 (원)" />
+
+</label>
+<button onclick="addCoffee()">추가</button>
+
+<!-- 커피 목록 -->
+<h2>커피 목록</h2>
+<table>
+    <thead>
+    <tr>
+        <th>이름</th>
+        <th>가격</th>
+    </tr>
+    </thead>
+    <tbody id="coffeeTable">
+
+    </tbody>
+</table>
+
+<!-- 커피 수정 폼 -->
+<div id="editForm" style="display: none; margin-top: 20px;">
+    <h2>커피 수정</h2>
+    <label>
+        <input type="text" id="updateCoffeeName" placeholder="커피 이름" />
+    </label>
+    <label>
+        <input type="number" id="updateCoffeePrice" min="0" placeholder="가격 (원)" />
+    </label>
+    <button onclick="updateCoffee()">수정</button>
+    <button onclick="cancelUpdate()">취소</button>
+</div>
+</body>
+</html>
