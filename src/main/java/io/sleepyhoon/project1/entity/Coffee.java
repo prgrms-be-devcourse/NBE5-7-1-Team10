@@ -1,11 +1,6 @@
 package io.sleepyhoon.project1.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +15,7 @@ public class Coffee {
     @Id
     @Column(name = "coffee_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Setter //테스트용 Setter입니다.
     private Long id;
 
     @Setter
