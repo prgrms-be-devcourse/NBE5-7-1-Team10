@@ -11,4 +11,4 @@ spring:
     properties:
       hibernate:
         show_sql: true
-        format_sql: true
+        formagit t_sql: true
