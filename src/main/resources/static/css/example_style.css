@@ -64,3 +64,9 @@ hr {
 .del-button {
     width: 38px;
 }
+
+.inform {
+    color: crimson;
+    font-size: 0.8rem;
+    padding-bottom: 0.5rem;
+}
