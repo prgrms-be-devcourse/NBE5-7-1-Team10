@@ -12,8 +12,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.util.ReflectionUtils;
 
 
+import java.lang.reflect.Field;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -51,31 +53,54 @@ class CoffeeServiceTest {
         Long coffeeId = 2L;
         when(coffeeRepository.findById(coffeeId)).thenReturn(Optional.empty());
 
-        // when
-        Coffee result = coffeeService.findById(coffeeId);
-
-        // then
+        // when & then
         assertThrows(CoffeeNotFoundException.class, () -> {
             coffeeService.findById(coffeeId);
         });
     }
 
+    //리플렉션으로 id강제 세팅
+    private Coffee createCoffeeWithId(Long id, String name, int price, String img) {
+        Coffee coffee = Coffee.builder()
+                .name(name)
+                .price(price)
+                .img(img)
+                .build();
+
+        try {
+            // Coffee 클래스의 "id" 필드 가져오기
+            Field idField = Coffee.class.getDeclaredField("id");
+            idField.setAccessible(true); // private 접근 허용
+            idField.set(coffee, id); // id 값 세팅
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException("ID 필드 설정 실패", e);
+        }
+
+        return coffee;
+    }
+
     @Test
     @DisplayName("save 테스트")
     void save() {
-        // given
-        Coffee coffee = new Coffee("test", 456,"어쩌고저쩌고이미지");
-        when(coffeeRepository.save(any(Coffee.class))).thenReturn(coffee);
+        CoffeeRequestDto requestDto = CoffeeRequestDto.builder()
+                .name("bugCoffee")
+                .price(1000)
+                .img("dfdaddfadf")
+                .build();
+
+        // 리턴될 mock 객체 (ID 포함)
+        Coffee savedCoffee = createCoffeeWithId(1L,"bugCoffee",1000,"dfdaddfadf");
+
+        // any(Coffee.class)로 매칭 범용 처리
+        when(coffeeRepository.save(any(Coffee.class))).thenReturn(savedCoffee);
 
         // when
-        Coffee result = coffeeService.save(coffee);
+        Long result = coffeeService.save(requestDto);
 
         // then
         assertNotNull(result);
-        assertEquals(coffee.getName(), result.getName());
-        assertEquals(coffee.getPrice(), result.getPrice());
-
-        verify(coffeeRepository, times(1)).save(coffee);
+        assertEquals(1L, result); // savedCoffee.getId()
+        verify(coffeeRepository, times(1)).save(any(Coffee.class));
     }
 
     @Test
