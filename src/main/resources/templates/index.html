@@ -24,47 +24,37 @@
   <div class="row">
     <div class="col-md-8 mt-4 d-flex flex-column align-items-start p-3 pt-0">
       <h5 class="flex-grow-0"><b>상품 목록</b></h5>
-      <ul class="list-group products">
+      <ul class="list-group products" id="coffee-list"></ul>
+        <script>
+          fetch('http://localhost:8080/coffees/all')
+              .then(resp => resp.json())
+              .then(json => {
+                const coffee_list = json.data; // 맞나..
+                const ul = document.getElementById('coffee-list');
+                ul.innerHTML = '';
 
-        <li class="list-group-item d-flex mt-3" data-name="columbia">
-          <div class="col-2"><img class="img-fluid" src="https://i.imgur.com/HKOFQYa.jpeg" alt=""></div>
-          <div class="col">
-            <div class="row text-muted">커피콩</div>
-            <div class="row">Columbia Nariñó</div>
-          </div>
-          <div class="col text-center price">5000원</div>
-          <div class="col text-end action">
-            <a class="btn btn-small btn-outline-dark del-button" href="">-</a>
-            <a class="btn btn-small btn-outline-dark add-button" href="">+</a>
-          </div>
-        </li>
+                coffee_list.forEach(coffee => {
+                  console.log(coffee);
+                  const li = document.createElement('li');
+                  li.className = 'list-group-item d-flex mt-3';
+                  li.setAttribute('data-name', coffee.name.toLowerCase());
+                  li.innerHTML = `
+                    <div class="col-2"><img class="img-fluid" src="${coffee.img}" alt=""></div>
+                    <div class="col">
+                      <div class="row text-muted">커피콩</div>
+                      <div class="row">${coffee.name}</div>
+                    </div>
+                    <div class="col text-center price">${coffee.price}원</div>
 
-        <li class="list-group-item d-flex mt-2" data-name="brazil">
-          <div class="col-2"><img class="img-fluid" src="https://i.imgur.com/HKOFQYa.jpeg" alt=""></div>
-          <div class="col">
-            <div class="row text-muted">커피콩</div>
-            <div class="row">Brazil Serra Do Caparaó</div>
-          </div>
-          <div class="col text-center price">5000원</div>
-          <div class="col text-end action">
-            <a class="btn btn-small btn-outline-dark del-button" href="">-</a>
-            <a class="btn btn-small btn-outline-dark add-button" href="">+</a>
-          </div>
-        </li>
-
-        <li class="list-group-item d-flex mt-2" data-name="arabica">
-          <div class="col-2"><img class="img-fluid" src="https://i.imgur.com/HKOFQYa.jpeg" alt=""></div>
-          <div class="col">
-            <div class="row text-muted">커피콩</div>
-            <div class="row">Arabica</div>
-          </div>
-          <div class="col text-center price">5000원</div>
-          <div class="col text-end action">
-            <a class="btn btn-small btn-outline-dark del-button" href="">-</a>
-            <a class="btn btn-small btn-outline-dark add-button" href="">+</a>
-          </div>
-        </li>
-      </ul>
+                    <div class="col text-end action">
+                      <a class="btn btn-small btn-outline-dark del-button" href="#">-</a>
+                      <a class="btn btn-small btn-outline-dark add-button" href="#">+</a>
+                    </div>
+                  `;
+                  ul.appendChild(li);
+                });
+              });
+        </script>
     </div>
 
     <div class="col-md-4 summary p-4">
