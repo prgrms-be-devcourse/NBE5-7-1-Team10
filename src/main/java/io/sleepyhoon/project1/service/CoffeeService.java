@@ -33,6 +33,7 @@ public class CoffeeService {
                     .id(coffee.getId())
                     .name(coffee.getName())
                     .price(coffee.getPrice())
+                    .img(coffee.getImg())
                     .build();
 
             coffeeListDto.add(responseCoffeeDto);
