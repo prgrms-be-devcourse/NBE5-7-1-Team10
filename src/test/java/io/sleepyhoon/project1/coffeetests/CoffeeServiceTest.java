@@ -3,6 +3,7 @@ package io.sleepyhoon.project1.coffeetests;
 import io.sleepyhoon.project1.dao.CoffeeRepository;
 import io.sleepyhoon.project1.dto.CoffeeRequestDto;
 import io.sleepyhoon.project1.entity.Coffee;
+import io.sleepyhoon.project1.exception.CoffeeInvalidRequestException;
 import io.sleepyhoon.project1.exception.CoffeeNotFoundException;
 import io.sleepyhoon.project1.service.CoffeeService;
 import lombok.extern.slf4j.Slf4j;
@@ -138,4 +139,53 @@ class CoffeeServiceTest {
         // 리포지토리 호출 확인
         verify(coffeeRepository).findById(coffeeId);
     }
+
+    @Test
+    @DisplayName("커피이름이 빈칸일때 예외처리")
+    void throwExceptionWhenNameIsEmpty() throws Exception {
+        //given
+        CoffeeRequestDto requestDto = CoffeeRequestDto.builder()
+                .name("")
+                .price(1000)
+                .img("대충이미지")
+                .build();
+
+        //when & then
+        assertThrows(CoffeeInvalidRequestException.class, () -> {
+            coffeeService.save(requestDto);
+        });
+    }
+
+    @Test
+    @DisplayName("커피이름이 Null일때 예외처리")
+    void throwExceptionWhenNameIsNull() throws Exception {
+        //given
+        CoffeeRequestDto requestDto = CoffeeRequestDto.builder()
+                .name(null)
+                .price(1000)
+                .img("대충이미지")
+                .build();
+
+        //when & then
+        assertThrows(CoffeeInvalidRequestException.class, () -> {
+            coffeeService.save(requestDto);
+        });
+    }
+
+    @Test
+    @DisplayName("커피이름이 공백으로만 이루어졌을때 예외처리")
+    void throwExceptionWhenNameIsOnlySpaces() throws Exception {
+        //given
+        CoffeeRequestDto requestDto = CoffeeRequestDto.builder()
+                .name("       ")
+                .price(1000)
+                .img("대충이미지")
+                .build();
+
+        //when & then
+        assertThrows(CoffeeInvalidRequestException.class, () -> {
+            coffeeService.save(requestDto);
+        });
+    }
+
 }
