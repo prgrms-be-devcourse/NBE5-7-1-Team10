@@ -5,6 +5,7 @@ package io.sleepyhoon.project1.service;
 import io.sleepyhoon.project1.dao.OrderRepository;
 import io.sleepyhoon.project1.dto.OrderDto;
 import io.sleepyhoon.project1.entity.Order;
+import io.sleepyhoon.project1.exception.OrderNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,14 +41,14 @@ public class OrderService {
 
     public OrderDto findById(Long id) {
         return orderRepository.findDtoById(id)
-                .orElseThrow(() -> new NoSuchElementException("Order not found"));
+                .orElseThrow(() -> new OrderNotFoundException("Order not found"));
 
     }
 
     public void delete(String email, String address) {
 
         Order findOrder = orderRepository.findByEmailAndAddress(email, address)
-                .orElseThrow(() -> new NoSuchElementException("Order not found"));
+                .orElseThrow(() -> new OrderNotFoundException("Order not found"));
 
         orderRepository.deleteById(findOrder.getId());
     }
