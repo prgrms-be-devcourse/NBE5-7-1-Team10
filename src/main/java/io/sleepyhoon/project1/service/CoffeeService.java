@@ -27,6 +27,9 @@ public class CoffeeService {
 
     public List<CoffeeResponseDto> findEveryCoffee() {
         List<Coffee> coffeeList = coffeeRepository.findAll();
+        if (coffeeList.isEmpty()) {
+            throw new CoffeeNotFoundException();
+        }
         List<CoffeeResponseDto> coffeeListDto = new ArrayList<>();
         for(Coffee coffee : coffeeList) {
             CoffeeResponseDto responseCoffeeDto = CoffeeResponseDto.builder()

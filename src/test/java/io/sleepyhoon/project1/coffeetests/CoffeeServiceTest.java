@@ -16,6 +16,8 @@ import org.springframework.data.util.ReflectionUtils;
 
 
 import java.lang.reflect.Field;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -135,5 +137,18 @@ class CoffeeServiceTest {
 
         // 리포지토리 호출 확인
         verify(coffeeRepository).findById(coffeeId);
+    }
+    
+    @Test
+    @DisplayName("findEveryCoffee시 결과 없으면 예외 발생 테스트")
+    void throwExWhenNoCoffee() throws Exception {
+        
+        when(coffeeRepository.findAll()).thenReturn(Collections.emptyList());
+
+        // when & then
+        assertThrows(CoffeeNotFoundException.class, () -> {
+            coffeeService.findEveryCoffee();
+        });
+    
     }
 }
