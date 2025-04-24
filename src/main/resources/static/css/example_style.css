@@ -80,3 +80,8 @@ hr {
     font-size: 0.8rem;
     padding-bottom: 0.5rem;
 }
+
+#coffee-list {
+    height: 500px;
+    overflow-y: auto
+}
