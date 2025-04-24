@@ -5,6 +5,7 @@ import io.sleepyhoon.project1.dto.CoffeeRequestDto;
 import io.sleepyhoon.project1.dto.CoffeeResponseDto;
 import io.sleepyhoon.project1.entity.Coffee;
 import io.sleepyhoon.project1.exception.CoffeeInvalidRequestException;
+import io.sleepyhoon.project1.exception.CoffeeDuplicationException;
 import io.sleepyhoon.project1.exception.CoffeeNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,13 @@ public class CoffeeService {
                .orElseThrow(() -> new CoffeeNotFoundException(id));
     }
 
+    public void checkDuplication(String coffeeName) {
+        List<Coffee> byName = coffeeRepository.findByName(coffeeName);
+        if (!byName.isEmpty()) {
+            throw new CoffeeDuplicationException(coffeeName);
+        }
+    }
+
     public List<CoffeeResponseDto> findEveryCoffee() {
         List<Coffee> coffeeList = coffeeRepository.findAll();
         List<CoffeeResponseDto> coffeeListDto = new ArrayList<>();
@@ -34,6 +42,7 @@ public class CoffeeService {
                     .id(coffee.getId())
                     .name(coffee.getName())
                     .price(coffee.getPrice())
+                    .img(coffee.getImg())
                     .build();
 
             coffeeListDto.add(responseCoffeeDto);
@@ -56,6 +65,9 @@ public class CoffeeService {
                 .price(requestDto.getPrice())
                 .img(requestDto.getImg())
                 .build();
+
+        checkDuplication(newCoffee.getName());
+
         return coffeeRepository.save(newCoffee).getId();
 
     }
@@ -82,6 +94,10 @@ public class CoffeeService {
 
         if (requestDto.getPrice() != null) {
             targetCoffee.setPrice(requestDto.getPrice());
+        }
+
+        if (requestDto.getImg() != null) {
+            targetCoffee.setImg(requestDto.getImg());
         }
 
         return targetCoffee;

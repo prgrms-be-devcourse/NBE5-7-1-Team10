@@ -3,9 +3,11 @@ package io.sleepyhoon.project1.dto;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @NoArgsConstructor
+@ToString
 public class CoffeeRequestDto {
     private String name;
     private Integer price;
