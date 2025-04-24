@@ -1,37 +1,30 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8" />
-    <title>주문 완료 안내</title>
-</head>
-<body>
-<h2 th:text="'주문번호: #' + ${order.id} + ' 주문이 완료되었습니다.'"></h2>
-
-<p><strong>배송 주소:</strong> <span th:text="${order.address}"></span></p>
-<p><strong>우편번호:</strong> <span th:text="${order.postNum}"></span></p>
-<p><strong>주문 시간:</strong>
-    <span th:text="${#temporals.format(order.orderedAt, 'yyyy-MM-dd HH:mm')}"></span>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<body><h2>주문이 완료되었습니다!</h2>
+<p>
+    주문번호&nbsp;<b th:text="${order.id}"></b><br/>
+    주문시각&nbsp;<span th:text="${order.orderedAt}"></span><br/>
+    배송지&nbsp;<span th:text="${order.address}"></span>
 </p>
 
 <h3>주문 내역</h3>
-<table border="1" cellpadding="8" cellspacing="0">
-    <thead>
-    <tr>
-        <th>메뉴명</th>
-        <th>수량</th>
-        <th>가격</th>
+<table border="1" cellpadding="6" cellspacing="0">
+    <tr><th>메뉴</th><th>수량</th><th>단가</th><th>금액</th></tr>
+    <tr th:each="co : ${order.coffeeOrders}">
+        <td th:text="${co.coffee.name}"></td>
+        <td th:text="${co.quantity}"></td>
+        <td th:text="${co.coffee.price}"></td>
+        <td th:text="${co.coffee.price * co.quantity}"></td>
     </tr>
-    </thead>
-    <tbody>
-    <tr th:each="item : ${items}">
-        <td th:text="${item.coffee.name}"></td>
-        <td th:text="${item.quantity}">2</td>
-        <td th:text="${item.coffee.price} + '원'"></td>
-    </tr>
-    </tbody>
 </table>
 
-<p style="margin-top: 20px;">싱글벙글 카페를 이용해주셔서 감사합니다 </p>
+<p style="margin-top:12px">
+    <b>총액&nbsp;:&nbsp;
+        <span th:text="${#numbers.formatInteger(
+            order.coffeeOrders.stream()
+                              .mapToInt(co -> co.coffee.price * co.quantity)
+                              .sum(), 0, 'COMMA')}"></span>원
+    </b>
+</p>
 </body>
 </html>
-

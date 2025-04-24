@@ -17,3 +17,4 @@ public class OrderDto {
         this.postNum = postNum;
     }
 }
+

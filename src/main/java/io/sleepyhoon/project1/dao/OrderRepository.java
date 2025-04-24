@@ -1,10 +1,14 @@
 package io.sleepyhoon.project1.dao;
 
 import io.sleepyhoon.project1.entity.Order;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,6 +19,15 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     List<Order> findByEmail(String email);
 
-    @Query("SELECT DISTINCT o.email FROM Order o")
-    List<String> findDistinctEmails();
+
+    List<Order> findByIsProcessedTrueAndOrderedAtBetween(
+            LocalDateTime start, LocalDateTime end);
+
+
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE Order o SET o.isProcessed = false WHERE o.id IN :ids")
+    int markProcessedFalseByIdIn(@Param("ids") List<Long> ids);
+
 }
