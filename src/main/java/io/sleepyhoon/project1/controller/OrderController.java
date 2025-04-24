@@ -29,4 +29,16 @@ public class OrderController {
         Long order = orderService.save(orderDto);
         return ResponseEntity.ok(new ApiResponse<>(order, "주문 성공", 201));
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<OrderDto>> getOrderById(@PathVariable Long id) {
+        Order order = orderService.findById(id);
+
+        OrderDto orderDto = OrderDto.builder()
+                .email(order.getEmail())
+                .address(order.getAddress())
+                .postNum(order.getPostNum())
+                .build();
+        return ResponseEntity.ok(new ApiResponse<>(orderDto, "조회 성공", 200));
+    }
 }

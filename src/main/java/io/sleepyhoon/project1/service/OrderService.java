@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -50,5 +51,10 @@ public class OrderService {
         return orderDtos;
     }
 
+    public Order findById(Long id) {
+        return orderRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Order not found"));
+
+    }
 
 }
