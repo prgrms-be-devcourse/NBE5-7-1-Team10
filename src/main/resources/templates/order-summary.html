@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>오늘의 주문 내역</title>
+</head>
+<body>
+<h2 th:text="'오늘의 주문 내역 (' + ${#lists.size(orders)} + '건)'">오늘의 주문 내역</h2>
+
+<!-- 전체 주문 금액 계산용 변수 초기화 -->
+<div th:with="totalAmount=0">
+
+    <!-- 각 주문 출력 -->
+    <div th:each="order : ${orders}"
+         th:with="orderTotal=0"
+         style="margin-bottom: 30px; border-bottom: 1px solid #ccc; padding-bottom: 10px;">
+
+        <p><strong>주문번호:</strong> <span th:text="${order.id}"></span></p>
+        <p><strong>주소:</strong> <span th:text="${order.address}"></span></p>
+        <p><strong>우편번호:</strong> <span th:text="${order.postNum}"></span></p>
+        <p><strong>시간:</strong> <span th:text="${#temporals.format(order.orderedAt, 'yyyy-MM-dd HH:mm')}"></span></p>
+
+        <h4>주문 항목</h4>
+        <ul>
+            <li th:each="item : ${order.coffeeOrders}"
+                th:with="itemTotal=${item.quantity} * ${item.coffee.price}"
+                th:text="${item.coffee.name} + ' x ' + ${item.quantity} + '개 (총 ' + itemTotal + '원)'">
+            </li>
+
+        </ul>
+    </div>
+
+    <!-- 총 결제 금액 출력 -->
+    <p style="font-weight: bold; font-size: 16px;">
+        총 결제 금액:
+        <span th:text="${#numbers.formatInteger(orders.stream().flatMap(o -> o.coffeeOrders.stream()).mapToInt(i -> i.quantity * i.coffee.price).sum(), 3, 'COMMA')} + '원'">
+        0원
+      </span>
+    </p>
+</div>
+
+<p> 싱글벙글한 하루 보내세요 </p>
+</body>
+</html>
+
