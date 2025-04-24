@@ -19,7 +19,9 @@ body {
     width: 90%;
     box-shadow: 0 6px 20px 0 rgba(38, 38, 38, 0.19);
     border-radius: 1rem;
-    border: transparent
+    border: transparent;
+    height: 80vh;
+
 }
 
 .summary {
@@ -27,7 +29,14 @@ body {
     border-top-right-radius: 1rem;
     border-bottom-right-radius: 1rem;
     padding: 4vh;
-    color: rgb(65, 65, 65)
+    color: rgb(65, 65, 65);
+    height: 80vh;
+
+}
+
+#summary-list {
+    overflow-y: scroll;
+    height: 10.5vh;
 }
 
 @media (max-width: 767px) {
@@ -39,6 +48,7 @@ body {
 
 .row {
     margin: 0
+
 }
 
 .title b {
@@ -82,6 +92,43 @@ hr {
 }
 
 #coffee-list {
-    height: 500px;
-    overflow-y: auto
+    height: 68vh;
+    overflow-y: auto;
+    padding-right: 10px;
+    box-sizing: border-box;
+}
+
+/*.summary:hover {*/
+/*    overflow-y: auto;*/
+/*}*/
+
+
+#coffee-list::-webkit-scrollbar {
+    display: compact;
+    width: 5px;
+    height: 20px;
+    background-color: lightgray;
+
+}
+
+/* Add a thumb */
+#coffee-list::-webkit-scrollbar-thumb {
+    background: gray;
+}
+
+#summary-list::-webkit-scrollbar {
+    display: compact;
+    width: 5px;
+    height: 20px;
+    background-color: lightgray;
+
+}
+
+/* Add a thumb */
+#summary-list::-webkit-scrollbar-thumb {
+    background: gray;
+}
+
+#coffee-list-box {
+    height: 80vh;
 }
