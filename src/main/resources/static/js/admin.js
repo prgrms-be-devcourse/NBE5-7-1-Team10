@@ -12,7 +12,7 @@ function loadCoffees() {
             if (data.length === 0) {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="3">등록된 커피가 없습니다 ☕</td>
+                        <td colspan="5" style="text-align: center; color: gray;">등록된 커피가 없습니다 ☕</td>
                     </tr>
                 `;
                 return;
@@ -73,10 +73,6 @@ function addCoffee() {
             clearPostForm();
             loadCoffees();
         })
-        .catch(err => {
-            alert("에러 발생!!");
-            console.error(err);
-        });
 }
 
 function updateCoffee() {
@@ -99,7 +95,7 @@ function updateCoffee() {
             hideEditForm();
             alert("수정이 반영되었습니다!")
         }).catch(err => {
-        alert("에러발생!!");
+        alert("에러 발생!!");
         console.log(err);
     });
 }
@@ -114,17 +110,26 @@ function deleteCoffee(id) {
         method: 'DELETE',
     })
         .then(() => {
-            // DOM에서 해당 <tr> 제거
             const row = document.getElementById(`coffee-${id}`);
             if (row) row.remove();
 
-            // coffeeMap에서도 제거 (선택 사항)
             delete coffeeMap[id];
 
             alert("삭제되었습니다!");
+
+            const tbody = document.getElementById("coffeeTable");
+            if (tbody.children.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" style="text-align: center; color: gray;">
+                            등록된 커피가 없습니다 ☕
+                        </td>
+                    </tr>
+                `;
+            }
         })
         .catch(err => {
-            alert("에러발생!!");
+            alert("에러 발생!!");
             console.log(err);
         });
 }
