@@ -4,6 +4,7 @@ import io.sleepyhoon.project1.dao.CoffeeRepository;
 import io.sleepyhoon.project1.dto.CoffeeRequestDto;
 import io.sleepyhoon.project1.dto.CoffeeResponseDto;
 import io.sleepyhoon.project1.entity.Coffee;
+import io.sleepyhoon.project1.exception.CoffeeInvalidRequestException;
 import io.sleepyhoon.project1.exception.CoffeeNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -43,6 +44,13 @@ public class CoffeeService {
     //Coffee 저장하는 메소드
     public Long save(CoffeeRequestDto requestDto) {
 
+        //유효하지 않은 값 = ture
+        boolean isInvalidName = checkRequiredField(requestDto);
+
+        if(isInvalidName) {
+            throw new CoffeeInvalidRequestException();
+        }
+
         Coffee newCoffee = Coffee.builder()
                 .name(requestDto.getName())
                 .price(requestDto.getPrice())
@@ -50,6 +58,12 @@ public class CoffeeService {
                 .build();
         return coffeeRepository.save(newCoffee).getId();
 
+    }
+
+    //requestDto 유효성 검사 메소드(null값 유무, 빈칸, 공백만 포함)
+    public boolean checkRequiredField(CoffeeRequestDto requestDto) {
+        String coffeeName = requestDto.getName();
+        return coffeeName == null || coffeeName.isBlank();
     }
 
     //Coffee 삭제하는 메소드
