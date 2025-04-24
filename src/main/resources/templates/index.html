@@ -24,7 +24,7 @@
   <div class="row">
     <div class="col-md-8 mt-4 d-flex flex-column align-items-start p-3 pt-0" id="coffee-list-box">
       <h5 class="flex-grow-0"><b>상품 목록</b></h5>
-      <ul class="list-group products" id="coffee-list"></ul>
+      <ul class="list-group list-group-flush products" id="coffee-list"></ul>
         <script>
           fetch('http://localhost:8080/coffees/all')
               .then(resp => resp.json())
