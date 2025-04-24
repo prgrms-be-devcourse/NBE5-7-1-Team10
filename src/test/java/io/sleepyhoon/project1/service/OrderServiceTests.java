@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @Transactional
 @SpringBootTest
@@ -60,7 +59,7 @@ class OrderServiceTests {
         orderService.save(orderDto3);
 
 
-        List<Order> orderList = orderService.findByEmailAllOrders("h1@h1.com");
+        List<Order> orderList = orderService.findAllOrdersByEmail("h1@h1.com");
 
         assertThat(orderList).isNotNull();
         assertThat(orderList.size()).isEqualTo(3);

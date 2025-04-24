@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -35,34 +34,13 @@ public class OrderService {
         )).getId();
     }
 
-    public List<OrderDto> findByEmailAllOrders(String email) {
-        List<Order> orders = orderRepository.findByEmail(email);
-
-        List<OrderDto> orderDtos = new ArrayList<>();
-        for (Order order : orders) {
-            orderDtos.add(
-                    OrderDto.builder()
-                            .email(order.getEmail())
-                            .address(order.getAddress())
-                            .postNum(order.getPostNum())
-                    .build());
-        }
-        
-        return orderDtos;
+    public List<OrderDto> findAllOrdersByEmail(String email) {
+        return orderRepository.findByEmail(email);
     }
 
     public OrderDto findById(Long id) {
-
-        Optional<Order> orderOptional = orderRepository.findById(id);
-
-        Order order = orderOptional.orElseThrow(() -> new NoSuchElementException("Order not found"));
-
-        return OrderDto.builder()
-                .email(order.getEmail())
-                .address(order.getAddress())
-                .postNum(order.getPostNum())
-                .build();
-
+        return orderRepository.findDtoById(id)
+                .orElseThrow(() -> new NoSuchElementException("Order not found"));
 
     }
 

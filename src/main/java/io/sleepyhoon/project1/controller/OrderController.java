@@ -2,10 +2,8 @@ package io.sleepyhoon.project1.controller;
 
 import io.sleepyhoon.project1.dto.ApiResponse;
 import io.sleepyhoon.project1.dto.OrderDto;
-import io.sleepyhoon.project1.entity.Order;
 import io.sleepyhoon.project1.service.OrderService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +18,7 @@ public class OrderController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<OrderDto>>> getAllOrders(@RequestParam String email) {
-        List<OrderDto> orders = orderService.findByEmailAllOrders(email);
+        List<OrderDto> orders = orderService.findAllOrdersByEmail(email);
         return ResponseEntity.ok(new ApiResponse<>(orders, "조회 성공", 200));
     }
 
