@@ -19,14 +19,14 @@ public class OrderController {
     private final OrderService orderService;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<Order>>> getAllOrders(@RequestParam String email) {
-        List<Order> orders = orderService.findByEmailAllOrders(email);
+    public ResponseEntity<ApiResponse<List<OrderDto>>> getAllOrders(@RequestParam String email) {
+        List<OrderDto> orders = orderService.findByEmailAllOrders(email);
         return ResponseEntity.ok(new ApiResponse<>(orders, "조회 성공", 200));
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<Order>> saveOrder(@RequestBody OrderDto orderDto) {
-        Order order = orderService.save(orderDto);
+    public ResponseEntity<ApiResponse<Long>> saveOrder(@RequestBody OrderDto orderDto) {
+        Long order = orderService.save(orderDto);
         return ResponseEntity.ok(new ApiResponse<>(order, "주문 성공", 201));
     }
 }

@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,7 +21,7 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
 
-    public Order save(OrderDto orderDto) {
+    public Long save(OrderDto orderDto) {
 
         Optional<Order> orderOptional = orderRepository.findByEmailAndAddress(orderDto.getEmail(), orderDto.getAddress());
 
@@ -30,11 +31,23 @@ public class OrderService {
                         .address(orderDto.getAddress())
                         .postNum(orderDto.getPostNum())
                         .build()
-        ));
+        )).getId();
     }
 
-    public List<Order> findByEmailAllOrders(String email) {
-        return orderRepository.findByEmail(email);
+    public List<OrderDto> findByEmailAllOrders(String email) {
+        List<Order> orders = orderRepository.findByEmail(email);
+
+        List<OrderDto> orderDtos = new ArrayList<>();
+        for (Order order : orders) {
+            orderDtos.add(
+                    OrderDto.builder()
+                            .email(order.getEmail())
+                            .address(order.getAddress())
+                            .postNum(order.getPostNum())
+                    .build());
+        }
+        
+        return orderDtos;
     }
 
 
