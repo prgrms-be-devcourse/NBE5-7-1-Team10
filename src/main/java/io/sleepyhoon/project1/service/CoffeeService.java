@@ -4,6 +4,7 @@ import io.sleepyhoon.project1.dao.CoffeeRepository;
 import io.sleepyhoon.project1.dto.CoffeeRequestDto;
 import io.sleepyhoon.project1.dto.CoffeeResponseDto;
 import io.sleepyhoon.project1.entity.Coffee;
+import io.sleepyhoon.project1.exception.CoffeeDuplicationException;
 import io.sleepyhoon.project1.exception.CoffeeNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,13 @@ public class CoffeeService {
 
         return coffeeRepository.findById(id)
                .orElseThrow(() -> new CoffeeNotFoundException(id));
+    }
+
+    public void checkDuplication(String coffeeName) {
+        List<Coffee> byName = coffeeRepository.findByName(coffeeName);
+        if (!byName.isEmpty()) {
+            throw new CoffeeDuplicationException(coffeeName);
+        }
     }
 
     public List<CoffeeResponseDto> findEveryCoffee() {
@@ -48,6 +56,9 @@ public class CoffeeService {
                 .price(requestDto.getPrice())
                 .img(requestDto.getImg())
                 .build();
+
+        checkDuplication(newCoffee.getName());
+
         return coffeeRepository.save(newCoffee).getId();
 
     }
