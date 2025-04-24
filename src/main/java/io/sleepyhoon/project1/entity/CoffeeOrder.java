@@ -2,8 +2,10 @@ package io.sleepyhoon.project1.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
 
 @Entity
 @Getter
@@ -25,4 +27,12 @@ public class CoffeeOrder {
 
     @Column(nullable = false)
     private Integer quantity;
+
+    @Builder
+    public CoffeeOrder(Coffee coffee, Order order, Integer quantity) {
+        this.coffee = coffee;
+        this.order = order;
+        this.quantity = quantity;
+    }
+
 }
