@@ -44,4 +44,12 @@ public class OrderService {
 
     }
 
+    public void delete(String email, String address) {
+
+        Order findOrder = orderRepository.findByEmailAndAddress(email, address)
+                .orElseThrow(() -> new NoSuchElementException("Order not found"));
+
+        orderRepository.deleteById(findOrder.getId());
+    }
+
 }

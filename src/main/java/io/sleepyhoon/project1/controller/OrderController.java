@@ -32,4 +32,11 @@ public class OrderController {
     public ResponseEntity<ApiResponse<OrderDto>> getOrderById(@PathVariable Long id) {
         return ResponseEntity.ok(new ApiResponse<>(orderService.findById(id), "조회 성공", 200));
     }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteOrder(@RequestParam String email, @RequestParam String address) {
+        orderService.delete(email, address);
+        return ResponseEntity.noContent().build();
+    }
+
 }
