@@ -51,9 +51,18 @@ public class OrderService {
         return orderDtos;
     }
 
-    public Order findById(Long id) {
-        return orderRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Order not found"));
+    public OrderDto findById(Long id) {
+
+        Optional<Order> orderOptional = orderRepository.findById(id);
+
+        Order order = orderOptional.orElseThrow(() -> new NoSuchElementException("Order not found"));
+
+        return OrderDto.builder()
+                .email(order.getEmail())
+                .address(order.getAddress())
+                .postNum(order.getPostNum())
+                .build();
+
 
     }
 
