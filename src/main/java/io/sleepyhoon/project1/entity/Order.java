@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -38,7 +39,7 @@ public class Order {
 
     @Setter
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CoffeeOrder> coffeeOrders;
+    private List<CoffeeOrder> coffeeOrders = new ArrayList<>();
 
     @Builder
     public Order(String email, String address, String postNum, Integer price) {
