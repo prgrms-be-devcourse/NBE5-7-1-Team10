@@ -3,7 +3,9 @@ package io.sleepyhoon.project1.service;
 
 
 import io.sleepyhoon.project1.dao.OrderRepository;
+import io.sleepyhoon.project1.dto.CoffeeListDto;
 import io.sleepyhoon.project1.dto.OrderDto;
+import io.sleepyhoon.project1.dto.OrderRequestDto;
 import io.sleepyhoon.project1.entity.Order;
 import io.sleepyhoon.project1.exception.OrderNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -22,27 +24,32 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
 
-    public Long save(OrderDto orderDto) {
-
-        Optional<Order> orderOptional = orderRepository.findByEmailAndAddress(orderDto.getEmail(), orderDto.getAddress());
-
-        return orderOptional.orElseGet(() -> orderRepository.save(
+    public OrderRequestDto save(OrderRequestDto request)    {
+        Long orderId = orderRepository.save(
                 Order.builder()
-                        .email(orderDto.getEmail())
-                        .address(orderDto.getAddress())
-                        .postNum(orderDto.getPostNum())
+                        .email(request.getEmail())
+                        .address(request.getAddress())
+                        .postNum(request.getPostNum())
                         .build()
-        )).getId();
+        ).getId();
+
+        OrderRequestDto orderDto = findById(orderId);
+        List<CoffeeListDto> coffeeList = orderRepository.findCoffeeListByOrderId(orderId);
+        Integer price = orderRepository.getPriceById(orderId);
+
+        orderDto.setCoffeeList(coffeeList);
+        orderDto.setPrice(price);
+
+        return orderDto;
     }
 
     public List<OrderDto> findAllOrdersByEmail(String email) {
         return orderRepository.findByEmail(email);
     }
 
-    public OrderDto findById(Long id) {
+    public OrderRequestDto findById(Long id) {
         return orderRepository.findDtoById(id)
                 .orElseThrow(() -> new OrderNotFoundException("Order not found"));
-
     }
 
     public void delete(String email, String address) {

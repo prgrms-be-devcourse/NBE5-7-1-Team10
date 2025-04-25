@@ -2,6 +2,7 @@ package io.sleepyhoon.project1.controller;
 
 import io.sleepyhoon.project1.dto.ApiResponse;
 import io.sleepyhoon.project1.dto.OrderDto;
+import io.sleepyhoon.project1.dto.OrderRequestDto;
 import io.sleepyhoon.project1.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,13 +24,13 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<Long>> saveOrder(@RequestBody OrderDto orderDto) {
-        Long order = orderService.save(orderDto);
+    public ResponseEntity<ApiResponse<OrderRequestDto>> saveOrder(@RequestBody OrderRequestDto request) {
+        OrderRequestDto order = orderService.save(request);
         return ResponseEntity.ok(new ApiResponse<>(order, "주문 성공", 201));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<OrderDto>> getOrderById(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<OrderRequestDto>> getOrderById(@PathVariable Long id) {
         return ResponseEntity.ok(new ApiResponse<>(orderService.findById(id), "조회 성공", 200));
     }
 
