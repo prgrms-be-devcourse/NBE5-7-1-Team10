@@ -98,7 +98,8 @@ public class CoffeeOrderServiceTest {
 
         //when
         List<CoffeeOrder> actualCoffeeOrders=
-                coffeeOrderService.save(coffeeOrderRequestDtoMap, testOrder);
+                coffeeOrderService.genCoffeeOrderList(coffeeOrderRequestDtoMap, testOrder);
+
         //순서보장이 안되서 테스트 실패하는 경우가 있어서 정렬 후 검증
         actualCoffeeOrders.sort(Comparator.comparing(o -> o.getCoffee().getName()));
 

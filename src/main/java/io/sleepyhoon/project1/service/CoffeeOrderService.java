@@ -21,7 +21,7 @@ public class CoffeeOrderService {
     private final CoffeeService coffeeService;
     private final CoffeeOrderRepository coffeeOrderRepository;
 
-    public List<CoffeeOrder> save(Map<String, Integer> coffeeOrderMap, Order orderRequest) {
+    public List<CoffeeOrder> genCoffeeOrderList(Map<String, Integer> coffeeOrderMap, Order orderRequest) {
 
         List<CoffeeOrder> coffeeOrderList = new ArrayList<>();
         for(Map.Entry<String, Integer> entry : coffeeOrderMap.entrySet()) {
@@ -36,8 +36,8 @@ public class CoffeeOrderService {
                     .quantity(coffeeQuantity)
                     .build();
 
-            CoffeeOrder saved = coffeeOrderRepository.save(coffeeOrder);
-            coffeeOrderList.add(saved);
+            //CoffeeOrder saved = coffeeOrderRepository.save(coffeeOrder);
+            coffeeOrderList.add(coffeeOrder);
         }
         return coffeeOrderList;
     }
