@@ -32,7 +32,8 @@ public class Order {
     @Column(nullable = false)
     private Boolean isProcessed = false;
 
-    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
+    @Setter
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CoffeeOrder> coffeeOrders;
 
     @Builder
@@ -41,4 +42,5 @@ public class Order {
         this.address = address;
         this.postNum = postNum;
     }
+
 }

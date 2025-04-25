@@ -27,6 +27,12 @@ public class CoffeeService {
                .orElseThrow(() -> new CoffeeNotFoundException(id));
     }
 
+    //Coffee Name으로 커피 조회
+    public Coffee findFirstCoffeeByName(String coffeeName) {
+        return coffeeRepository.findFirstByName(coffeeName)
+                .orElseThrow(() -> new CoffeeNotFoundException(coffeeName));
+    }
+
     public void checkDuplication(String coffeeName) {
         List<Coffee> byName = coffeeRepository.findByName(coffeeName);
         if (!byName.isEmpty()) {
