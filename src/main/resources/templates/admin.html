@@ -3,7 +3,12 @@
 <head>
     <meta charset="UTF-8" />
     <title>카페 관리자 페이지</title>
-    <script src="/js/admin.js"></script>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+
+  <script src="/js/admin.js"></script>
     <script src="/js/admin_api.js"></script>
     <link rel="stylesheet" href="/css/admin_style.css" />
 </head>
@@ -11,15 +16,23 @@
 <h1>카페 관리자 페이지</h1>
 
 <!-- 새로운 커피 추가 -->
-<h2>커피 추가</h2>
-<label for="newCoffeeName">
-    <input type="text" id="newCoffeeName" placeholder="커피 이름" />
-</label>
-<label for="newCoffeePrice">
-    <input type="number" id="newCoffeePrice" placeholder="가격 (원)" />
+<div class="coffee-form">
+    <h2>커피 추가</h2>
 
-</label>
-<button onclick="addCoffee()">추가</button>
+    <label for="newCoffeeName">
+        <input type="text" id="newCoffeeName" placeholder="커피 이름" />
+    </label>
+
+    <label for="newCoffeePrice">
+        <input type="number" id="newCoffeePrice" placeholder="가격 (원)" />
+    </label>
+
+    <label for="newCoffeeImageUrl">
+        <input type="text" id="newCoffeeImageUrl" placeholder="파일 경로" />
+    </label>
+
+    <button onclick="addCoffee()">추가</button>
+</div>
 
 <!-- 커피 목록 -->
 <h2>커피 목록</h2>
@@ -28,6 +41,7 @@
     <tr>
         <th>이름</th>
         <th>가격</th>
+        <th>이미지</th>
     </tr>
     </thead>
     <tbody id="coffeeTable">
@@ -43,6 +57,9 @@
     </label>
     <label>
         <input type="number" id="updateCoffeePrice" min="0" placeholder="가격 (원)" />
+    </label>
+    <label>
+        <input type="text" id="updateCoffeeImageUrl" placeholder="커피 사진" />
     </label>
     <button onclick="updateCoffee()">수정</button>
     <button onclick="cancelUpdate()">취소</button>

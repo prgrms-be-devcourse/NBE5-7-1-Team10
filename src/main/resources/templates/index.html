@@ -22,49 +22,108 @@
 
 <div class="card">
   <div class="row">
-    <div class="col-md-8 mt-4 d-flex flex-column align-items-start p-3 pt-0">
+    <div class="col-md-8 mt-4 d-flex flex-column align-items-start p-3 pt-0" id="coffee-list-box">
       <h5 class="flex-grow-0"><b>상품 목록</b></h5>
-      <ul class="list-group products">
+      <ul class="list-group list-group-flush products" id="coffee-list"></ul>
+        <script>
+          fetch('http://localhost:8080/coffees/all')
+              .then(resp => resp.json())
+              .then(json => {
+                const coffee_list = json.data;
+                const ul = document.getElementById('coffee-list');
+                ul.innerHTML = '';
 
-        <li class="list-group-item d-flex mt-3" data-name="columbia">
-          <div class="col-2"><img class="img-fluid" src="https://i.imgur.com/HKOFQYa.jpeg" alt=""></div>
-          <div class="col">
-            <div class="row text-muted">커피콩</div>
-            <div class="row">Columbia Nariñó</div>
-          </div>
-          <div class="col text-center price">5000원</div>
-          <div class="col text-end action">
-            <a class="btn btn-small btn-outline-dark del-button" href="">-</a>
-            <a class="btn btn-small btn-outline-dark add-button" href="">+</a>
-          </div>
-        </li>
+                coffee_list.forEach(coffee => {
+                  const li = document.createElement('li');
+                  li.className = 'list-group-item d-flex mt-3';
+                  li.setAttribute('data-name', coffee.name.toLowerCase());
+                  li.innerHTML = `
+                    <div class="col-2"><img class="img-fluid" src="${coffee.img}" alt=""></div>
+                    <div class="col">
+                      <div class="row text-muted">커피콩</div>
+                      <div class="row">${coffee.name}</div>
+                    </div>
+                    <div class="col text-center price">${coffee.price}원</div>
 
-        <li class="list-group-item d-flex mt-2" data-name="brazil">
-          <div class="col-2"><img class="img-fluid" src="https://i.imgur.com/HKOFQYa.jpeg" alt=""></div>
-          <div class="col">
-            <div class="row text-muted">커피콩</div>
-            <div class="row">Brazil Serra Do Caparaó</div>
-          </div>
-          <div class="col text-center price">5000원</div>
-          <div class="col text-end action">
-            <a class="btn btn-small btn-outline-dark del-button" href="">-</a>
-            <a class="btn btn-small btn-outline-dark add-button" href="">+</a>
-          </div>
-        </li>
+                    <div class="col text-end action">
+                      <a class="btn btn-small btn-outline-dark del-button" href="#">-</a>
+                      <a class="btn btn-small btn-outline-dark add-button" href="#">+</a>
+                    </div>
+                  `;
 
-        <li class="list-group-item d-flex mt-2" data-name="arabica">
-          <div class="col-2"><img class="img-fluid" src="https://i.imgur.com/HKOFQYa.jpeg" alt=""></div>
-          <div class="col">
-            <div class="row text-muted">커피콩</div>
-            <div class="row">Arabica</div>
-          </div>
-          <div class="col text-center price">5000원</div>
-          <div class="col text-end action">
-            <a class="btn btn-small btn-outline-dark del-button" href="">-</a>
-            <a class="btn btn-small btn-outline-dark add-button" href="">+</a>
-          </div>
-        </li>
-      </ul>
+                  // add/del 버튼에 이벤트 달기
+                  // 커피별 개수 저장용 객체
+                  const coffeeCounts = {};
+                  const summaryList = document.getElementById('summary-list');
+                  const name = coffee.name.toLowerCase();
+                  const displayName = name;
+                  const price = coffee.price;
+
+                  const addBtn = li.querySelector('.add-button');
+                  const delBtn = li.querySelector('.del-button');
+
+                  addBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    coffeeCounts[name] =  (coffeeCounts[name] || 0) + 1;
+                    updateSummary(name, displayName, coffeeCounts[name]);
+                    addTotalPrice(price);
+                  });
+
+                  delBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.preventDefault();
+                    if (coffeeCounts[name]) {
+                      coffeeCounts[name]--;
+                      subtractTotalPrice(price);
+                      if (coffeeCounts[name] === 0) {
+                        removeSummary(name);
+                        delete coffeeCounts[name];
+                      } else {
+                        updateSummary(name, displayName, coffeeCounts[name]);
+                      }
+                    }
+                  });
+
+                  // summary에 해당 커피 항목 추가/업데이트
+                  function updateSummary(name, displayName, count) {
+                    let row = summaryList.querySelector(`[data-name="${name}"]`);
+                    if (!row) {
+                      // 없으면 새로 추가
+                      row = document.createElement('div');
+                      row.className = 'row';
+                      row.setAttribute('data-name', name.toLowerCase());
+                      row.innerHTML = `<h6 class="p-0 summary-coffee-name">${displayName} <span class="product-count badge bg-dark" data-name="${name.toLowerCase()}">${count}개</span></h6>`;
+                      summaryList.appendChild(row);
+                    } else {
+                      // 있으면 개수만 업데이트
+                      row.querySelector('.product-count').textContent = `${count}개`;
+                    }
+                  }
+
+                  // summary에서 해당 커피 항목 삭제
+                  function removeSummary(name) {
+                    const row = summaryList.querySelector(`[data-name="${name}"]`);
+                    if (row) summaryList.removeChild(row);
+                  }
+
+                  function subtractTotalPrice(price) {
+                    const currentPrice = parseInt(document.getElementById("total-price").textContent);
+                    if (currentPrice - price >= 0) {
+                      document.getElementById("total-price").textContent = `${currentPrice - price}원`;
+                    } else {
+                      console.error("총 가격이 음수입니다.")
+                    }
+                  }
+                  function addTotalPrice(price) {
+                    const currentPrice = parseInt(document.getElementById("total-price").textContent);
+                    document.getElementById("total-price").textContent = `${currentPrice + price}원`;
+
+                  }
+
+                  ul.appendChild(li);
+                });
+              });
+        </script>
     </div>
 
     <div class="col-md-4 summary p-4">
@@ -72,17 +131,11 @@
         <h5 class="m-0 p-0"><b>Summary</b></h5>
       </div>
       <hr>
-      <div class="row">
-        <h6 class="p-0">Columbia Nariñó <span class="product-count badge bg-dark text-" data-name="columbia">0개</span></h6>
-      </div>
-      <div class="row">
-        <h6 class="p-0">Brazil Serra Do Caparaó <span class="product-count badge bg-dark" data-name="brazil">0개</span></h6>
-      </div>
-      <div class="row">
-        <h6 class="p-0">Arabica <span class="product-count badge bg-dark" data-name="arabica">0개</span></h6>
+
+      <div id="summary-list">
       </div>
 
-      <form>
+      <form id="delivery-info">
         <div class="mb-3">
           <label for="email" class="form-label">이메일</label>
           <input type="email" class="form-control mb-1" id="email">
@@ -92,15 +145,15 @@
           <input type="text" class="form-control mb-1" id="address">
         </div>
         <div class="mb-3">
-          <label for="postcode" class="form-label">우편번호</label>
-          <input type="text" class="form-control" id="postcode">
+          <label for="postnum" class="form-label">우편번호</label>
+          <input type="text" class="form-control" id="postnum">
         </div>
         <div class="inform">당일 오후 2시 이후의 주문은 다음날 배송을 시작합니다.</div>
       </form>
 
       <div class="row pt-2 pb-2 border-top">
         <h5 class="col">총 금액</h5>
-        <h5 class="col text-end">15000원</h5>
+        <h5 class="col text-end" id="total-price">0원</h5>
       </div>
 
       <button class="btn btn-dark col-12 order-btn">결제하기</button>
@@ -110,50 +163,35 @@
 </div>
 
 <script>
-  // + 누르면 개수 증가
-  document.querySelectorAll('.add-button').forEach(function(btn) {
-    btn.addEventListener('click', function(e) {
-      e.preventDefault(); // a태그 새로고침 방지
-
-      // 1. 어떤 커피인지 data-name으로 구분
-      // (li에 data-name이 있다면)
-      const li = btn.closest('li');
-      const coffeeName = li.getAttribute('data-name');
-
-      // 2. summary에서 같은 data-name을 가진 .product-count 찾기
-      const summaryCount = document.querySelector('.summary .product-count[data-name="' + coffeeName + '"]');
-      if (summaryCount) {
-        // "2개" → 2
-        let count = parseInt(summaryCount.textContent);
-        summaryCount.textContent = (count + 1) + "개";
-      }
-    });
-  });
-
-  // - 누르면 개수 증가
-  document.querySelectorAll('.del-button').forEach(function(btn) {
-    btn.addEventListener('click', function(e) {
-      e.preventDefault(); // a태그 새로고침 방지
-
-      const li = btn.closest('li');
-      const coffeeName = li.getAttribute('data-name');
-
-      const summaryCount = document.querySelector('.summary .product-count[data-name="' + coffeeName + '"]');
-      if (summaryCount) {
-        let count = parseInt(summaryCount.textContent);
-        if (count >= 1){
-          summaryCount.textContent = (count - 1) + "개";
-        }
-      }
-    });
-  });
-
   // 결제하기 눌렀을 떄 팝업 메세지 생성
   document.querySelector('.order-btn').addEventListener('click', function() {
+
+    const totalPrice = parseInt(document.getElementById("total-price").textContent);
+    const email = document.getElementById('email').value;
+    const address = document.getElementById('address').value;
+    const postnum = document.getElementById('postnum').value;
+    console.log(totalPrice);
+
+    if (totalPrice === 0){
+      alert(`상품을 먼저 담아주세요.`);
+      return;
+    }
+    else if (!email || !address || !postnum) {
+      alert(`모든 칸에 정보를 채워주시기 바랍니다.`);
+      return;
+    }
+    if (!email.includes('@')) {
+      alert(`올바른 이메일 형식이 아닙니다.`);
+      return;
+    }
+
     const counts = {};
-    document.querySelectorAll('.product-count').forEach(function(span) {
+    document.querySelectorAll('#summary-list .product-count').forEach(function(span) {
       const name = span.dataset.name;
-      counts[name] = parseInt(span.textContent);
+      const count = parseInt(span.textContent);
+      if (count > 0) { // 0개는 주문에 포함하지 않음
+        counts[name] = count;
+      }
     });
 
     const message = "주문이 성공적으로 완료되었습니다.\n\n" +
@@ -161,19 +199,53 @@
 
     const contents = [];
     for (const [key, value] of Object.entries(counts)) {
-      contents.push(key + ":" + value + "개");
+      contents.push(`${key}: ${value}`);
     }
+    contents.push(`총 금액 : ${totalPrice}원`);
 
 
     const deliveryMessage = "\n\n ----- 배송 정보 확인 -----\n"
     const deliveryInfo = [];
-    deliveryInfo.push("이메일 : " + document.getElementById('email').value);
-    deliveryInfo.push("주소 : " + document.getElementById('address').value);
-    deliveryInfo.push("우편번호 : " + document.getElementById('postcode').value);
+    deliveryInfo.push("이메일 : " + email);
+    deliveryInfo.push("주소 : " + address);
+    deliveryInfo.push("우편번호 : " + postnum);
 
     const orderJson = message + contents.join("\n") + deliveryMessage + deliveryInfo.join("\n");
 
-    alert(orderJson);
+    const coffeeList = Object.entries(counts).map(([name, quantity]) => ({
+      coffeeName: name,
+      quantity: quantity
+    }));
+
+    const data = {
+      "coffee-list": coffeeList,
+      "email": document.getElementById('email').value,
+      "address": document.getElementById('address').value,
+      "postnum": document.getElementById('postnum').value,
+      "price": totalPrice,
+    };
+
+    console.log(data);
+    fetch('http://localhost:8080/coffee', {
+      method: "POST",
+      headers: {
+        //내가 보내는 요청의 본문에는 JSON형식이 들어있다는 걸 알려줘야 함
+        "Content-Type": "application/json",
+      },
+      // global.js - getPostValues()에 보면 title, content author 모아놓은 json 미리 만들어놨음
+      // 이 내용을 받을 곳은 java라서.. 알아들을 수 있게 객체가 아닌 string으로 보내야 한다
+      body: JSON.stringify(data)
+    })
+        .then(
+            resp => resp.json()
+        )
+        .then(data => {
+          console.log("createOrder()");
+          console.log(data);
+          alert(orderJson);
+        })
+        .catch(err => console.log(err)); //요청처리 에러났을때 실행
+
   });
 
 </script>

@@ -3,6 +3,7 @@ package io.sleepyhoon.project1.coffeetests;
 import io.sleepyhoon.project1.dao.CoffeeRepository;
 import io.sleepyhoon.project1.dto.CoffeeRequestDto;
 import io.sleepyhoon.project1.entity.Coffee;
+import io.sleepyhoon.project1.exception.CoffeeInvalidRequestException;
 import io.sleepyhoon.project1.exception.CoffeeNotFoundException;
 import io.sleepyhoon.project1.service.CoffeeService;
 import lombok.extern.slf4j.Slf4j;
@@ -111,13 +112,14 @@ class CoffeeServiceTest {
     void update_when() {
         // given
         Long coffeeId = 1L;
+        Coffee existingCoffee = createCoffeeWithId(coffeeId,"Latte",4000,"개쩌는 사진링크");
 
-        Coffee existingCoffee = new Coffee("Latte",4000,"개쩌는 사진링크");
-//        existingCoffee.setId(coffeeId);
 
-        CoffeeRequestDto requestDto = new CoffeeRequestDto();
-        requestDto.setName("Cappuccino");
-        requestDto.setPrice(4500);
+        CoffeeRequestDto requestDto = CoffeeRequestDto.builder()
+                .name("newLatte")
+                .price(1000)
+                .img("새로운 라테 사진")
+                .build();
 
         // findById가 호출되면 existingCoffee를 반환
         when(coffeeRepository.findById(coffeeId)).thenReturn(Optional.of(existingCoffee));
@@ -126,14 +128,64 @@ class CoffeeServiceTest {
         Coffee result = coffeeService.update(coffeeId, requestDto);
 
         // then
-        assertEquals("Cappuccino", result.getName());
-        assertEquals(4500, result.getPrice());
+        assertEquals("newLatte", result.getName());
+        assertEquals(1000, result.getPrice());
+        assertEquals("새로운 라테 사진", result.getImg());
 
         // 실제로 커피 객체가 수정되었는지도 확인
-        assertEquals("Cappuccino", existingCoffee.getName());
-        assertEquals(4500, existingCoffee.getPrice());
+        assertEquals("newLatte", existingCoffee.getName());
+        assertEquals(1000, existingCoffee.getPrice());
 
         // 리포지토리 호출 확인
         verify(coffeeRepository).findById(coffeeId);
     }
+
+    @Test
+    @DisplayName("커피이름이 빈칸일때 예외처리")
+    void throwExceptionWhenNameIsEmpty() throws Exception {
+        //given
+        CoffeeRequestDto requestDto = CoffeeRequestDto.builder()
+                .name("")
+                .price(1000)
+                .img("대충이미지")
+                .build();
+
+        //when & then
+        assertThrows(CoffeeInvalidRequestException.class, () -> {
+            coffeeService.save(requestDto);
+        });
+    }
+
+    @Test
+    @DisplayName("커피이름이 Null일때 예외처리")
+    void throwExceptionWhenNameIsNull() throws Exception {
+        //given
+        CoffeeRequestDto requestDto = CoffeeRequestDto.builder()
+                .name(null)
+                .price(1000)
+                .img("대충이미지")
+                .build();
+
+        //when & then
+        assertThrows(CoffeeInvalidRequestException.class, () -> {
+            coffeeService.save(requestDto);
+        });
+    }
+
+    @Test
+    @DisplayName("커피이름이 공백으로만 이루어졌을때 예외처리")
+    void throwExceptionWhenNameIsOnlySpaces() throws Exception {
+        //given
+        CoffeeRequestDto requestDto = CoffeeRequestDto.builder()
+                .name("       ")
+                .price(1000)
+                .img("대충이미지")
+                .build();
+
+        //when & then
+        assertThrows(CoffeeInvalidRequestException.class, () -> {
+            coffeeService.save(requestDto);
+        });
+    }
+
 }
