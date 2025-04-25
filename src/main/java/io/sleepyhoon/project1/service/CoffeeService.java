@@ -66,16 +66,15 @@ public class CoffeeService {
             throw new CoffeeInvalidRequestException();
         }
 
+        checkDuplication(requestDto.getName());
+
         Coffee newCoffee = Coffee.builder()
                 .name(requestDto.getName())
                 .price(requestDto.getPrice())
                 .img(requestDto.getImg())
                 .build();
 
-        checkDuplication(newCoffee.getName());
-
         return coffeeRepository.save(newCoffee).getId();
-
     }
 
     //requestDto 유효성 검사 메소드(null값 유무, 빈칸, 공백만 포함)
