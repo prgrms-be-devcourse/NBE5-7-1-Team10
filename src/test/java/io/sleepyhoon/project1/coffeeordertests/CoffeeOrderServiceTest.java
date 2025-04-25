@@ -98,7 +98,7 @@ public class CoffeeOrderServiceTest {
 
         //when
         List<CoffeeOrder> actualCoffeeOrders=
-                coffeeOrderService.save(coffeeOrderRequestDtoMap, testOrder).getCoffeeOrders();
+                coffeeOrderService.save(coffeeOrderRequestDtoMap, testOrder);
         //순서보장이 안되서 테스트 실패하는 경우가 있어서 정렬 후 검증
         actualCoffeeOrders.sort(Comparator.comparing(o -> o.getCoffee().getName()));
 
@@ -109,8 +109,6 @@ public class CoffeeOrderServiceTest {
             assertEquals(expectedCoffeeOrders.get(i).getCoffee().getName(), actualCoffeeOrders.get(i).getCoffee().getName());
             assertEquals(expectedCoffeeOrders.get(i).getQuantity(), actualCoffeeOrders.get(i).getQuantity());
         }
-
-        log.info("actualCoffeeOrders = {}", actualCoffeeOrders);
 
     }
 

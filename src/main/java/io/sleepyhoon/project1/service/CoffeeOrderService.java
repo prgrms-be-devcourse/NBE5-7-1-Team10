@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -20,9 +21,9 @@ public class CoffeeOrderService {
     private final CoffeeService coffeeService;
     private final CoffeeOrderRepository coffeeOrderRepository;
 
-    public Order save(Map<String, Integer> coffeeOrderMap, Order orderRequest) {
+    public List<CoffeeOrder> save(Map<String, Integer> coffeeOrderMap, Order orderRequest) {
 
-        List<CoffeeOrder> coffeeOrderList = new LinkedList<>();
+        List<CoffeeOrder> coffeeOrderList = new ArrayList<>();
         for(Map.Entry<String, Integer> entry : coffeeOrderMap.entrySet()) {
             String coffeeName = entry.getKey();
             Integer coffeeQuantity = entry.getValue();
@@ -38,8 +39,9 @@ public class CoffeeOrderService {
             CoffeeOrder saved = coffeeOrderRepository.save(coffeeOrder);
             coffeeOrderList.add(saved);
         }
-        orderRequest.setCoffeeOrders(coffeeOrderList);
-        return orderRequest;
+        return coffeeOrderList;
     }
 
 }
+
+
