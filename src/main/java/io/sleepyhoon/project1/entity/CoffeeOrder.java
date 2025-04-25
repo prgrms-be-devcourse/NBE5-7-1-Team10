@@ -28,11 +28,15 @@ public class CoffeeOrder {
     @Column(nullable = false)
     private Integer quantity;
 
+    @Column(nullable = false)
+    private Integer subtotalPrice;
+
     @Builder
     public CoffeeOrder(Coffee coffee, Order order, Integer quantity) {
         this.coffee = coffee;
         this.order = order;
         this.quantity = quantity;
+        this.subtotalPrice = coffee.getPrice() * quantity;
     }
 
 }

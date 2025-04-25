@@ -1,6 +1,7 @@
 package io.sleepyhoon.project1.service;
 
 import io.sleepyhoon.project1.dao.CoffeeOrderRepository;
+import io.sleepyhoon.project1.dto.CoffeeListDto;
 import io.sleepyhoon.project1.dto.CoffeeOrderDto;
 import io.sleepyhoon.project1.entity.Coffee;
 import io.sleepyhoon.project1.entity.CoffeeOrder;
@@ -21,12 +22,13 @@ public class CoffeeOrderService {
     private final CoffeeService coffeeService;
     private final CoffeeOrderRepository coffeeOrderRepository;
 
-    public List<CoffeeOrder> genCoffeeOrderList(Map<String, Integer> coffeeOrderMap, Order orderRequest) {
+    public List<CoffeeOrder> genCoffeeOrderList(List<CoffeeListDto> requestCoffeeList, Order orderRequest) {
 
-        List<CoffeeOrder> coffeeOrderList = new ArrayList<>();
-        for(Map.Entry<String, Integer> entry : coffeeOrderMap.entrySet()) {
-            String coffeeName = entry.getKey();
-            Integer coffeeQuantity = entry.getValue();
+        List<CoffeeOrder> responseCoffeeOrderList = new ArrayList<>();
+        for(CoffeeListDto coffeeListDto : requestCoffeeList) {
+
+            String coffeeName = coffeeListDto.getCoffeeName();
+            Integer coffeeQuantity = coffeeListDto.getQuantity();
 
             Coffee coffeeInOrder = coffeeService.findFirstCoffeeByName(coffeeName);
 
@@ -37,10 +39,11 @@ public class CoffeeOrderService {
                     .build();
 
             //CoffeeOrder saved = coffeeOrderRepository.save(coffeeOrder);
-            coffeeOrderList.add(coffeeOrder);
+            responseCoffeeOrderList.add(coffeeOrder);
         }
-        return coffeeOrderList;
+        return responseCoffeeOrderList;
     }
+
 
 }
 

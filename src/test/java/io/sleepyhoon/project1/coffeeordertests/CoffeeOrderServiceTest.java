@@ -3,6 +3,7 @@ package io.sleepyhoon.project1.coffeeordertests;
 import io.sleepyhoon.project1.dao.CoffeeOrderRepository;
 import io.sleepyhoon.project1.dao.CoffeeRepository;
 import io.sleepyhoon.project1.dao.OrderRepository;
+import io.sleepyhoon.project1.dto.CoffeeListDto;
 import io.sleepyhoon.project1.dto.CoffeeOrderDto;
 import io.sleepyhoon.project1.dto.CoffeeRequestDto;
 import io.sleepyhoon.project1.entity.Coffee;
@@ -80,9 +81,9 @@ public class CoffeeOrderServiceTest {
                 .build();
         orderRepository.save(testOrder);
 
-        Map<String, Integer> coffeeOrderRequestDtoMap = Map.of(
-                "test1",3
-                ,"test2",2
+        List<CoffeeListDto> coffeeOrderRequestDtoMap = List.of(
+                new CoffeeListDto("test1",3),
+                new CoffeeListDto("test2", 2)
         );
 
         CoffeeOrder coffeeOrder1 = genCoffeeOrder(test1, testOrder, 3);
@@ -103,7 +104,6 @@ public class CoffeeOrderServiceTest {
         //순서보장이 안되서 테스트 실패하는 경우가 있어서 정렬 후 검증
         actualCoffeeOrders.sort(Comparator.comparing(o -> o.getCoffee().getName()));
 
-
         //then
         assertEquals(expectedCoffeeOrders.size(), actualCoffeeOrders.size());
         for (int i = 0; i < expectedCoffeeOrders.size(); i++) {
@@ -111,6 +111,10 @@ public class CoffeeOrderServiceTest {
             assertEquals(expectedCoffeeOrders.get(i).getQuantity(), actualCoffeeOrders.get(i).getQuantity());
         }
 
+        //가격소계 합 확인
+        log.info("actualCoffeeOrders.get(0).getCoffee().getPrice() = {}", actualCoffeeOrders.get(0).getCoffee().getPrice());
+        log.info("actualCoffeeOrders.get(0).getQuantity() = {}", actualCoffeeOrders.get(0).getQuantity());
+        log.info("actualCoffeeOrders.get(0).getSubtotalPrice() = {}", actualCoffeeOrders.get(0).getSubtotalPrice());
     }
 
 }
