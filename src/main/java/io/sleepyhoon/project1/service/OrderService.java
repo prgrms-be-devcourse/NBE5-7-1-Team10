@@ -38,10 +38,16 @@ public class OrderService {
                         .build()
         );
 
-        OrderRequestDto orderDto = findById(order.getId());
-        orderDto.setCoffeeList(request.getCoffeeList());
+        List<CoffeeOrder> coffeeOrders = genCoffeeOrderList(request.getCoffeeList(), order);
 
-        return orderDto;
+        order.setCoffeeOrders(coffeeOrders);
+        OrderRequestDto orderRequestDto = new OrderRequestDto(order.getPrice(), order.getEmail(), order.getAddress(), order.getPostNum());
+        List<CoffeeListDto> coffeeList = orderRequestDto.getCoffeeList();
+
+        for (CoffeeOrder coffeeOrder : coffeeOrders) {
+            coffeeList.add(new CoffeeListDto(coffeeOrder.getCoffee().getName(), coffeeOrder.getQuantity()));
+        }
+        return orderRequestDto;
     }
 
     public List<OrderRequestDto> findAllOrdersByEmail(String email) {
