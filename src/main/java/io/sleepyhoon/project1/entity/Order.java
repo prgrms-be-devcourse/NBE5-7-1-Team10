@@ -25,6 +25,10 @@ public class Order {
     @Column(nullable = false)
     private String postNum;
 
+    @Setter
+    @Column(nullable = false)
+    private Integer price;
+
     @Column(nullable = false)
     private LocalDateTime orderedAt = LocalDateTime.now();
 
@@ -37,10 +41,11 @@ public class Order {
     private List<CoffeeOrder> coffeeOrders;
 
     @Builder
-    public Order(String email, String address, String postNum) {
+    public Order(String email, String address, String postNum, Integer price) {
         this.email = email;
         this.address = address;
         this.postNum = postNum;
+        this.price = price;
     }
 
 }

@@ -11,3 +11,4 @@ public class CoffeeListDto {
     private String coffeeName;
     private Integer quantity;
 }
+
