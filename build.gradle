@@ -31,6 +31,14 @@ dependencies {
 
     runtimeOnly 'com.mysql:mysql-connector-j'
 
+    // 로그인을 위해 추가
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+    testImplementation 'org.springframework.security:spring-security-test'
+
+    // 필수입력값 검증을 위해 추가
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
     compileOnly "org.projectlombok:lombok"
     annotationProcessor "org.projectlombok:lombok"
     testCompileOnly "org.projectlombok:lombok"

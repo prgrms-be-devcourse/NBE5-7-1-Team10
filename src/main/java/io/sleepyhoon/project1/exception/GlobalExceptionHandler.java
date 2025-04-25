@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -31,4 +34,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
 
     }
+
+//    /*-------------------------------------------------------------*/
+//    @ResponseStatus(HttpStatus.BAD_REQUEST)
+//    @ExceptionHandler(MemberDuplicateException.class)
+//    public ResponseEntity<ErrorResponseDto> handleMemberDuplicateException(MemberDuplicateException e) {
+//        ErrorResponseDto response = new ErrorResponseDto("MEMBER_INVALID_REQUEST", e.getMessage(), 400);
+//        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+//    }
 }
