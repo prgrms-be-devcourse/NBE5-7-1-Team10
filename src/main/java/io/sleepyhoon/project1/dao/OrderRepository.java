@@ -20,14 +20,14 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findByEmail(String email);
 
 
-    List<Order> findByIsProcessedTrueAndOrderedAtBetween(
+    List<Order> findByIsProcessedFalseAndOrderedAtBetween(
             LocalDateTime start, LocalDateTime end);
 
 
 
     @Modifying
     @Transactional
-    @Query("UPDATE Order o SET o.isProcessed = false WHERE o.id IN :ids")
-    int markProcessedFalseByIdIn(@Param("ids") List<Long> ids);
+    @Query("UPDATE Order o SET o.isProcessed = true WHERE o.id IN :ids")
+    int markProcessedTrueByIdIn(@Param("ids") List<Long> ids);
 
 }

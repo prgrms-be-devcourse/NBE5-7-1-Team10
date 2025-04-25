@@ -37,7 +37,7 @@ public class DailyOrderSummarySchedulerService {
 
 
         List<Order> orders =
-                orderRepository.findByIsProcessedTrueAndOrderedAtBetween(start, end);
+                orderRepository.findByIsProcessedFalseAndOrderedAtBetween(start, end);
 
         if (orders.isEmpty()) {
             log.info("오늘 02-14시 주문 없음 → 메일 발송 생략");
@@ -55,16 +55,16 @@ public class DailyOrderSummarySchedulerService {
             try {
                 orderMailService.sendDailyOrderSummary(email, summaries);
             } catch (MessagingException e) {
-                log.error("전체주문내역 메일 실패 – email={}, error={}", email, e.getMessage(), e);
+                log.error("전체주문내역 메일 전송  실패 – email={}, error={}", email, e.getMessage(), e);
             }
         });
 
-        // isProcessed=false로 일괄 업데이트
+        // isProcessed=True로 일괄 업데이트
         List<Long> ids = orders.stream()
                 .map(Order::getId)
                 .toList();
 
-        int updated = orderRepository.markProcessedFalseByIdIn(ids);
-        log.info("isProcessed=false 업데이트 {}건 완료", updated);
+        int updated = orderRepository.markProcessedTrueByIdIn(ids);
+        log.info("isProcessed=True 업데이트 {}건 완료", updated);
     }
 }
