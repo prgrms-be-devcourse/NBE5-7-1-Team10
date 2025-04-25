@@ -17,12 +17,9 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     Optional<Order> findByEmailAndAddress(String email, String Address);
 
-    @Query("SELECT new io.sleepyhoon.project1.dto.OrderDto(o.email, o.address, o.postNum) " +
-            "FROM Order o " +
-            "WHERE o.email = :email")
-    List<OrderDto> findByEmail(@Param("email")String email);
+    List<Order> findByEmail(@Param("email")String email);
 
-    @Query("SELECT new io.sleepyhoon.project1.dto.OrderRequestDto(o.email, o.address, o.postNum) " +
+    @Query("SELECT new io.sleepyhoon.project1.dto.OrderRequestDto(o.price,o.email, o.address, o.postNum) " +
             "FROM Order o " +
             "WHERE o.id = :id")
     Optional<OrderRequestDto> findDtoById(@Param("id")Long id);
@@ -33,7 +30,4 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             "JOIN co.coffee c " +
             "WHERE o.id = :id")
     List<CoffeeListDto> findCoffeeListByOrderId(@Param("id")Long id);
-
-    @Query("SELECT c.price FROM Order o JOIN o.coffeeOrders co JOIN co.coffee c WHERE o.id = :id")
-    Integer getPriceById(@Param("id")Long id);
 }

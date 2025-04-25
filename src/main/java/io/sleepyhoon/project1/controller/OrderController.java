@@ -18,8 +18,8 @@ public class OrderController {
     private final OrderService orderService;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<OrderDto>>> getAllOrders(@RequestParam String email) {
-        List<OrderDto> orders = orderService.findAllOrdersByEmail(email);
+    public ResponseEntity<ApiResponse<List<OrderRequestDto>>> getAllOrders(@RequestParam String email) {
+        List<OrderRequestDto> orders = orderService.findAllOrdersByEmail(email);
         return ResponseEntity.ok(new ApiResponse<>(orders, "조회 성공", 200));
     }
 
