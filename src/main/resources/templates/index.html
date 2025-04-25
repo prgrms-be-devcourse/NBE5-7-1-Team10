@@ -212,8 +212,13 @@
 
     const orderJson = message + contents.join("\n") + deliveryMessage + deliveryInfo.join("\n");
 
+    const coffeeList = Object.entries(counts).map(([name, quantity]) => ({
+      coffeeName: name,
+      quantity: quantity
+    }));
+
     const data = {
-      "coffee-list": counts,
+      "coffee-list": coffeeList,
       "email": document.getElementById('email').value,
       "address": document.getElementById('address').value,
       "postnum": document.getElementById('postnum').value,
