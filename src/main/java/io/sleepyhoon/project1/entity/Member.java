@@ -1,10 +1,7 @@
 package io.sleepyhoon.project1.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @Entity
@@ -27,7 +24,8 @@ public class Member {
     @Column(nullable = false)
     private String password;
 
-    private final String role = "USER";
+    @Setter
+    private String role = "USER";
 
     @Builder
     public Member(String email, String username, String password) {
