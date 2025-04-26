@@ -4,6 +4,7 @@ import io.sleepyhoon.project1.dao.CoffeeRepository;
 import io.sleepyhoon.project1.dto.CoffeeRequestDto;
 import io.sleepyhoon.project1.dto.CoffeeResponseDto;
 import io.sleepyhoon.project1.entity.Coffee;
+import io.sleepyhoon.project1.entity.CoffeeImg;
 import io.sleepyhoon.project1.exception.CoffeeInvalidRequestException;
 import io.sleepyhoon.project1.exception.CoffeeDuplicationException;
 import io.sleepyhoon.project1.exception.CoffeeNotFoundException;
@@ -19,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CoffeeService {
     private final CoffeeRepository coffeeRepository;
+    private final CoffeeImgService coffeeImgService;
 
     //Coffee ID로 커피 찾아 반환하는 메소드(Optional로 반환)
     public Coffee findById(Long id) {
@@ -40,15 +42,23 @@ public class CoffeeService {
         }
     }
 
+    //Coffee가 가지고 있는 CoffeeImg에서 Url을 뽑아 List로 변환
+    public List<String> findCoffeeImages(Coffee coffee) {
+        return coffee.getImages().stream()
+                .map(CoffeeImg::getUrl)
+                .toList();
+    }
+
     public List<CoffeeResponseDto> findEveryCoffee() {
         List<Coffee> coffeeList = coffeeRepository.findAll();
         List<CoffeeResponseDto> coffeeListDto = new ArrayList<>();
         for(Coffee coffee : coffeeList) {
+            List<String> images = findCoffeeImages(coffee);
             CoffeeResponseDto responseCoffeeDto = CoffeeResponseDto.builder()
                     .id(coffee.getId())
                     .name(coffee.getName())
                     .price(coffee.getPrice())
-                    .img(coffee.getImg())
+                    .images(images)
                     .build();
 
             coffeeListDto.add(responseCoffeeDto);
@@ -68,10 +78,11 @@ public class CoffeeService {
 
         checkDuplication(requestDto.getName());
 
+        List<CoffeeImg> coffeeImgs = coffeeImgService.saveImg(requestDto.getImages());
         Coffee newCoffee = Coffee.builder()
                 .name(requestDto.getName())
                 .price(requestDto.getPrice())
-                .img(requestDto.getImg())
+                .images(coffeeImgs)
                 .build();
 
         return coffeeRepository.save(newCoffee).getId();
@@ -101,8 +112,9 @@ public class CoffeeService {
             targetCoffee.setPrice(requestDto.getPrice());
         }
 
-        if (requestDto.getImg() != null) {
-            targetCoffee.setImg(requestDto.getImg());
+        if (requestDto.getImages() != null) {
+            List<CoffeeImg> coffeeImgs = coffeeImgService.saveImg(requestDto.getImages());
+            targetCoffee.setImages(coffeeImgs);
         }
 
         return targetCoffee;
