@@ -3,6 +3,7 @@ package io.sleepyhoon.project1.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -11,7 +12,7 @@ import java.util.List;
 public class OrderRequestDto {
 
     @JsonProperty("coffee-list") // JSON의 키와 다른 경우 매핑
-    private List<CoffeeListDto> coffeeList;
+    private List<CoffeeListDto> coffeeList = new ArrayList<>();
 
     private Integer price;
     private String email;
@@ -24,5 +25,7 @@ public class OrderRequestDto {
         this.address = address;
         this.postNum = postNum;
     }
+
+
 }
 

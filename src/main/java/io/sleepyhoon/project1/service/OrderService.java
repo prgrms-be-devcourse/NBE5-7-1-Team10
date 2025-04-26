@@ -27,6 +27,7 @@ public class OrderService {
 
 
     private final OrderRepository orderRepository;
+    private final CoffeeOrderService coffeeOrderService;
 
     public OrderRequestDto save(OrderRequestDto request)    {
         Order order = orderRepository.save(
@@ -38,9 +39,10 @@ public class OrderService {
                         .build()
         );
 
-        List<CoffeeOrder> coffeeOrders = genCoffeeOrderList(request.getCoffeeList(), order);
+        List<CoffeeOrder> coffeeOrders = coffeeOrderService.genCoffeeOrderList(request.getCoffeeList(), order);
 
         order.setCoffeeOrders(coffeeOrders);
+
         OrderRequestDto orderRequestDto = new OrderRequestDto(order.getPrice(), order.getEmail(), order.getAddress(), order.getPostNum());
         List<CoffeeListDto> coffeeList = orderRequestDto.getCoffeeList();
 
