@@ -19,11 +19,5 @@ public class OrderRequestDto {
     private String address;
     private String postNum;
 
-    public OrderRequestDto(Integer price, String email, String address, String postNum) {
-        this.price = price;
-        this.email = email;
-        this.address = address;
-        this.postNum = postNum;
-    }
 }
 

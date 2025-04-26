@@ -1,7 +1,12 @@
 package io.sleepyhoon.project1.service;
 
 import io.sleepyhoon.project1.dao.OrderRepository;
+import io.sleepyhoon.project1.dto.CoffeeListDto;
 import io.sleepyhoon.project1.dto.OrderDto;
+import io.sleepyhoon.project1.dto.OrderRequestDto;
+import io.sleepyhoon.project1.dto.OrderResponseDto;
+import io.sleepyhoon.project1.entity.Coffee;
+import io.sleepyhoon.project1.entity.CoffeeOrder;
 import io.sleepyhoon.project1.entity.Order;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,77 +34,87 @@ class OrderServiceTests {
     @Mock
     OrderRepository orderRepository;
 
-    static OrderDto dto;
-    static Order savedOrder;
-
-    @BeforeEach
-    void init() throws Exception {
-        // given
-        dto = new OrderDto("ex@example.com", "경기도", "12345");
-
-        savedOrder = Order.builder()
-                .email(dto.getEmail())
-                .address(dto.getAddress())
-                .postNum(dto.getPostNum())
-                .build();
-
-        // Order객체 Id 강제 설정
-        Field idField1 = Order.class.getDeclaredField("id");
-        idField1.setAccessible(true);
-        idField1.set(savedOrder, 1L);
-    }
-
-    @Test
-    @DisplayName("입력한 주문이 존재할 때 저장되는 경우")
-    void saveExistOrderTest() throws Exception {
-
-        when(orderRepository.findByEmailAndAddress(dto.getEmail(),dto.getAddress())).thenReturn(Optional.of(savedOrder));
-
-        // when
-        Long firstCall = orderService.save(dto);
-        Long secondCall = orderService.save(dto);
-
-        // then
-        assertThat(firstCall).isEqualTo(secondCall);
-        verify(orderRepository, never()).save(any());
-
-    }
-
-    @Test
-    @DisplayName("주문이 존재하지 않을 때 저장되는 경우")
-    void saveNotExistOrderTest() throws Exception {
-
-        when(orderRepository.findByEmailAndAddress(dto.getEmail(),dto.getAddress())).thenReturn(Optional.empty());
-        when(orderRepository.save(any(Order.class))).thenReturn(savedOrder);
-
-        // when
-        Long result = orderService.save(dto);
-
-        // then
-        assertThat(result).isEqualTo(1L);
-    }
-
     @Test
     @DisplayName("email에 해당하는 주문 리스트 읽기")
     void readAllOrders() throws Exception {
 
         // given
-        OrderDto dto1 = new OrderDto("ex@example.com", "경기도", "12345");
-        OrderDto dto2 = new OrderDto("ex@example.com", "서울", "23132");
-        OrderDto dto3 = new OrderDto("ex@example.com", "제주도", "421521");
+        Coffee americano = genCoffee("아메리카노", 1500, "1");
+        Coffee cappuccino = genCoffee("카푸치노", 3000, "2");
 
-        List<OrderDto> orderList = List.of(dto1, dto2, dto3);
+        Order order1 = genOrder("ex@example.com", "경기도", "12345", 4500);
+        Order order2 = genOrder("test@test.com", "서울", "12242", 9000);
+        Order order3 = genOrder("ex@example.com", "부산", "14442", 13500);
+
+        Field idField = Order.class.getDeclaredField("id");
+        idField.setAccessible(true);
+        idField.set(order1, 1L);
+        idField.set(order2, 2L);
+        idField.set(order3, 3L);
+
+        List<CoffeeOrder> coffeeOrders1 = genCoffeeOrderList(genCoffeeOrder(americano, order1, 1), genCoffeeOrder(cappuccino, order1, 1));
+        List<CoffeeOrder> coffeeOrders2 = genCoffeeOrderList(genCoffeeOrder(americano, order1, 2), genCoffeeOrder(cappuccino, order1, 2));
+        List<CoffeeOrder> coffeeOrders3 = genCoffeeOrderList(genCoffeeOrder(americano, order1, 3), genCoffeeOrder(cappuccino, order1, 3));
+
+        order1.setCoffeeOrders(coffeeOrders1);
+        order2.setCoffeeOrders(coffeeOrders2);
+        order3.setCoffeeOrders(coffeeOrders3);
+
+        List<Order> orderList = List.of(order1, order3);
 
         when(orderRepository.findByEmail("ex@example.com")).thenReturn(orderList);
 
         // when
-        List<OrderDto> orders = orderService.findAllOrdersByEmail("ex@example.com");
+        List<OrderResponseDto> orders = orderService.findAllOrdersByEmail("ex@example.com");
 
         // then
-        assertThat(orders.size()).isEqualTo(3);
-        assertThat(orders.get(0)).isEqualTo(dto1);
-        assertThat(orders.get(1)).isEqualTo(dto2);
-        assertThat(orders.get(2)).isEqualTo(dto3);
+        assertThat(orders.size()).isEqualTo(2);
+        assertThat(orders.get(0).getId()).isEqualTo(order1.getId());
+        assertThat(orders.get(1).getPrice()).isEqualTo(order3.getPrice());
+        assertThat(order1.getPrice()).isEqualTo(getPrice(coffeeOrders1));
+
+        assertThat(orders.get(1).getAddress()).isNotEqualTo(order1.getAddress());
+        assertThat(orders.get(1).getEmail()).isNotEqualTo(order2.getEmail());
+
+    }
+
+
+    private Coffee genCoffee(String coffeeName, Integer price, String img) {
+        return Coffee.builder()
+                .name(coffeeName)
+                .price(price)
+                .img(img)
+                .build();
+    }
+
+    private CoffeeOrder genCoffeeOrder(Coffee coffee, Order order, Integer quantity) {
+        return CoffeeOrder.builder()
+                .coffee(coffee)
+                .order(order)
+                .quantity(quantity)
+                .build();
+    }
+
+    private List<CoffeeOrder> genCoffeeOrderList(CoffeeOrder... coffeeOrders) {
+        return List.of(coffeeOrders);
+    }
+
+    private Order genOrder(String email, String address, String postNum, Integer price) {
+        return Order.builder()
+                .email(email)
+                .address(address)
+                .postNum(postNum)
+                .price(price)
+                .build();
+    }
+
+    private Integer getPrice(List<CoffeeOrder> coffeeOrders) {
+        Integer price = 0;
+
+        for (CoffeeOrder coffeeOrder : coffeeOrders) {
+            price += coffeeOrder.getCoffee().getPrice() * coffeeOrder.getQuantity();
+        }
+        return price;
     }
 
 }
