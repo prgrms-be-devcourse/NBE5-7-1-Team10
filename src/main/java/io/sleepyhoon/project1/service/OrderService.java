@@ -4,8 +4,8 @@ package io.sleepyhoon.project1.service;
 
 import io.sleepyhoon.project1.dao.OrderRepository;
 import io.sleepyhoon.project1.dto.CoffeeListDto;
-import io.sleepyhoon.project1.dto.OrderDto;
 import io.sleepyhoon.project1.dto.OrderRequestDto;
+import io.sleepyhoon.project1.dto.OrderResponseDto;
 import io.sleepyhoon.project1.entity.CoffeeOrder;
 import io.sleepyhoon.project1.entity.Order;
 import io.sleepyhoon.project1.exception.OrderNotFoundException;
@@ -16,8 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -27,8 +25,9 @@ public class OrderService {
 
 
     private final OrderRepository orderRepository;
+    private final CoffeeOrderService coffeeOrderService;
 
-    public OrderRequestDto save(OrderRequestDto request)    {
+    public OrderResponseDto save(OrderRequestDto request)    {
         Order order = orderRepository.save(
                 Order.builder()
                         .email(request.getEmail())
@@ -38,35 +37,35 @@ public class OrderService {
                         .build()
         );
 
-        List<CoffeeOrder> coffeeOrders = genCoffeeOrderList(request.getCoffeeList(), order);
+        List<CoffeeOrder> coffeeOrders = coffeeOrderService.genCoffeeOrderList(request.getCoffeeList(), order);
 
         order.setCoffeeOrders(coffeeOrders);
-        OrderRequestDto orderRequestDto = new OrderRequestDto(order.getPrice(), order.getEmail(), order.getAddress(), order.getPostNum());
-        List<CoffeeListDto> coffeeList = orderRequestDto.getCoffeeList();
+
+        OrderResponseDto orderResponseDto = new OrderResponseDto(order.getId(), order.getPrice(), order.getEmail(), order.getAddress(), order.getPostNum());
+        List<CoffeeListDto> coffeeList = orderResponseDto.getCoffeeList();
 
         for (CoffeeOrder coffeeOrder : coffeeOrders) {
             coffeeList.add(new CoffeeListDto(coffeeOrder.getCoffee().getName(), coffeeOrder.getQuantity()));
         }
-        return orderRequestDto;
+        return orderResponseDto;
     }
 
-    public List<OrderRequestDto> findAllOrdersByEmail(String email) {
+    public List<OrderResponseDto> findAllOrdersByEmail(String email) {
         List<Order> orderList = orderRepository.findByEmail(email);
 
-        List<OrderRequestDto> orderRequestDtoList = new ArrayList<>();
+        List<OrderResponseDto> orderResponseDtoList = new ArrayList<>();
 
         for (Order order : orderList) {
-            OrderRequestDto orderRequestDto = new OrderRequestDto(order.getPrice(), order.getEmail(), order.getAddress(), order.getPostNum());
-            orderRequestDto.setCoffeeList(orderRepository.findCoffeeListByOrderId(order.getId()));
-            log.info("orderRepository.findCoffeeListByOrderId(order.getId()) = {}", orderRepository.findCoffeeListByOrderId(order.getId()));
-            orderRequestDtoList.add(orderRequestDto);
+            OrderResponseDto orderResponseDto = new OrderResponseDto(order.getId(), order.getPrice(), order.getEmail(), order.getAddress(), order.getPostNum());
+            orderResponseDto.setCoffeeList(orderRepository.findCoffeeListByOrderId(order.getId()));
+            orderResponseDtoList.add(orderResponseDto);
         }
 
-        return orderRequestDtoList;
+        return orderResponseDtoList;
     }
 
-    public OrderRequestDto findById(Long id) {
-        return orderRepository.findDtoById(id)
+    public OrderResponseDto findById(Long id) {
+        return orderRepository.findByIdAsDto(id)
                 .orElseThrow(() -> new OrderNotFoundException("Order not found"));
     }
 
