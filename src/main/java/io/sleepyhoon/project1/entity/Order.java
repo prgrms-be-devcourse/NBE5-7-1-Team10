@@ -48,15 +48,4 @@ public class Order {
         this.postNum = postNum;
         this.price = price;
     }
-
-    @Builder
-    public Order(String email, String address, String postNum, Integer price, LocalDateTime orderedAt, Boolean isProcessed, List<CoffeeOrder> coffeeOrders) {
-        this.email = email;
-        this.address = address;
-        this.postNum = postNum;
-        this.price = price;
-        this.orderedAt = orderedAt;
-        this.isProcessed = isProcessed;
-        this.coffeeOrders = coffeeOrders;
-    }
 }

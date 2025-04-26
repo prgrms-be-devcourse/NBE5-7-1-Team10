@@ -41,13 +41,24 @@ public class OrderService {
 
         order.setCoffeeOrders(coffeeOrders);
 
-        OrderResponseDto orderResponseDto = new OrderResponseDto(order.getId(), order.getPrice(), order.getEmail(), order.getAddress(), order.getPostNum());
-        List<CoffeeListDto> coffeeList = orderResponseDto.getCoffeeList();
+        return OrderResponseDto.builder()
+                 .id(order.getId())
+                 .price(order.getPrice())
+                 .email(order.getEmail())
+                 .address(order.getAddress())
+                 .postNum(order.getPostNum())
+                 .coffeeList(toDtoList(coffeeOrders))
+                 .build();
+
+    }
+
+    private List<CoffeeListDto> toDtoList(List<CoffeeOrder> coffeeOrders) {
+        List<CoffeeListDto> coffeeListDtos = new ArrayList<>();
 
         for (CoffeeOrder coffeeOrder : coffeeOrders) {
-            coffeeList.add(new CoffeeListDto(coffeeOrder.getCoffee().getName(), coffeeOrder.getQuantity()));
+            coffeeListDtos.add(new CoffeeListDto(coffeeOrder.getCoffee().getName(), coffeeOrder.getQuantity()));
         }
-        return orderResponseDto;
+        return coffeeListDtos;
     }
 
     public List<OrderResponseDto> findAllOrdersByEmail(String email) {
@@ -56,9 +67,15 @@ public class OrderService {
         List<OrderResponseDto> orderResponseDtoList = new ArrayList<>();
 
         for (Order order : orderList) {
-            OrderResponseDto orderResponseDto = new OrderResponseDto(order.getId(), order.getPrice(), order.getEmail(), order.getAddress(), order.getPostNum());
-            orderResponseDto.setCoffeeList(orderRepository.findCoffeeListByOrderId(order.getId()));
-            orderResponseDtoList.add(orderResponseDto);
+            orderResponseDtoList.add(
+                    OrderResponseDto.builder()
+                        .id(order.getId())
+                        .email(order.getEmail())
+                        .address(order.getAddress())
+                        .postNum(order.getPostNum())
+                        .price(order.getPrice())
+                        .coffeeList(toDtoList(order.getCoffeeOrders()))
+                        .build());
         }
 
         return orderResponseDtoList;
