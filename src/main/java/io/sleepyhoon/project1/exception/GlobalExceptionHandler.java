@@ -37,4 +37,10 @@ public class GlobalExceptionHandler {
         ErrorResponseDto response = new ErrorResponseDto("ORDER_NOT_FOUND", e.getMessage(), 404);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
+
+    @ExceptionHandler(OrderOwnerMismatchException.class)
+    public ResponseEntity<ErrorResponseDto> handleOrderOwnerMismatch(OrderOwnerMismatchException e) {
+        ErrorResponseDto response = new ErrorResponseDto("ORDER_OWNER_MISMATCH", e.getMessage(), 400);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
 }

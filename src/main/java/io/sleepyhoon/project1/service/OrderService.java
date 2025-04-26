@@ -9,6 +9,7 @@ import io.sleepyhoon.project1.dto.OrderResponseDto;
 import io.sleepyhoon.project1.entity.CoffeeOrder;
 import io.sleepyhoon.project1.entity.Order;
 import io.sleepyhoon.project1.exception.OrderNotFoundException;
+import io.sleepyhoon.project1.exception.OrderOwnerMismatchException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -47,12 +48,12 @@ public class OrderService {
                  .email(order.getEmail())
                  .address(order.getAddress())
                  .postNum(order.getPostNum())
-                 .coffeeList(toDtoList(coffeeOrders))
+                 .coffeeList(convertToDtoList(coffeeOrders))
                  .build();
 
     }
 
-    private List<CoffeeListDto> toDtoList(List<CoffeeOrder> coffeeOrders) {
+    private List<CoffeeListDto> convertToDtoList(List<CoffeeOrder> coffeeOrders) {
         List<CoffeeListDto> coffeeListDtos = new ArrayList<>();
 
         for (CoffeeOrder coffeeOrder : coffeeOrders) {
@@ -74,7 +75,7 @@ public class OrderService {
                         .address(order.getAddress())
                         .postNum(order.getPostNum())
                         .price(order.getPrice())
-                        .coffeeList(toDtoList(order.getCoffeeOrders()))
+                        .coffeeList(convertToDtoList(order.getCoffeeOrders()))
                         .build());
         }
 
@@ -82,16 +83,28 @@ public class OrderService {
     }
 
     public OrderResponseDto findById(Long id) {
-        return orderRepository.findByIdAsDto(id)
+        Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new OrderNotFoundException("Order not found"));
+
+        return OrderResponseDto.builder()
+                .id(order.getId())
+                .email(order.getEmail())
+                .address(order.getAddress())
+                .postNum(order.getPostNum())
+                .price(order.getPrice())
+                .coffeeList(convertToDtoList(order.getCoffeeOrders()))
+                .build();
     }
 
-    public void delete(String email, String address) {
+    public void delete(Long id, String email) {
 
-        Order findOrder = orderRepository.findByEmailAndAddress(email, address)
+        Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new OrderNotFoundException("Order not found"));
+        if ( !order.getEmail().equals(email) ) {
+            throw new OrderOwnerMismatchException("OrderOwner Mismatch: " + email + " != " + order.getEmail());
+        }
 
-        orderRepository.deleteById(findOrder.getId());
+        orderRepository.delete(order);
     }
 
 }

@@ -36,8 +36,8 @@ public class OrderController {
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteOrder(@RequestParam String email, @RequestParam String address) {
-        orderService.delete(email, address);
+    public ResponseEntity<Void> deleteOrder(@RequestParam Long id, @RequestParam String email) {
+        orderService.delete(id, email);
         return ResponseEntity.noContent().build();
     }
 

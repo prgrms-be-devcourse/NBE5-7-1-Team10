@@ -11,7 +11,7 @@ import java.util.List;
 public class OrderResponseDto {
 
     @JsonProperty("coffee-list")
-    private List<CoffeeListDto> coffeeList = new ArrayList<>();
+    private List<CoffeeListDto> coffeeList;
 
     private Long id;
     private Integer price;
@@ -19,16 +19,7 @@ public class OrderResponseDto {
     private String address;
     private String postNum;
 
-    public OrderResponseDto(Long id, Integer price, String email, String address, String postNum) {
-        this.id = id;
-        this.price = price;
-        this.email = email;
-        this.address = address;
-        this.postNum = postNum;
-    }
-
     @Builder
-
     public OrderResponseDto(List<CoffeeListDto> coffeeList, Long id, Integer price, String email, String address, String postNum) {
         this.coffeeList = coffeeList;
         this.id = id;

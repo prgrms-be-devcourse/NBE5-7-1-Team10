@@ -1,32 +1,14 @@
 package io.sleepyhoon.project1.dao;
 
-import io.sleepyhoon.project1.dto.CoffeeListDto;
-import io.sleepyhoon.project1.dto.OrderResponseDto;
 import io.sleepyhoon.project1.entity.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
-    Optional<Order> findByEmailAndAddress(String email, String Address);
+    List<Order> findByEmail(String email);
 
-    List<Order> findByEmail(@Param("email")String email);
-
-    @Query("SELECT new io.sleepyhoon.project1.dto.OrderResponseDto(o.id, o.price, o.email, o.address, o.postNum) " +
-            "FROM Order o " +
-            "WHERE o.id = :id")
-    Optional<OrderResponseDto> findByIdAsDto(@Param("id")Long id);
-
-    @Query("SELECT new io.sleepyhoon.project1.dto.CoffeeListDto(c.name, co.quantity) " +
-            "FROM Order o " +
-            "JOIN o.coffeeOrders co " +
-            "JOIN co.coffee c " +
-            "WHERE o.id = :id")
-    List<CoffeeListDto> findCoffeeListByOrderId(@Param("id")Long id);
 }
