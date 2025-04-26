@@ -32,7 +32,7 @@ public class DailyOrderSummarySchedulerService {
 
         ZoneId zone = ZoneId.of("Asia/Seoul");
         LocalDate today = LocalDate.now(zone);
-        LocalDateTime start = today.atTime(2, 0);
+        LocalDateTime start = today.minusDays(1).atTime(14,0);
         LocalDateTime end   = today.atTime(14, 0);
 
 
@@ -40,9 +40,10 @@ public class DailyOrderSummarySchedulerService {
                 orderRepository.findByIsProcessedFalseAndOrderedAtBetween(start, end);
 
         if (orders.isEmpty()) {
-            log.info("오늘 02-14시 주문 없음 → 메일 발송 생략");
+            log.info("전날 14시-오늘 14시 사이 주문 없음 → 메일 발송 생략");
             return;
         }
+
 
 
         Map<String, List<OrderSummaryDto>> map =
@@ -51,15 +52,16 @@ public class DailyOrderSummarySchedulerService {
                         .collect(Collectors.groupingBy(OrderSummaryDto::email));
 
 
+
         map.forEach((email, summaries) -> {
             try {
                 orderMailService.sendDailyOrderSummary(email, summaries);
             } catch (MessagingException e) {
-                log.error("전체주문내역 메일 전송  실패 – email={}, error={}", email, e.getMessage(), e);
+                log.error("전체주문내역 메일 실패 – email={}, error={}", email, e.getMessage(), e);
             }
         });
 
-        // isProcessed=True로 일괄 업데이트
+
         List<Long> ids = orders.stream()
                 .map(Order::getId)
                 .toList();

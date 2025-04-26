@@ -21,7 +21,7 @@ public class OrderService {
 
 
     private final OrderRepository orderRepository;
-    private final ApplicationEventPublisher publisher;   // 주입
+    private final ApplicationEventPublisher publisher;
 
     public Order save(OrderDto orderDto) {
 

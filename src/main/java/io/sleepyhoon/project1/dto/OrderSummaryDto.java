@@ -13,6 +13,7 @@ public record OrderSummaryDto(
         LocalDateTime orderedAt
 ) {
 
+
     public static OrderSummaryDto from(Order order) {
         int sum = order.getCoffeeOrders()
                 .stream()
