@@ -2,6 +2,7 @@ package io.sleepyhoon.project1.config;
 
 
 import io.sleepyhoon.project1.dao.MemberRepository;
+import io.sleepyhoon.project1.dto.Role;
 import io.sleepyhoon.project1.entity.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +31,7 @@ public class AdminAccountInitializer {
                         .password(passwordEncoder.encode("admin"))
                         .email("admin@admin.com")
                         .build();
-                admin.setRole("ADMIN");
+                admin.setRole(Role.ADMIN);
                 memberRepository.save(admin);
                 log.info("관리자 계정 생성 완료");
             }

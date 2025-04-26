@@ -9,15 +9,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
+@Getter
 public class MemberDetails implements UserDetails {
 
-    @Getter
-    private final String email;
-    @Getter
-    private final String username;
-    @Getter
-    private final String password;
-    private final String role;
+    private String email;
+    private String username;
+    private String password;
+    private Role role;
 
     public MemberDetails(Member member) {
         this.email = member.getEmail();
@@ -28,6 +26,6 @@ public class MemberDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(this.role));
+        return List.of(new SimpleGrantedAuthority(role.name()));
     }
 }

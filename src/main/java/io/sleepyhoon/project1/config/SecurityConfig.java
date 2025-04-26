@@ -1,5 +1,6 @@
 package io.sleepyhoon.project1.config;
 
+import io.sleepyhoon.project1.dto.Role;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,18 +32,19 @@ public class SecurityConfig {
                 )
 //                .formLogin(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.disable())
                 .authorizeHttpRequests(auth -> {
                         auth
                             .requestMatchers("/login/**", "/signup/**")
-                            .anonymous()
+                                .anonymous()
                             .requestMatchers("/css/**", "/js/**", "/img/**")
-                            .permitAll()
-                            .requestMatchers("/index/**")
-                            .hasAnyRole("ADMIN", "USER")
-                            .requestMatchers("/admin/**")
-                            .hasAnyRole("ADMIN")
+                                .permitAll()
+                            .requestMatchers("/index/**, /user/**")
+                                .hasAnyAuthority(Role.ADMIN.name(), Role.MEMBER.name())
+                            .requestMatchers("/admin")
+                                .hasAnyAuthority(Role.ADMIN.name())
                             .anyRequest()
-                            .authenticated();
+                                .authenticated();
                     }
                 )
                 .logout(Customizer.withDefaults())

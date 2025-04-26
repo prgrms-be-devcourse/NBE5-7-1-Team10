@@ -1,5 +1,6 @@
 package io.sleepyhoon.project1.entity;
 
+import io.sleepyhoon.project1.dto.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,7 +26,8 @@ public class Member {
     private String password;
 
     @Setter
-    private String role = "USER";
+    @Enumerated(EnumType.STRING)
+    private Role role = Role.MEMBER;
 
     @Builder
     public Member(String email, String username, String password) {
