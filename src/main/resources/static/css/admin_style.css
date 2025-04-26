@@ -82,3 +82,49 @@ label {
     margin-top: 10px;
 }
 
+table, th, td {
+    border: 1px solid #ccc;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 8px 12px;
+    text-align: center;
+}
+
+.coffee-form {
+    border: 1px solid #ccc;
+    padding: 16px;
+    border-radius: 8px;
+    width: 300px;
+    background-color: #f9f9f9;
+}
+
+.coffee-form h2 {
+    text-align: center;
+}
+
+.coffee-form label {
+    display: block;
+    margin-bottom: 12px;
+}
+
+.coffee-form input {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+}
+
+.coffee-form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.coffee-form button:hover {
+    background-color: #45a049;
+}
