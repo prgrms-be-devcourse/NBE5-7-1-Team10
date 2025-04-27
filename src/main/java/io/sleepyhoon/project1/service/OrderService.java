@@ -4,20 +4,20 @@ package io.sleepyhoon.project1.service;
 
 import io.sleepyhoon.project1.dao.OrderRepository;
 import io.sleepyhoon.project1.dto.CoffeeListDto;
-import io.sleepyhoon.project1.dto.OrderDto;
 import io.sleepyhoon.project1.dto.OrderRequestDto;
 import io.sleepyhoon.project1.entity.CoffeeOrder;
 import io.sleepyhoon.project1.entity.Order;
+import io.sleepyhoon.project1.event.OrderCreatedEvent;
 import io.sleepyhoon.project1.exception.OrderNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+
 
 @Slf4j
 @Service
@@ -28,6 +28,8 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final CoffeeOrderService coffeeOrderService;
+    private final ApplicationEventPublisher publisher;
+
 
     public OrderRequestDto save(OrderRequestDto request)    {
         Order order = orderRepository.save(
@@ -49,6 +51,7 @@ public class OrderService {
         for (CoffeeOrder coffeeOrder : coffeeOrders) {
             coffeeList.add(new CoffeeListDto(coffeeOrder.getCoffee().getName(), coffeeOrder.getQuantity()));
         }
+        publisher.publishEvent(new OrderCreatedEvent(order));
         return orderRequestDto;
     }
 

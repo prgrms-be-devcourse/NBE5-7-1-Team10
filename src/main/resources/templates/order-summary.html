@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <title>당일 처리될 주문내역 요약 </title>
+    <link rel="stylesheet" href="/css/admin_style.css" />
+</head>
+<body>
+<h1>당일(2-14) 주문내역 요약</h1>
+
+<!-- 주문 목록 테이블 -->
+<table border="1" cellpadding="6" cellspacing="0">
+    <thead>
+    <tr><th>주문번호</th><th>주문시각</th><th>금액(원)</th></tr>
+    </thead>
+    <tbody>
+    <tr th:each="o : ${orders}">
+        <td th:text="${o.id}"></td>
+        <td th:text="${o.orderedAt}"></td>
+        <td th:text="${o.totalPrice}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<!-- 총액 -->
+<p style="margin-top:10px">
+    <b>총액 : <span th:text="${total}"></span>원</b>
+</p>
+
+</body>
+</html>
