@@ -1,0 +1,91 @@
+@font-face {
+    font-family: 'Pretendard-Regular';
+    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+
+* {
+    font-family: 'Pretendard-Regular', 'Segoe UI', sans-serif;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #f9f9f9;
+    padding: 40px;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h1 {
+    font-size: 32px;
+    margin-bottom: 30px;
+    font-weight: bold;
+    color: #212529;
+    text-align: center;
+}
+
+form {
+    background-color: white;
+    padding: 30px;
+    border: 1px solid #ced4da;
+    border-radius: 10px;
+    width: 300px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+}
+
+form div {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+}
+
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+button {
+    width: 100%;
+    padding: 10px 16px;
+    background-color: #212529;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #343a40;
+}
+
+div > button[type="button"] {
+    background-color: white;
+    border: 1px solid #212529;
+    color: #212529;
+}
+
+div > button[type="button"]:hover {
+    background-color: #212529;
+    color: white;
+}
+
+button a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
