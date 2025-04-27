@@ -2,12 +2,11 @@ package io.sleepyhoon.project1.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 
-import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
 public class OrderResponseDto {
 
     @JsonProperty("coffee-list")
