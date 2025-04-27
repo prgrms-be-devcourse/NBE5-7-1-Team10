@@ -46,10 +46,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
-//    @ExceptionHandler(MemberDuplicateException.class)
-//    public ResponseEntity<ErrorResponseDto> handleMemberDuplicate(MemberDuplicateException e) {
-//        ErrorResponseDto response = new ErrorResponseDto("MEMBER_DUPLICATE", e.getMessage(), 400);
-//        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-//    }
+    @ExceptionHandler(MemberDuplicateException.class)
+    public ResponseEntity<ErrorResponseDto> handleMemberDuplicate(MemberDuplicateException e) {
+        ErrorResponseDto response = new ErrorResponseDto("MEMBER_DUPLICATE", e.getMessage(), 400);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
 
 }
