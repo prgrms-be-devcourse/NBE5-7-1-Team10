@@ -85,3 +85,23 @@ a {
 a:hover {
     text-decoration: underline;
 }
+
+.link-underline {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 16px;
+    font-size: 14px;
+    text-decoration: none;
+    color: #212529;
+    border: 1px solid #212529;
+    border-radius: 6px;
+    background-color: white;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.link-underline:hover {
+    background-color: #212529;
+    color: white;
+    text-decoration: none;
+}
