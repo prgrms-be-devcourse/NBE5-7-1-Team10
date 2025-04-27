@@ -4,7 +4,6 @@ package io.sleepyhoon.project1.service;
 
 import io.sleepyhoon.project1.dao.OrderRepository;
 import io.sleepyhoon.project1.dto.CoffeeListDto;
-import io.sleepyhoon.project1.dto.OrderDto;
 import io.sleepyhoon.project1.dto.OrderRequestDto;
 import io.sleepyhoon.project1.entity.CoffeeOrder;
 import io.sleepyhoon.project1.entity.Order;
@@ -18,8 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+
 
 @Slf4j
 @Service
@@ -84,9 +82,5 @@ public class OrderService {
 
         orderRepository.deleteById(findOrder.getId());
     }
-
-}
-}
-
 
 }
