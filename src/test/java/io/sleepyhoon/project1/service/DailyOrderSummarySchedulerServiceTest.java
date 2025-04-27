@@ -38,17 +38,17 @@ class DailyOrderSummarySchedulerServiceTests {
     void setUp() throws Exception {
         order1 = Order.builder()
                 .email("test1@example.com")
-                .address("Seoul")
+                .address("서울")
                 .postNum("12345")
                 .build();
 
         order2 = Order.builder()
                 .email("test2@example.com")
-                .address("Busan")
+                .address("서울")
                 .postNum("67890")
                 .build();
 
-        // ID 강제 설정
+
         Field idField1 = Order.class.getDeclaredField("id");
         idField1.setAccessible(true);
         idField1.set(order1, 1L);
