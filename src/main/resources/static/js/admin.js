@@ -68,9 +68,9 @@ function loadCoffees() {
                             ${coffee.images.length > 1 ? `<button onclick="prevImage(${coffee.id})">◀️</button>` : ''}
                             <img id="coffee-img-${coffee.id}" src="${coffee.images[0]}" height="300" width="300" alt="">
                             ${coffee.images.length > 1 ? `<button onclick="nextImage(${coffee.id})">▶️</button>` : ''}
-                        </td>
-                        <td><button onclick="showEditForm(${coffee.id})">수정</button></td>
-                        <td><button onclick="deleteCoffee(${coffee.id})">삭제</button></td>
+                        </td>                                                                               
+                        <td><button class="btn btn-dark col-12 order-btn" onclick="showEditForm(${coffee.id})">수정</button></td>
+                        <td><button class="btn btn-dark col-12 order-btn" onclick="deleteCoffee(${coffee.id})">삭제</button></td>
                     </tr>
                 `;
             });
