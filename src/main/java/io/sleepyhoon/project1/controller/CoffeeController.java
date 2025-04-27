@@ -28,15 +28,13 @@ public class CoffeeController {
 
         Coffee findCoffee = coffeeService.findById(id);
 
-        List<String> images = findCoffee.getImages().stream()
-                .map(CoffeeImg::getUrl)
-                .toList();
+        List<String> coffeeImages = coffeeService.findCoffeeImages(findCoffee);
 
         CoffeeResponseDto coffeeResponseDto = CoffeeResponseDto.builder()
                 .id(findCoffee.getId())
                 .name(findCoffee.getName())
                 .price(findCoffee.getPrice())
-                .images(images)
+                .images(coffeeImages)
                 .build();
 
         return ResponseEntity.ok(new ApiResponse<>(coffeeResponseDto,"조회 성공",200));
@@ -45,6 +43,7 @@ public class CoffeeController {
     @GetMapping("/all")
     public ResponseEntity<ApiResponse<List<CoffeeResponseDto>>> getAllCoffees() {
         List<CoffeeResponseDto> responseCoffeeDto = coffeeService.findEveryCoffee();
+
         return ResponseEntity.ok(new ApiResponse<>(responseCoffeeDto, "조회 성공",200));
     }
 

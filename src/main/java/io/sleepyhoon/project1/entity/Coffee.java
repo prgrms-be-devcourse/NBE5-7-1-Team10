@@ -1,5 +1,6 @@
 package io.sleepyhoon.project1.entity;
 
+import io.sleepyhoon.project1.service.CoffeeImgService;
 import jakarta.persistence.*;
 import lombok.*;
 
