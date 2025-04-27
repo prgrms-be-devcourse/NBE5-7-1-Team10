@@ -16,8 +16,43 @@
 </head>
 
 <body class="container-fluid">
-<div class="d-flex justify-content-end align-items-center mt-2 me-2">
-    <a href="/logout" class="btn btn-small btn-outline-dark del-button" style="text-decoration: none">로그아웃 하기</a>
+
+<script>
+  fetch('http://localhost:8080/auth/me')
+  .then(resp => resp.json())
+  .then(user => {
+    console.log(`==============유저정보============`);
+    console.log(user);
+    const email = user.email;
+    const username = user.username;
+    const isAdmin = user.role.some(auth=> auth.authority === 'ADMIN' || auth.authority === 'ROLE_ADMIN');
+    console.log(isAdmin);
+    const buttonDiv = document.getElementById('top-buttons');
+
+    // buttonDiv.innerHTML = ``;
+    if (isAdmin) {
+      console.log(`관리자페이지버튼 추가`);
+      buttonDiv.innerHTML =  `<a href="/admin" class="btn btn-small btn-outline-dark" style="margin-right: 10px">관리자페이지</a>` + buttonDiv.innerHTML;
+    } else {
+      buttonDiv.innerHTML = `<a href="/user" class="btn btn-small btn-outline-dark" style="margin-right: 10px">마이페이지</a>` + buttonDiv.innerHTML;
+    }
+
+    const userinfo = document.getElementById('user-info');
+    userinfo.innerHTML =  `
+    <span style="font-size: 18px">현재 사용자 정보</span>
+    <hr style="margin-top: 10px;">
+    <h6>사용자 이름 | <span style="color: #606060;">${username}</span></h6>
+    <h6>이메일 | <span style="color: #606060;">${email}</span></h6>
+    <br>
+    `;
+
+  });
+</script>
+
+
+
+<div class="d-flex justify-content-end align-items-center mt-2 me-2" id="top-buttons">
+  <a href="/logout" class="btn btn-small btn-outline-dark del-button" style="text-decoration: none; width: auto; height: auto; white-space: nowrap;">로그아웃 하기</a>
 </div>
 <div class="row justify-content-center m-4">
   <h1 class="text-center">Grids & Circle</h1>
@@ -138,18 +173,17 @@
       <div id="summary-list">
       </div>
 
-      <form id="delivery-info">
-        <div class="mb-3">
-          <label for="email" class="form-label">이메일</label>
-          <input type="email" class="form-control mb-1" id="email">
+      <form id="delivery-info" style="padding-top: 10%">
+
+        <div id="user-info">
         </div>
         <div class="mb-3">
           <label for="address" class="form-label">주소</label>
           <input type="text" class="form-control mb-1" id="address">
         </div>
         <div class="mb-3">
-          <label for="postNum" class="form-label">우편번호</label>
-          <input type="text" class="form-control" id="postNum">
+          <label for="postnum" class="form-label">우편번호</label>
+          <input type="text" class="form-control" id="postnum">
         </div>
         <div class="inform">당일 오후 2시 이후의 주문은 다음날 배송을 시작합니다.</div>
       </form>
@@ -170,16 +204,15 @@
   document.querySelector('.order-btn').addEventListener('click', function() {
 
     const totalPrice = parseInt(document.getElementById("total-price").textContent);
-    const email = document.getElementById('email').value;
     const address = document.getElementById('address').value;
-    const postNum = document.getElementById('postNum').value;
+    const postnum = document.getElementById('postnum').value;
     console.log(totalPrice);
 
     if (totalPrice === 0){
       alert(`상품을 먼저 담아주세요.`);
       return;
     }
-    else if (!email || !address || !postNum) {
+    else if (!address || !postnum) {
       alert(`모든 칸에 정보를 채워주시기 바랍니다.`);
       return;
     }
@@ -211,20 +244,15 @@
     const deliveryInfo = [];
     deliveryInfo.push("이메일 : " + email);
     deliveryInfo.push("주소 : " + address);
-    deliveryInfo.push("우편번호 : " + postNum);
+    deliveryInfo.push("우편번호 : " + postnum);
 
     const orderJson = message + contents.join("\n") + deliveryMessage + deliveryInfo.join("\n");
 
-    const coffeeList = Object.entries(counts).map(([name, quantity]) => ({
-      coffeeName: name,
-      quantity: quantity
-    }));
-
     const data = {
-      "coffee-list": coffeeList,
+      "coffee-list": counts,
       "email": document.getElementById('email').value,
       "address": document.getElementById('address').value,
-      "postNum": document.getElementById('postNum').value,
+      "postnum": document.getElementById('postnum').value,
       "price": totalPrice,
     };
 
