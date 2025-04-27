@@ -17,7 +17,8 @@
 
 <body class="container-fluid">
 <div class="d-flex justify-content-end align-items-center mt-2 me-2">
-    <a href="/logout" class="btn btn-small btn-outline-dark del-button" style="text-decoration: none">로그아웃 하기</a>
+  <a href="/logout" class="btn btn-sm btn-outline-dark logout-button" style="text-decoration: none;">로그아웃 하기</a>
+
 </div>
 <div class="row justify-content-center m-4">
   <h1 class="text-center">Grids & Circle</h1>
@@ -40,19 +41,25 @@
                   const li = document.createElement('li');
                   li.className = 'list-group-item d-flex mt-3';
                   li.setAttribute('data-name', coffee.name.toLowerCase());
-                  li.innerHTML = `
-                    <div class="col-2"><img class="img-fluid" src="${coffee.img}" alt=""></div>
-                    <div class="col">
-                      <div class="row text-muted">커피콩</div>
-                      <div class="row">${coffee.name}</div>
-                    </div>
-                    <div class="col text-center price">${coffee.price}원</div>
+                    li.innerHTML = `
+                        <div class="col-2 position-relative">
+                          <img class="img-fluid" id="coffee-img-${coffee.id}" src="${coffee.images[0]}" alt="" style="width: 100%; height: auto; object-fit: cover;">
+                          ${coffee.images.length > 1 ? `
+                            <button class="prev-btn btn btn-light position-absolute top-50 start-0 translate-middle-y" style="display: none;">◀️</button>
+                            <button class="next-btn btn btn-light position-absolute top-50 end-0 translate-middle-y" style="display: none;">▶️</button>
+                          ` : ''}
+                        </div>
+                        <div class="col">
+                          <div class="row text-muted">커피콩</div>
+                          <div class="row">${coffee.name}</div>
+                        </div>
+                        <div class="col text-center price">${coffee.price}원</div>
 
-                    <div class="col text-end action">
-                      <a class="btn btn-small btn-outline-dark del-button" href="#">-</a>
-                      <a class="btn btn-small btn-outline-dark add-button" href="#">+</a>
-                    </div>
-                  `;
+                        <div class="col text-end action">
+                          <a class="btn btn-small btn-outline-dark del-button" href="#">-</a>
+                          <a class="btn btn-small btn-outline-dark add-button" href="#">+</a>
+                        </div>
+                      `;
 
                   // add/del 버튼에 이벤트 달기
                   // 커피별 개수 저장용 객체
@@ -64,6 +71,44 @@
 
                   const addBtn = li.querySelector('.add-button');
                   const delBtn = li.querySelector('.del-button');
+                    const imgWrapper = li.querySelector('.col-2');
+                    if (imgWrapper) {
+                        imgWrapper.addEventListener('mouseenter', () => {
+                            const prevBtn = imgWrapper.querySelector('.prev-btn');
+                            const nextBtn = imgWrapper.querySelector('.next-btn');
+                            if (prevBtn) prevBtn.style.display = 'block';
+                            if (nextBtn) nextBtn.style.display = 'block';
+                        });
+                        imgWrapper.addEventListener('mouseleave', () => {
+                            const prevBtn = imgWrapper.querySelector('.prev-btn');
+                            const nextBtn = imgWrapper.querySelector('.next-btn');
+                            if (prevBtn) prevBtn.style.display = 'none';
+                            if (nextBtn) nextBtn.style.display = 'none';
+                        });
+                    }
+
+                    // 버튼 클릭시 이미지 변경
+                    const imgTag = li.querySelector(`#coffee-img-${coffee.id}`);
+                    let currentIndex = 0;
+
+                    const prevBtn = li.querySelector('.prev-btn');
+                    const nextBtn = li.querySelector('.next-btn');
+
+                    if (prevBtn) {
+                        prevBtn.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            currentIndex = (currentIndex - 1 + coffee.images.length) % coffee.images.length;
+                            imgTag.src = coffee.images[currentIndex];
+                        });
+                    }
+
+                    if (nextBtn) {
+                        nextBtn.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            currentIndex = (currentIndex + 1) % coffee.images.length;
+                            imgTag.src = coffee.images[currentIndex];
+                        });
+                    }
 
                   addBtn.addEventListener('click', function(e) {
                     e.preventDefault();
