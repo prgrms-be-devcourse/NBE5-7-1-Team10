@@ -91,7 +91,7 @@ function showEditForm(id) {
     // 기본 값을 넣어준다.
     document.getElementById("updateCoffeeName").value = coffee.name;
     document.getElementById("updateCoffeePrice").value = coffee.price;
-    document.getElementById("updateCoffeeImageUrl").value = coffee.img;
+    document.getElementById("updateCoffeeImageUrl").value = "";
     document.getElementById("editForm").style.display = "block";
 }
 
@@ -127,29 +127,41 @@ function addCoffee() {
 
 
 function updateCoffee() {
-    if(selectedCoffeeId == null) return;
-    const data = getUpdateValues();
+    if (selectedCoffeeId == null) return;
+    const formData = new FormData();
+    formData.append('name', document.getElementById('updateCoffeeName').value);
+    formData.append('price', document.getElementById('updateCoffeePrice').value);
+
+    const imageInput = document.getElementById('updateCoffeeImageUrl');
+    for (let i = 0; i < imageInput.files.length; i++) {
+        formData.append('images', imageInput.files[i]); // 여러 이미지 처리
+    }
+
     fetch(`/coffees/${selectedCoffeeId}`, {
         method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
+        body: formData
     })
         .then(res => res.json())
         .then(response => {
             const updateCoffee = response.data;
             document.querySelector(`#coffee-${updateCoffee.id} td.name`).innerText = updateCoffee.name;
             document.querySelector(`#coffee-${updateCoffee.id} td.price`).innerText = updateCoffee.price + "원";
-            document.querySelector(`#coffee-${updateCoffee.id} td.img`).innerText = updateCoffee.img;
+            document.querySelector(`#coffee-${updateCoffee.id} td.img`).innerHTML = `
+            ${updateCoffee.images.length > 1 ? `<button onclick="prevImage(${updateCoffee.id})">◀</button>` : ''}
+            <img id="coffee-img-${updateCoffee.id}" src="${updateCoffee.images[0]}" height="300" width="300" alt="">
+            ${updateCoffee.images.length > 1 ? `<button onclick="nextImage(${updateCoffee.id})">▶</button>` : ''}
+             `;
+
             coffeeMap[updateCoffee.id] = updateCoffee;
             hideEditForm();
-            alert("수정이 반영되었습니다!")
-        }).catch(err => {
-        alert("에러 발생!!");
-        console.log(err);
-    });
+            alert("수정이 반영되었습니다!");
+        })
+        .catch(err => {
+            alert("수정 에러 발생!!");
+            console.log(err);
+        });
 }
+
 
 function deleteCoffee(id) {
     if(id==null) return;

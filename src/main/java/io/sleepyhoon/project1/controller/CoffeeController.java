@@ -54,15 +54,9 @@ public class CoffeeController {
         return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse<>(newId, "생성 성공", 201));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<CoffeeResponseDto>> updateCoffee(@PathVariable long id, @RequestBody CoffeeRequestDto requestDto) {
-        Coffee updated = coffeeService.update(id, requestDto);
-        CoffeeResponseDto coffeeResponseDto = CoffeeResponseDto.builder()
-                .id(updated.getId())
-                .name(updated.getName())
-                .price(updated.getPrice())
-//                .img(updated.getImg())
-                .build();
+    @PutMapping(value = "/{id}", consumes = "multipart/form-data")
+    public ResponseEntity<ApiResponse<CoffeeResponseDto>> updateCoffee(@PathVariable long id, @ModelAttribute CoffeeRequestDto requestDto) {
+        CoffeeResponseDto coffeeResponseDto = coffeeService.update(id, requestDto);
 
         return ResponseEntity.ok(new ApiResponse<>(coffeeResponseDto,"수정 성공",200));
     }

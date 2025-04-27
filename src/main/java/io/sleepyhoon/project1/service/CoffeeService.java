@@ -22,14 +22,12 @@ public class CoffeeService {
     private final CoffeeRepository coffeeRepository;
     private final CoffeeImgService coffeeImgService;
 
-    //Coffee ID로 커피 찾아 반환하는 메소드(Optional로 반환)
     public Coffee findById(Long id) {
 
         return coffeeRepository.findById(id)
                .orElseThrow(() -> new CoffeeNotFoundException(id));
     }
 
-    //Coffee Name으로 커피 조회
     public Coffee findFirstCoffeeByName(String coffeeName) {
         return coffeeRepository.findFirstByName(coffeeName)
                 .orElseThrow(() -> new CoffeeNotFoundException(coffeeName));
@@ -66,10 +64,8 @@ public class CoffeeService {
         return coffeeListDto;
     }
 
-    //Coffee 저장하는 메소드
     public Long save(CoffeeRequestDto requestDto) {
 
-        //유효하지 않은 값 = ture
         boolean isInvalidName = checkRequiredField(requestDto);
 
         if(isInvalidName) {
@@ -96,14 +92,12 @@ public class CoffeeService {
         return coffeeName == null || coffeeName.isBlank();
     }
 
-    //Coffee 삭제하는 메소드
     public void deleteById(Long id) {
         Coffee coffee = findById(id);
         coffeeRepository.delete(coffee);
     }
 
-    //Coffee 정보 변경하는 메소드
-    public Coffee update(Long id,CoffeeRequestDto requestDto) {
+    public CoffeeResponseDto update(Long id,CoffeeRequestDto requestDto) {
         Coffee targetCoffee = findById(id);
 
         if (requestDto.getName() != null) {
@@ -116,12 +110,17 @@ public class CoffeeService {
 
         if (requestDto.getImages() != null) {
             List<CoffeeImg> coffeeImgs = coffeeImgService.saveImg(requestDto.getImages(), targetCoffee);
-            targetCoffee.setImages(coffeeImgs);
+            targetCoffee.getImages().clear();
+            targetCoffee.getImages().addAll(coffeeImgs);
         }
 
-        return targetCoffee;
+        List<String> coffeeImages = findCoffeeImages(targetCoffee);
 
+        return CoffeeResponseDto.builder()
+                .id(targetCoffee.getId())
+                .name(targetCoffee.getName())
+                .price(targetCoffee.getPrice())
+                .images(coffeeImages)
+                .build();
     }
-
-
 }
