@@ -13,8 +13,6 @@ spring:
         show_sql: true
         format_sql: true
 
-  web:
-    resources:
-      static-locations: file:img/
+
 file:
   path: img/

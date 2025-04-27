@@ -1,5 +1,41 @@
 let coffeeMap = {};
 let selectedCoffeeId = null;
+let coffeeImageIndex = {};
+// { coffeeId: 현재 인덱스 }
+function prevImage(coffeeId) {
+    const coffee = coffeeMap[coffeeId];
+    if (!coffee || !coffee.images || coffee.images.length === 0) return;
+
+    if (!(coffeeId in coffeeImageIndex)) {
+        coffeeImageIndex[coffeeId] = 0;
+    }
+
+    coffeeImageIndex[coffeeId]--;
+    if (coffeeImageIndex[coffeeId] < 0) {
+        coffeeImageIndex[coffeeId] = coffee.images.length - 1; // 마지막으로 이동
+    }
+
+    const imgTag = document.getElementById(`coffee-img-${coffeeId}`);
+    imgTag.src = coffee.images[coffeeImageIndex[coffeeId]];
+}
+
+function nextImage(coffeeId) {
+    const coffee = coffeeMap[coffeeId];
+    if (!coffee || !coffee.images || coffee.images.length === 0) return;
+
+    if (!(coffeeId in coffeeImageIndex)) {
+        coffeeImageIndex[coffeeId] = 0;
+    }
+
+    coffeeImageIndex[coffeeId]++;
+    if (coffeeImageIndex[coffeeId] >= coffee.images.length) {
+        coffeeImageIndex[coffeeId] = 0; // 처음으로 이동
+    }
+
+    const imgTag = document.getElementById(`coffee-img-${coffeeId}`);
+    imgTag.src = coffee.images[coffeeImageIndex[coffeeId]];
+}
+
 
 function loadCoffees() {
     fetch(`/coffees/all`)
@@ -28,7 +64,11 @@ function loadCoffees() {
                     <tr id="coffee-${coffee.id}">
                         <td class="name">${coffee.name}</td>
                         <td class="price">${coffee.price}원</td>
-                        <td class="img"><img src="${coffee.img}" height="50" width="auto" alt=""></td>
+                        <td class="img">
+                            ${coffee.images.length > 1 ? `<button onclick="prevImage(${coffee.id})">◀️</button>` : ''}
+                            <img id="coffee-img-${coffee.id}" src="${coffee.images[0]}" height="300" width="300" alt="">
+                            ${coffee.images.length > 1 ? `<button onclick="nextImage(${coffee.id})">▶️</button>` : ''}
+                        </td>
                         <td><button onclick="showEditForm(${coffee.id})">수정</button></td>
                         <td><button onclick="deleteCoffee(${coffee.id})">삭제</button></td>
                     </tr>
@@ -56,24 +96,35 @@ function showEditForm(id) {
 }
 
 function addCoffee() {
-    const data = getPostValues();
+    const name = document.getElementById("newCoffeeName").value;
+    const price = document.getElementById("newCoffeePrice").value;
+    const images = document.getElementById("newCoffeeImage").files;
+
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('price', price);
+
+    for (let i = 0; i < images.length; i++) {
+        formData.append('images', images[i]);
+    }
+
     fetch(`/coffees`, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
+        body: formData
     }).then(res => {
         if (!res.ok) {
             throw new Error("서버 응답 오류");
         }
         return res.json();
-    })
-        .then(newCoffee => {
-            clearPostForm();
-            loadCoffees();
-        })
+    }).then(newCoffee => {
+        clearPostForm();
+        loadCoffees();
+    }).catch(err => {
+        alert("에러 발생!!");
+        console.log(err);
+    });
 }
+
 
 function updateCoffee() {
     if(selectedCoffeeId == null) return;

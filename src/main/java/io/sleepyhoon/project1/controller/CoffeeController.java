@@ -47,8 +47,8 @@ public class CoffeeController {
         return ResponseEntity.ok(new ApiResponse<>(responseCoffeeDto, "조회 성공",200));
     }
 
-    @PostMapping
-    public ResponseEntity<ApiResponse<Long>> saveCoffee(@RequestBody CoffeeRequestDto requestDto) {
+    @PostMapping(consumes = "multipart/form-data")
+    public ResponseEntity<ApiResponse<Long>> saveCoffee(@ModelAttribute CoffeeRequestDto requestDto) {
 
         Long newId = coffeeService.save(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse<>(newId, "생성 성공", 201));

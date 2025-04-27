@@ -78,12 +78,14 @@ public class CoffeeService {
 
         checkDuplication(requestDto.getName());
 
-        List<CoffeeImg> coffeeImgs = coffeeImgService.saveImg(requestDto.getImages());
         Coffee newCoffee = Coffee.builder()
                 .name(requestDto.getName())
                 .price(requestDto.getPrice())
-                .images(coffeeImgs)
                 .build();
+
+        List<CoffeeImg> coffeeImgs = coffeeImgService.saveImg(requestDto.getImages(), newCoffee);
+
+        newCoffee.setImages(coffeeImgs);
 
         return coffeeRepository.save(newCoffee).getId();
     }
@@ -113,7 +115,7 @@ public class CoffeeService {
         }
 
         if (requestDto.getImages() != null) {
-            List<CoffeeImg> coffeeImgs = coffeeImgService.saveImg(requestDto.getImages());
+            List<CoffeeImg> coffeeImgs = coffeeImgService.saveImg(requestDto.getImages(), targetCoffee);
             targetCoffee.setImages(coffeeImgs);
         }
 

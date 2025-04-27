@@ -1,6 +1,7 @@
 package io.sleepyhoon.project1.service;
 
 import io.sleepyhoon.project1.dao.CoffeeImgRepository;
+import io.sleepyhoon.project1.entity.Coffee;
 import io.sleepyhoon.project1.entity.CoffeeImg;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
@@ -45,9 +46,13 @@ public class CoffeeImgServiceTests {
 
         List<MultipartFile> imgList = List.of(mockFile1, mockFile2);
 
+        Coffee coffee = Coffee.builder()
+                .name("coffee")
+                .price(456)
+                .build();
 
         //when
-        List<CoffeeImg> result = coffeeImgService.saveImg(imgList);
+        List<CoffeeImg> result = coffeeImgService.saveImg(imgList,coffee);
 
         //then
         assertThat(result).hasSize(2);
