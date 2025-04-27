@@ -4,11 +4,13 @@ import io.sleepyhoon.project1.dao.CoffeeImgRepository;
 import io.sleepyhoon.project1.entity.Coffee;
 import io.sleepyhoon.project1.entity.CoffeeImg;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -16,6 +18,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -33,10 +36,11 @@ public class CoffeeImgService {
 
                         String originalFilename  = file.getOriginalFilename();
                         String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
-                        String newFilename = UUID.randomUUID().toString() + extension;
+                        String newFilename = UUID.randomUUID() + extension;
 
-                        Path path = Paths.get(uploadPath, newFilename);
-                        Files.write(path, file.getBytes());
+                        Path savePath = Paths.get(uploadPath, newFilename);
+
+                        file.transferTo(savePath);
 
                         return CoffeeImg.builder()
                                 .title(file.getOriginalFilename())
