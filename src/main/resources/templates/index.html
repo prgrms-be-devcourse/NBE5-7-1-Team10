@@ -249,32 +249,65 @@
       return;
     }
 
+
     const counts = {};
-    document.querySelectorAll('#summary-list .product-count').forEach(span => {
+    document.querySelectorAll('#summary-list .product-count').forEach(function(span) {
       const name = span.dataset.name;
       const count = parseInt(span.textContent);
-      if (count > 0) counts[name] = count;
+      if (count > 0) { // 0개는 주문에 포함하지 않음
+        counts[name] = count;
+      }
     });
 
-    const orderJson = {
+    const message = "주문이 성공적으로 완료되었습니다.\n\n" +
+            "----- 주문 내역 -----\n";
+
+    const contents = [];
+    for (const [key, value] of Object.entries(counts)) {
+      contents.push(`${key}: ${value}`);
+    }
+    contents.push(`총 금액 : ${totalPrice}원`);
+
+
+    const deliveryMessage = "\n\n ----- 배송 정보 확인 -----\n"
+    const deliveryInfo = [];
+    deliveryInfo.push("이메일 : " + email);
+    deliveryInfo.push("주소 : " + address);
+    deliveryInfo.push("우편번호 : " + postnum);
+
+    const orderJson = message + contents.join("\n") + deliveryMessage + deliveryInfo.join("\n");
+
+    const data = {
       "coffee-list": counts,
-      "email": email,
-      "address": address,
-      "postNum": postnum,
+      "email": document.getElementById('email').value,
+      "address": document.getElementById('address').value,
+      "postnum": document.getElementById('postnum').value,
       "price": totalPrice,
     };
 
+    console.log(data);
     fetch('http://localhost:8080/orders', {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(orderJson)
+      headers: {
+        //내가 보내는 요청의 본문에는 JSON형식이 들어있다는 걸 알려줘야 함
+        "Content-Type": "application/json",
+      },
+      // global.js - getPostValues()에 보면 title, content author 모아놓은 json 미리 만들어놨음
+      // 이 내용을 받을 곳은 java라서.. 알아들을 수 있게 객체가 아닌 string으로 보내야 한다
+      body: JSON.stringify(data)
     })
-            .then(resp => resp.json())
+            .then(
+                    resp => resp.json()
+            )
             .then(data => {
-              alert("주문이 완료되었습니다!");
+              console.log("createOrder()");
+              console.log(data);
+              alert(orderJson);
             })
-            .catch(err => console.log(err));
+            .catch(err => console.log(err)); //요청처리 에러났을때 실행
+
   });
+
 </script>
 
 </body>
