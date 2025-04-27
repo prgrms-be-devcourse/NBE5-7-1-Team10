@@ -41,8 +41,8 @@
     userinfo.innerHTML =  `
     <span style="font-size: 18px">현재 사용자 정보</span>
     <hr style="margin-top: 10px;">
-    <h6>사용자 이름 | <span style="color: #606060;">${username}</span></h6>
-    <h6>이메일 | <span style="color: #606060;">${email}</span></h6>
+    <h6>사용자 이름 | <span style="color: #606060;" id="username">${username}</span></h6>
+    <h6>이메일 | <span style="color: #606060;" id="email">${email}</span></h6>
     <br>
     `;
 
@@ -206,7 +206,7 @@
     const totalPrice = parseInt(document.getElementById("total-price").textContent);
     const address = document.getElementById('address').value;
     const postnum = document.getElementById('postnum').value;
-    console.log(totalPrice);
+    const email = document.getElementById('email').innerText;
 
     if (totalPrice === 0){
       alert(`상품을 먼저 담아주세요.`);
