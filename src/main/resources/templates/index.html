@@ -19,26 +19,26 @@
 
 <script>
   fetch('http://localhost:8080/auth/me')
-  .then(resp => resp.json())
-  .then(user => {
-    console.log(`==============유저정보============`);
-    console.log(user);
-    const email = user.email;
-    const username = user.username;
-    const isAdmin = user.role.some(auth=> auth.authority === 'ADMIN' || auth.authority === 'ROLE_ADMIN');
-    console.log(isAdmin);
-    const buttonDiv = document.getElementById('top-buttons');
+          .then(resp => resp.json())
+          .then(user => {
+            console.log(`==============유저정보============`);
+            console.log(user);
+            const email = user.email;
+            const username = user.username;
+            const isAdmin = user.role.some(auth=> auth.authority === 'ADMIN' || auth.authority === 'ROLE_ADMIN');
+            console.log(isAdmin);
+            const buttonDiv = document.getElementById('top-buttons');
 
-    // buttonDiv.innerHTML = ``;
-    if (isAdmin) {
-      console.log(`관리자페이지버튼 추가`);
-      buttonDiv.innerHTML =  `<a href="/admin" class="btn btn-small btn-outline-dark" style="margin-right: 10px">관리자페이지</a>` + buttonDiv.innerHTML;
-    } else {
-      buttonDiv.innerHTML = `<a href="/user" class="btn btn-small btn-outline-dark" style="margin-right: 10px">마이페이지</a>` + buttonDiv.innerHTML;
-    }
+            // buttonDiv.innerHTML = ``;
+            if (isAdmin) {
+              console.log(`관리자페이지버튼 추가`);
+              buttonDiv.innerHTML =  `<a href="/admin" class="btn btn-small btn-outline-dark" style="margin-right: 10px">관리자페이지</a>` + buttonDiv.innerHTML;
+            } else {
+              buttonDiv.innerHTML = `<a href="/user" class="btn btn-small btn-outline-dark" style="margin-right: 10px">마이페이지</a>` + buttonDiv.innerHTML;
+            }
 
-    const userinfo = document.getElementById('user-info');
-    userinfo.innerHTML =  `
+            const userinfo = document.getElementById('user-info');
+            userinfo.innerHTML =  `
     <span style="font-size: 18px">현재 사용자 정보</span>
     <hr style="margin-top: 10px;">
     <h6>사용자 이름 | <span style="color: #606060;">${username}</span></h6>
@@ -46,7 +46,7 @@
     <br>
     `;
 
-  });
+          });
 </script>
 
 
@@ -63,19 +63,19 @@
     <div class="col-md-8 mt-4 d-flex flex-column align-items-start p-3 pt-0" id="coffee-list-box">
       <h5 class="flex-grow-0"><b>상품 목록</b></h5>
       <ul class="list-group list-group-flush products" id="coffee-list"></ul>
-        <script>
-          fetch('http://localhost:8080/coffees/all')
-              .then(resp => resp.json())
-              .then(json => {
-                const coffee_list = json.data;
-                const ul = document.getElementById('coffee-list');
-                ul.innerHTML = '';
+      <script>
+        fetch('http://localhost:8080/coffees/all')
+                .then(resp => resp.json())
+                .then(json => {
+                  const coffee_list = json.data;
+                  const ul = document.getElementById('coffee-list');
+                  ul.innerHTML = '';
 
-                coffee_list.forEach(coffee => {
-                  const li = document.createElement('li');
-                  li.className = 'list-group-item d-flex mt-3';
-                  li.setAttribute('data-name', coffee.name.toLowerCase());
-                  li.innerHTML = `
+                  coffee_list.forEach(coffee => {
+                    const li = document.createElement('li');
+                    li.className = 'list-group-item d-flex mt-3';
+                    li.setAttribute('data-name', coffee.name.toLowerCase());
+                    li.innerHTML = `
                     <div class="col-2"><img class="img-fluid" src="${coffee.img}" alt=""></div>
                     <div class="col">
                       <div class="row text-muted">커피콩</div>
@@ -89,79 +89,79 @@
                     </div>
                   `;
 
-                  // add/del 버튼에 이벤트 달기
-                  // 커피별 개수 저장용 객체
-                  const coffeeCounts = {};
-                  const summaryList = document.getElementById('summary-list');
-                  const name = coffee.name.toLowerCase();
-                  const displayName = name;
-                  const price = coffee.price;
+                    // add/del 버튼에 이벤트 달기
+                    // 커피별 개수 저장용 객체
+                    const coffeeCounts = {};
+                    const summaryList = document.getElementById('summary-list');
+                    const name = coffee.name.toLowerCase();
+                    const displayName = name;
+                    const price = coffee.price;
 
-                  const addBtn = li.querySelector('.add-button');
-                  const delBtn = li.querySelector('.del-button');
+                    const addBtn = li.querySelector('.add-button');
+                    const delBtn = li.querySelector('.del-button');
 
-                  addBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    coffeeCounts[name] =  (coffeeCounts[name] || 0) + 1;
-                    updateSummary(name, displayName, coffeeCounts[name]);
-                    addTotalPrice(price);
-                  });
+                    addBtn.addEventListener('click', function(e) {
+                      e.preventDefault();
+                      coffeeCounts[name] =  (coffeeCounts[name] || 0) + 1;
+                      updateSummary(name, displayName, coffeeCounts[name]);
+                      addTotalPrice(price);
+                    });
 
-                  delBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.preventDefault();
-                    if (coffeeCounts[name]) {
-                      coffeeCounts[name]--;
-                      subtractTotalPrice(price);
-                      if (coffeeCounts[name] === 0) {
-                        removeSummary(name);
-                        delete coffeeCounts[name];
+                    delBtn.addEventListener('click', function(e) {
+                      e.preventDefault();
+                      e.preventDefault();
+                      if (coffeeCounts[name]) {
+                        coffeeCounts[name]--;
+                        subtractTotalPrice(price);
+                        if (coffeeCounts[name] === 0) {
+                          removeSummary(name);
+                          delete coffeeCounts[name];
+                        } else {
+                          updateSummary(name, displayName, coffeeCounts[name]);
+                        }
+                      }
+                    });
+
+                    // summary에 해당 커피 항목 추가/업데이트
+                    function updateSummary(name, displayName, count) {
+                      let row = summaryList.querySelector(`[data-name="${name}"]`);
+                      if (!row) {
+                        // 없으면 새로 추가
+                        row = document.createElement('div');
+                        row.className = 'row';
+                        row.setAttribute('data-name', name.toLowerCase());
+                        row.innerHTML = `<h6 class="p-0 summary-coffee-name">${displayName} <span class="product-count badge bg-dark" data-name="${name.toLowerCase()}">${count}개</span></h6>`;
+                        summaryList.appendChild(row);
                       } else {
-                        updateSummary(name, displayName, coffeeCounts[name]);
+                        // 있으면 개수만 업데이트
+                        row.querySelector('.product-count').textContent = `${count}개`;
                       }
                     }
+
+                    // summary에서 해당 커피 항목 삭제
+                    function removeSummary(name) {
+                      const row = summaryList.querySelector(`[data-name="${name}"]`);
+                      if (row) summaryList.removeChild(row);
+                    }
+
+                    function subtractTotalPrice(price) {
+                      const currentPrice = parseInt(document.getElementById("total-price").textContent);
+                      if (currentPrice - price >= 0) {
+                        document.getElementById("total-price").textContent = `${currentPrice - price}원`;
+                      } else {
+                        console.error("총 가격이 음수입니다.")
+                      }
+                    }
+                    function addTotalPrice(price) {
+                      const currentPrice = parseInt(document.getElementById("total-price").textContent);
+                      document.getElementById("total-price").textContent = `${currentPrice + price}원`;
+
+                    }
+
+                    ul.appendChild(li);
                   });
-
-                  // summary에 해당 커피 항목 추가/업데이트
-                  function updateSummary(name, displayName, count) {
-                    let row = summaryList.querySelector(`[data-name="${name}"]`);
-                    if (!row) {
-                      // 없으면 새로 추가
-                      row = document.createElement('div');
-                      row.className = 'row';
-                      row.setAttribute('data-name', name.toLowerCase());
-                      row.innerHTML = `<h6 class="p-0 summary-coffee-name">${displayName} <span class="product-count badge bg-dark" data-name="${name.toLowerCase()}">${count}개</span></h6>`;
-                      summaryList.appendChild(row);
-                    } else {
-                      // 있으면 개수만 업데이트
-                      row.querySelector('.product-count').textContent = `${count}개`;
-                    }
-                  }
-
-                  // summary에서 해당 커피 항목 삭제
-                  function removeSummary(name) {
-                    const row = summaryList.querySelector(`[data-name="${name}"]`);
-                    if (row) summaryList.removeChild(row);
-                  }
-
-                  function subtractTotalPrice(price) {
-                    const currentPrice = parseInt(document.getElementById("total-price").textContent);
-                    if (currentPrice - price >= 0) {
-                      document.getElementById("total-price").textContent = `${currentPrice - price}원`;
-                    } else {
-                      console.error("총 가격이 음수입니다.")
-                    }
-                  }
-                  function addTotalPrice(price) {
-                    const currentPrice = parseInt(document.getElementById("total-price").textContent);
-                    document.getElementById("total-price").textContent = `${currentPrice + price}원`;
-
-                  }
-
-                  ul.appendChild(li);
                 });
-              });
-        </script>
+      </script>
     </div>
 
     <div class="col-md-4 summary p-4">
@@ -231,7 +231,7 @@
     });
 
     const message = "주문이 성공적으로 완료되었습니다.\n\n" +
-        "----- 주문 내역 -----\n";
+            "----- 주문 내역 -----\n";
 
     const contents = [];
     for (const [key, value] of Object.entries(counts)) {
@@ -267,15 +267,15 @@
       // 이 내용을 받을 곳은 java라서.. 알아들을 수 있게 객체가 아닌 string으로 보내야 한다
       body: JSON.stringify(data)
     })
-        .then(
-            resp => resp.json()
-        )
-        .then(data => {
-          console.log("createOrder()");
-          console.log(data);
-          alert(orderJson);
-        })
-        .catch(err => console.log(err)); //요청처리 에러났을때 실행
+            .then(
+                    resp => resp.json()
+            )
+            .then(data => {
+              console.log("createOrder()");
+              console.log(data);
+              alert(orderJson);
+            })
+            .catch(err => console.log(err)); //요청처리 에러났을때 실행
 
   });
 
