@@ -23,9 +23,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     List<Order> findByEmail(@Param("email")String email);
 
-    List<Order> findByIsProcessedFalseAndOrderedAtBetween(
-            LocalDateTime start, LocalDateTime end);
-
     @Query("SELECT new io.sleepyhoon.project1.dto.OrderRequestDto(o.price,o.email, o.address, o.postNum) " +
             "FROM Order o " +
             "WHERE o.id = :id")
@@ -38,8 +35,12 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             "WHERE o.id = :id")
     List<CoffeeListDto> findCoffeeListByOrderId(@Param("id")Long id);
 
+    List<Order> findByIsProcessedFalseAndOrderedAtBetween(
+            LocalDateTime start, LocalDateTime end);
+
+
     @Modifying
-    @Transactional
     @Query("UPDATE Order o SET o.isProcessed = true WHERE o.id IN :ids")
     int markProcessedTrueByIdIn(@Param("ids") List<Long> ids);
+
 }
