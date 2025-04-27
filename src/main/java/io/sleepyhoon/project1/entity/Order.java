@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -25,6 +26,10 @@ public class Order {
     @Column(nullable = false)
     private String postNum;
 
+    @Setter
+    @Column(nullable = false)
+    private Integer price;
+
     @Column(nullable = false)
     private LocalDateTime orderedAt = LocalDateTime.now();
 
@@ -32,13 +37,16 @@ public class Order {
     @Column(nullable = false)
     private Boolean isProcessed = false;
 
-    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
-    private List<CoffeeOrder> coffeeOrders;
+    @Setter
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CoffeeOrder> coffeeOrders = new ArrayList<>();
 
     @Builder
-    public Order(String email, String address, String postNum) {
+    public Order(String email, String address, String postNum, Integer price) {
         this.email = email;
         this.address = address;
         this.postNum = postNum;
+        this.price = price;
     }
+
 }

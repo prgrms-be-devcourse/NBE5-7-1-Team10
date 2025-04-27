@@ -35,11 +35,11 @@ public class GlobalExceptionHandler {
 
     }
 
-//    /*-------------------------------------------------------------*/
-//    @ResponseStatus(HttpStatus.BAD_REQUEST)
-//    @ExceptionHandler(MemberDuplicateException.class)
-//    public ResponseEntity<ErrorResponseDto> handleMemberDuplicateException(MemberDuplicateException e) {
-//        ErrorResponseDto response = new ErrorResponseDto("MEMBER_INVALID_REQUEST", e.getMessage(), 400);
-//        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-//    }
+
+    @ExceptionHandler(OrderNotFoundException.class)
+    public ResponseEntity<ErrorResponseDto> handleOrderNotFound(OrderNotFoundException e) {
+        ErrorResponseDto response = new ErrorResponseDto("ORDER_NOT_FOUND", e.getMessage(), 404);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
 }

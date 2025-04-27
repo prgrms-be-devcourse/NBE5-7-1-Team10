@@ -148,8 +148,8 @@
           <input type="text" class="form-control mb-1" id="address">
         </div>
         <div class="mb-3">
-          <label for="postnum" class="form-label">우편번호</label>
-          <input type="text" class="form-control" id="postnum">
+          <label for="postNum" class="form-label">우편번호</label>
+          <input type="text" class="form-control" id="postNum">
         </div>
         <div class="inform">당일 오후 2시 이후의 주문은 다음날 배송을 시작합니다.</div>
       </form>
@@ -172,14 +172,14 @@
     const totalPrice = parseInt(document.getElementById("total-price").textContent);
     const email = document.getElementById('email').value;
     const address = document.getElementById('address').value;
-    const postnum = document.getElementById('postnum').value;
+    const postNum = document.getElementById('postNum').value;
     console.log(totalPrice);
 
     if (totalPrice === 0){
       alert(`상품을 먼저 담아주세요.`);
       return;
     }
-    else if (!email || !address || !postnum) {
+    else if (!email || !address || !postNum) {
       alert(`모든 칸에 정보를 채워주시기 바랍니다.`);
       return;
     }
@@ -211,15 +211,20 @@
     const deliveryInfo = [];
     deliveryInfo.push("이메일 : " + email);
     deliveryInfo.push("주소 : " + address);
-    deliveryInfo.push("우편번호 : " + postnum);
+    deliveryInfo.push("우편번호 : " + postNum);
 
     const orderJson = message + contents.join("\n") + deliveryMessage + deliveryInfo.join("\n");
 
+    const coffeeList = Object.entries(counts).map(([name, quantity]) => ({
+      coffeeName: name,
+      quantity: quantity
+    }));
+
     const data = {
-      "coffee-list": counts,
+      "coffee-list": coffeeList,
       "email": document.getElementById('email').value,
       "address": document.getElementById('address').value,
-      "postnum": document.getElementById('postnum').value,
+      "postNum": document.getElementById('postNum').value,
       "price": totalPrice,
     };
 

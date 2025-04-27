@@ -27,6 +27,12 @@ public class CoffeeService {
                .orElseThrow(() -> new CoffeeNotFoundException(id));
     }
 
+    //Coffee Name으로 커피 조회
+    public Coffee findFirstCoffeeByName(String coffeeName) {
+        return coffeeRepository.findFirstByName(coffeeName)
+                .orElseThrow(() -> new CoffeeNotFoundException(coffeeName));
+    }
+
     public void checkDuplication(String coffeeName) {
         List<Coffee> byName = coffeeRepository.findByName(coffeeName);
         if (!byName.isEmpty()) {
@@ -60,16 +66,15 @@ public class CoffeeService {
             throw new CoffeeInvalidRequestException();
         }
 
+        checkDuplication(requestDto.getName());
+
         Coffee newCoffee = Coffee.builder()
                 .name(requestDto.getName())
                 .price(requestDto.getPrice())
                 .img(requestDto.getImg())
                 .build();
 
-        checkDuplication(newCoffee.getName());
-
         return coffeeRepository.save(newCoffee).getId();
-
     }
 
     //requestDto 유효성 검사 메소드(null값 유무, 빈칸, 공백만 포함)
