@@ -23,9 +23,9 @@
   .then(user => {
     console.log(`==============유저정보============`);
     console.log(user);
-    const email = user.email.email;
-    const username = user.email.username;
-    const isAdmin = user.authorities.some(auth=> auth.authority === 'ADMIN' || auth.authority === 'ROLE_ADMIN');
+    const email = user.email;
+    const username = user.username;
+    const isAdmin = user.role.some(auth=> auth.authority === 'ADMIN' || auth.authority === 'ROLE_ADMIN');
     console.log(isAdmin);
     const buttonDiv = document.getElementById('top-buttons');
 
