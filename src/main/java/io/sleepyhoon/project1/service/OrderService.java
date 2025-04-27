@@ -8,9 +8,12 @@ import io.sleepyhoon.project1.dto.OrderRequestDto;
 import io.sleepyhoon.project1.dto.OrderResponseDto;
 import io.sleepyhoon.project1.entity.CoffeeOrder;
 import io.sleepyhoon.project1.entity.Order;
+import io.sleepyhoon.project1.event.OrderCreatedEvent;
 import io.sleepyhoon.project1.exception.OrderNotFoundException;
 import io.sleepyhoon.project1.exception.OrderOwnerMismatchException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +28,8 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final CoffeeOrderService coffeeOrderService;
+    private final ApplicationEventPublisher publisher;
+
 
     public OrderResponseDto save(OrderRequestDto request)    {
         Order order = orderRepository.save(
@@ -39,6 +44,8 @@ public class OrderService {
         List<CoffeeOrder> coffeeOrders = coffeeOrderService.genCoffeeOrderList(request.getCoffeeList(), order);
 
         order.setCoffeeOrders(coffeeOrders);
+
+        publisher.publishEvent(new OrderCreatedEvent(order));
 
         return OrderResponseDto.builder()
                  .id(order.getId())
@@ -57,6 +64,7 @@ public class OrderService {
         for (CoffeeOrder coffeeOrder : coffeeOrders) {
             coffeeListDtos.add(new CoffeeListDto(coffeeOrder.getCoffee().getName(), coffeeOrder.getQuantity()));
         }
+
         return coffeeListDtos;
     }
 

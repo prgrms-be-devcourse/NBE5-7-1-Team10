@@ -1,15 +1,11 @@
 package io.sleepyhoon.project1.service;
 
 import io.sleepyhoon.project1.dao.OrderRepository;
-import io.sleepyhoon.project1.dto.CoffeeListDto;
-import io.sleepyhoon.project1.dto.OrderDto;
-import io.sleepyhoon.project1.dto.OrderRequestDto;
 import io.sleepyhoon.project1.dto.OrderResponseDto;
 import io.sleepyhoon.project1.entity.Coffee;
 import io.sleepyhoon.project1.entity.CoffeeOrder;
 import io.sleepyhoon.project1.entity.Order;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,7 +15,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.lang.reflect.Field;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
