@@ -9,10 +9,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-public class LoginController {
+public class ViewController {
 
     private final MemberService memberService;
 
@@ -27,7 +28,7 @@ public class LoginController {
         log.info("폼에 입력된 회원가입 정보 = {}", signupDto);
         memberService.save(signupDto);
 
-        return "redirect:/signin"; // 회원가입 후 자동으로 /signin으로 이동
+        return "redirect:/signin";
     }
 
     @GetMapping("/signin")
@@ -48,6 +49,11 @@ public class LoginController {
     @GetMapping("/user")
     public String showUserPage() {
         return "user";
+    }
+
+    @GetMapping("/admin")
+    public String admin() {
+        return "admin";
     }
 
 }
