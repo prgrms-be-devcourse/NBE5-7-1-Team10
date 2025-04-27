@@ -1,15 +1,11 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
-
-  <!-- style 부분만 분리 -->
   <link rel="stylesheet" href="/css/order_page_style.css">
 
   <title>주문 페이지 | Grid&Circles</title>
@@ -25,35 +21,30 @@
             console.log(user);
             const email = user.email;
             const username = user.username;
-            const isAdmin = user.role.some(auth=> auth.authority === 'ADMIN' || auth.authority === 'ROLE_ADMIN');
-            console.log(isAdmin);
+            const isAdmin = user.role.some(auth => auth.authority === 'ADMIN' || auth.authority === 'ROLE_ADMIN');
             const buttonDiv = document.getElementById('top-buttons');
 
-            // buttonDiv.innerHTML = ``;
             if (isAdmin) {
-              console.log(`관리자페이지버튼 추가`);
-              buttonDiv.innerHTML =  `<a href="/admin" class="btn btn-small btn-outline-dark" style="margin-right: 10px">관리자페이지</a>` + buttonDiv.innerHTML;
+              buttonDiv.innerHTML = `<a href="/admin" class="btn btn-small btn-outline-dark" style="margin-right: 10px">관리자페이지</a>` + buttonDiv.innerHTML;
             } else {
               buttonDiv.innerHTML = `<a href="/user" class="btn btn-small btn-outline-dark" style="margin-right: 10px">마이페이지</a>` + buttonDiv.innerHTML;
             }
 
             const userinfo = document.getElementById('user-info');
-            userinfo.innerHTML =  `
-    <span style="font-size: 18px">현재 사용자 정보</span>
-    <hr style="margin-top: 10px;">
-    <h6>사용자 이름 | <span style="color: #606060;" id="username">${username}</span></h6>
-    <h6>이메일 | <span style="color: #606060;" id="email">${email}</span></h6>
-    <br>
+            userinfo.innerHTML = `
+      <span style="font-size: 18px">현재 사용자 정보</span>
+      <hr style="margin-top: 10px;">
+      <h6>사용자 이름 | <span style="color: #606060;" id="username">${username}</span></h6>
+      <h6>이메일 | <span style="color: #606060;" id="email">${email}</span></h6>
+      <br>
     `;
-
           });
 </script>
-
-
 
 <div class="d-flex justify-content-end align-items-center mt-2 me-2" id="top-buttons">
   <a href="/logout" class="btn btn-small btn-outline-dark del-button" style="text-decoration: none; width: auto; height: auto; white-space: nowrap;">로그아웃 하기</a>
 </div>
+
 <div class="row justify-content-center m-4">
   <h1 class="text-center">Grids & Circle</h1>
 </div>
@@ -64,6 +55,25 @@
       <h5 class="flex-grow-0"><b>상품 목록</b></h5>
       <ul class="list-group list-group-flush products" id="coffee-list"></ul>
       <script>
+        let coffeeMap = {};
+        let coffeeImageIndex = {};
+
+        function prevImage(coffeeId) {
+          const coffee = coffeeMap[coffeeId];
+          if (!coffee || !coffee.images || coffee.images.length === 0) return;
+
+          coffeeImageIndex[coffeeId] = (coffeeImageIndex[coffeeId] - 1 + coffee.images.length) % coffee.images.length;
+          document.getElementById(`coffee-img-${coffeeId}`).src = coffee.images[coffeeImageIndex[coffeeId]];
+        }
+
+        function nextImage(coffeeId) {
+          const coffee = coffeeMap[coffeeId];
+          if (!coffee || !coffee.images || coffee.images.length === 0) return;
+
+          coffeeImageIndex[coffeeId] = (coffeeImageIndex[coffeeId] + 1) % coffee.images.length;
+          document.getElementById(`coffee-img-${coffeeId}`).src = coffee.images[coffeeImageIndex[coffeeId]];
+        }
+
         fetch('http://localhost:8080/coffees/all')
                 .then(resp => resp.json())
                 .then(json => {
@@ -72,25 +82,37 @@
                   ul.innerHTML = '';
 
                   coffee_list.forEach(coffee => {
+                    coffeeMap[coffee.id] = coffee;
+                    coffeeImageIndex[coffee.id] = 0;
+
                     const li = document.createElement('li');
-                    li.className = 'list-group-item d-flex mt-3';
+                    li.className = 'list-group-item d-flex align-items-center mt-3 position-relative';
                     li.setAttribute('data-name', coffee.name.toLowerCase());
+
                     li.innerHTML = `
-                    <div class="col-2"><img class="img-fluid" src="${coffee.img}" alt=""></div>
-                    <div class="col">
-                      <div class="row text-muted">커피콩</div>
-                      <div class="row">${coffee.name}</div>
-                    </div>
-                    <div class="col text-center price">${coffee.price}원</div>
+              <div class="col-5 position-relative" style="overflow: hidden;">
+                <img id="coffee-img-${coffee.id}" class="img-fluid"
+                     src="${coffee.images[0]}"
+                     style="width: 200px; height: 200px; object-fit: cover;">
+                ${coffee.images.length > 1 ? `
+                <button onclick="prevImage(${coffee.id})"
+                 style="position: absolute; top: 50%; left: 10px; transform: translateY(-50%); background: transparent; border: none; color: gray; font-size: 24px; display: none;">◀</button>
 
-                    <div class="col text-end action">
-                      <a class="btn btn-small btn-outline-dark del-button" href="#">-</a>
-                      <a class="btn btn-small btn-outline-dark add-button" href="#">+</a>
-                    </div>
-                  `;
+                <button onclick="nextImage(${coffee.id})"
+                style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); background: transparent; border: none; color: gray; font-size: 24px; display: none;">▶</button>
+                ` : ''}
+              </div>
 
-                    // add/del 버튼에 이벤트 달기
-                    // 커피별 개수 저장용 객체
+              <div class="col">
+                <div class="row text-muted">커피콩</div>
+                <div class="row">${coffee.name}</div>
+              </div>
+              <div class="col text-center price">${coffee.price}원</div>
+              <div class="col text-end action">
+                <a class="btn btn-small btn-outline-dark del-button" href="#">-</a>
+                <a class="btn btn-small btn-outline-dark add-button" href="#">+</a>
+              </div>
+            `;
                     const coffeeCounts = {};
                     const summaryList = document.getElementById('summary-list');
                     const name = coffee.name.toLowerCase();
@@ -158,6 +180,20 @@
 
                     }
 
+                    const imgWrapper = li.querySelector('.col-5');
+                    imgWrapper.addEventListener('mouseenter', () => {
+                      const prevBtn = imgWrapper.querySelector('button:nth-child(2)');
+                      const nextBtn = imgWrapper.querySelector('button:nth-child(3)');
+                      if (prevBtn) prevBtn.style.display = 'block';
+                      if (nextBtn) nextBtn.style.display = 'block';
+                    });
+                    imgWrapper.addEventListener('mouseleave', () => {
+                      const prevBtn = imgWrapper.querySelector('button:nth-child(2)');
+                      const nextBtn = imgWrapper.querySelector('button:nth-child(3)');
+                      if (prevBtn) prevBtn.style.display = 'none';
+                      if (nextBtn) nextBtn.style.display = 'none';
+                    });
+
                     ul.appendChild(li);
                   });
                 });
@@ -169,14 +205,10 @@
         <h5 class="m-0 p-0"><b>Summary</b></h5>
       </div>
       <hr>
-
-      <div id="summary-list">
-      </div>
+      <div id="summary-list"></div>
 
       <form id="delivery-info" style="padding-top: 10%">
-
-        <div id="user-info">
-        </div>
+        <div id="user-info"></div>
         <div class="mb-3">
           <label for="address" class="form-label">주소</label>
           <input type="text" class="form-control mb-1" id="address">
@@ -194,15 +226,12 @@
       </div>
 
       <button class="btn btn-dark col-12 order-btn">결제하기</button>
-
     </div>
   </div>
 </div>
 
 <script>
-  // 결제하기 눌렀을 떄 팝업 메세지 생성
   document.querySelector('.order-btn').addEventListener('click', function() {
-
     const totalPrice = parseInt(document.getElementById("total-price").textContent);
     const address = document.getElementById('address').value;
     const postnum = document.getElementById('postnum').value;
@@ -211,8 +240,7 @@
     if (totalPrice === 0){
       alert(`상품을 먼저 담아주세요.`);
       return;
-    }
-    else if (!address || !postnum) {
+    } else if (!address || !postnum) {
       alert(`모든 칸에 정보를 채워주시기 바랍니다.`);
       return;
     }
@@ -222,63 +250,31 @@
     }
 
     const counts = {};
-    document.querySelectorAll('#summary-list .product-count').forEach(function(span) {
+    document.querySelectorAll('#summary-list .product-count').forEach(span => {
       const name = span.dataset.name;
       const count = parseInt(span.textContent);
-      if (count > 0) { // 0개는 주문에 포함하지 않음
-        counts[name] = count;
-      }
+      if (count > 0) counts[name] = count;
     });
 
-    const message = "주문이 성공적으로 완료되었습니다.\n\n" +
-            "----- 주문 내역 -----\n";
-
-    const contents = [];
-    for (const [key, value] of Object.entries(counts)) {
-      contents.push(`${key}: ${value}`);
-    }
-    contents.push(`총 금액 : ${totalPrice}원`);
-
-
-    const deliveryMessage = "\n\n ----- 배송 정보 확인 -----\n"
-    const deliveryInfo = [];
-    deliveryInfo.push("이메일 : " + email);
-    deliveryInfo.push("주소 : " + address);
-    deliveryInfo.push("우편번호 : " + postnum);
-
-    const orderJson = message + contents.join("\n") + deliveryMessage + deliveryInfo.join("\n");
-
-    const data = {
+    const orderJson = {
       "coffee-list": counts,
-      "email": document.getElementById('email').value,
-      "address": document.getElementById('address').value,
-      "postnum": document.getElementById('postnum').value,
+      "email": email,
+      "address": address,
+      "postNum": postnum,
       "price": totalPrice,
     };
 
-    console.log(data);
     fetch('http://localhost:8080/orders', {
       method: "POST",
-      headers: {
-        //내가 보내는 요청의 본문에는 JSON형식이 들어있다는 걸 알려줘야 함
-        "Content-Type": "application/json",
-      },
-      // global.js - getPostValues()에 보면 title, content author 모아놓은 json 미리 만들어놨음
-      // 이 내용을 받을 곳은 java라서.. 알아들을 수 있게 객체가 아닌 string으로 보내야 한다
-      body: JSON.stringify(data)
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(orderJson)
     })
-            .then(
-                    resp => resp.json()
-            )
+            .then(resp => resp.json())
             .then(data => {
-              console.log("createOrder()");
-              console.log(data);
-              alert(orderJson);
+              alert("주문이 완료되었습니다!");
             })
-            .catch(err => console.log(err)); //요청처리 에러났을때 실행
-
+            .catch(err => console.log(err));
   });
-
 </script>
 
 </body>
