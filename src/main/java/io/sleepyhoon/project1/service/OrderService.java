@@ -37,12 +37,15 @@ public class OrderService {
                         .email(request.getEmail())
                         .address(request.getAddress())
                         .postNum(request.getPostNum())
-                        .price(request.getPrice())
+                        .price(0)
                         .build()
         );
 
         List<CoffeeOrder> coffeeOrders = coffeeOrderService.genCoffeeOrderList(request.getCoffeeList(), order);
 
+        Integer totalPrice = getTotalPrice(coffeeOrders);
+
+        order.setPrice(totalPrice);
         order.setCoffeeOrders(coffeeOrders);
 
         publisher.publishEvent(new OrderCreatedEvent(order));
@@ -56,6 +59,14 @@ public class OrderService {
                  .coffeeList(convertToDtoList(coffeeOrders))
                  .build();
 
+    }
+
+    private Integer getTotalPrice(List<CoffeeOrder> coffeeOrders) {
+        Integer totalPrice = 0;
+        for (CoffeeOrder coffeeOrder : coffeeOrders) {
+            totalPrice += coffeeOrder.getSubtotalPrice();
+        }
+        return totalPrice;
     }
 
     private List<CoffeeListDto> convertToDtoList(List<CoffeeOrder> coffeeOrders) {
