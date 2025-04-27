@@ -19,7 +19,9 @@ body {
     width: 90%;
     box-shadow: 0 6px 20px 0 rgba(38, 38, 38, 0.19);
     border-radius: 1rem;
-    border: transparent
+    border: transparent;
+    height: 80vh;
+
 }
 
 .summary {
@@ -27,7 +29,28 @@ body {
     border-top-right-radius: 1rem;
     border-bottom-right-radius: 1rem;
     padding: 4vh;
-    color: rgb(65, 65, 65)
+
+    color: rgb(65, 65, 65);
+    height: 80vh;
+
+}
+
+#summary-list {
+    overflow-y: scroll;
+    height: 10.5vh;
+}
+
+#summary-list::-webkit-scrollbar {
+    display: compact;
+    width: 5px;
+    height: 15px;
+    background-color: lightgray;
+
+}
+
+/* Add a thumb */
+#summary-list::-webkit-scrollbar-thumb {
+    background: gray;
 }
 
 @media (max-width: 767px) {
@@ -39,6 +62,7 @@ body {
 
 .row {
     margin: 0
+
 }
 
 .title b {
@@ -49,6 +73,16 @@ body {
 .col {
     padding: 0 1vh
 }
+
+.col-2 {
+    display: flex;
+    flex-direction: column; /* 세로 방향 정렬 */
+    justify-content: center; /* 세로 가운데 */
+    align-items: center;     /* 가로 가운데 */
+    height: 100%;            /* 높이값이 있어야 세로 정렬됨 */
+}
+
+
 
 img {
     width: 3.5rem
@@ -75,8 +109,42 @@ hr {
     width: 38px;
 }
 
+#delivery-info {
+    padding-top: 1.3vh;
+}
+
 .inform {
     color: crimson;
     font-size: 0.8rem;
     padding-bottom: 0.5rem;
+}
+
+#coffee-list {
+    height: 68vh;
+    overflow-y: auto;
+    padding-right: 10px;
+    box-sizing: border-box;
+}
+
+/*.summary:hover {*/
+/*    overflow-y: auto;*/
+/*}*/
+
+
+#coffee-list::-webkit-scrollbar {
+    display: compact;
+    width: 5px;
+    height: 20px;
+    background-color: lightgray;
+
+}
+
+/* Add a thumb */
+#coffee-list::-webkit-scrollbar-thumb {
+    background: gray;
+}
+
+
+#coffee-list-box {
+    height: 80vh;
 }

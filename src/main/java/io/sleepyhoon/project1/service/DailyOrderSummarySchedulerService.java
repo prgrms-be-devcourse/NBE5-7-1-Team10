@@ -40,7 +40,7 @@ public class DailyOrderSummarySchedulerService {
                 orderRepository.findByIsProcessedFalseAndOrderedAtBetween(start, end);
 
         if (orders.isEmpty()) {
-            log.info("전날 14시-오늘 14시 사이 주문 없음 → 메일 발송 생략");
+            log.info("전날 14시-오늘 14시 사이 주문 없음, 메일 발송 생략");
             return;
         }
 
@@ -56,6 +56,7 @@ public class DailyOrderSummarySchedulerService {
         map.forEach((email, summaries) -> {
             try {
                 orderMailService.sendDailyOrderSummary(email, summaries);
+                log.info("메일 전송 성공 – email={}", email);
             } catch (MessagingException e) {
                 log.error("전체주문내역 메일 실패 – email={}, error={}", email, e.getMessage(), e);
             }

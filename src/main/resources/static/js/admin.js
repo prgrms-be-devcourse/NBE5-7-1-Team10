@@ -2,24 +2,35 @@ let coffeeMap = {};
 let selectedCoffeeId = null;
 
 function loadCoffees() {
-    fetch(`/coffees`)
+    fetch(`/coffees/all`)
         .then(res => res.json())
-        .then(data => {
+        .then(response => {
+            const data = response.data;
             coffeeMap = {};
+            const tbody = document.getElementById("coffeeTable")
+
+            if (data.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" style="text-align: center; color: gray;">등록된 커피가 없습니다 ☕</td>
+                    </tr>
+                `;
+                return;
+            }
+
             data.forEach(coffee => {
                 coffeeMap[coffee.id] = coffee;
-            });
 
-            const tbody = document.getElementById("coffeeTable")
+            });
             tbody.innerHTML = ""
             data.forEach(coffee => {
                 tbody.innerHTML += `
-                    <tr>
-                        <td>${coffee.name}</td>
-                        <td>${coffee.price}원</td>
-                        <td>
-                            <button onclick="showEditForm(${coffee.id})">수정</button>
-                         </td>
+                    <tr id="coffee-${coffee.id}">
+                        <td class="name">${coffee.name}</td>
+                        <td class="price">${coffee.price}원</td>
+                        <td class="img"><img src="${coffee.img}" height="50" width="auto" alt=""></td>
+                        <td><button onclick="showEditForm(${coffee.id})">수정</button></td>
+                        <td><button onclick="deleteCoffee(${coffee.id})">삭제</button></td>
                     </tr>
                 `;
             });
@@ -40,6 +51,7 @@ function showEditForm(id) {
     // 기본 값을 넣어준다.
     document.getElementById("updateCoffeeName").value = coffee.name;
     document.getElementById("updateCoffeePrice").value = coffee.price;
+    document.getElementById("updateCoffeeImageUrl").value = coffee.img;
     document.getElementById("editForm").style.display = "block";
 }
 
@@ -58,14 +70,9 @@ function addCoffee() {
         return res.json();
     })
         .then(newCoffee => {
-            alert("추가 완료!");
             clearPostForm();
             loadCoffees();
         })
-        .catch(err => {
-            alert("에러 발생!!");
-            console.error(err);
-        });
 }
 
 function updateCoffee() {
@@ -79,15 +86,52 @@ function updateCoffee() {
         body: JSON.stringify(data)
     })
         .then(res => res.json())
-        .then(updateCoffee => {
+        .then(response => {
+            const updateCoffee = response.data;
+            document.querySelector(`#coffee-${updateCoffee.id} td.name`).innerText = updateCoffee.name;
+            document.querySelector(`#coffee-${updateCoffee.id} td.price`).innerText = updateCoffee.price + "원";
+            document.querySelector(`#coffee-${updateCoffee.id} td.img`).innerText = updateCoffee.img;
             coffeeMap[updateCoffee.id] = updateCoffee;
-            loadCoffees();
             hideEditForm();
             alert("수정이 반영되었습니다!")
         }).catch(err => {
-        alert("에러발생!!");
+        alert("에러 발생!!");
         console.log(err);
     });
+}
+
+function deleteCoffee(id) {
+    if(id==null) return;
+
+    const confirmed = confirm("정말 삭제하시겠습니까?");
+    if (!confirmed) return;
+
+    fetch(`/coffees/${id}`, {
+        method: 'DELETE',
+    })
+        .then(() => {
+            const row = document.getElementById(`coffee-${id}`);
+            if (row) row.remove();
+
+            delete coffeeMap[id];
+
+            alert("삭제되었습니다!");
+
+            const tbody = document.getElementById("coffeeTable");
+            if (tbody.children.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" style="text-align: center; color: gray;">
+                            등록된 커피가 없습니다 ☕
+                        </td>
+                    </tr>
+                `;
+            }
+        })
+        .catch(err => {
+            alert("에러 발생!!");
+            console.log(err);
+        });
 }
 
 function cancelUpdate() {
