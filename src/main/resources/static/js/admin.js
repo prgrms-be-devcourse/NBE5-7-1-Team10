@@ -29,8 +29,8 @@ function loadCoffees() {
                         <td class="name">${coffee.name}</td>
                         <td class="price">${coffee.price}원</td>
                         <td class="img"><img src="${coffee.img}" height="50" width="auto" alt=""></td>
-                        <td><button onclick="showEditForm(${coffee.id})">수정</button></td>
-                        <td><button onclick="deleteCoffee(${coffee.id})">삭제</button></td>
+                        <td><button class="btn btn-dark col-12 order-btn" onclick="showEditForm(${coffee.id})">수정</button></td>
+                        <td><button class="btn btn-dark col-12 order-btn" onclick="deleteCoffee(${coffee.id})">삭제</button></td>
                     </tr>
                 `;
             });
