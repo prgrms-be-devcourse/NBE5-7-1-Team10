@@ -48,5 +48,4 @@ public class Order {
         this.postNum = postNum;
         this.price = price;
     }
-
 }
