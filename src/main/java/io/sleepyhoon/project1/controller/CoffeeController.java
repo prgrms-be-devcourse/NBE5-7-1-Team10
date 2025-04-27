@@ -26,16 +26,7 @@ public class CoffeeController {
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<CoffeeResponseDto>> getCoffee(@PathVariable long id) {
 
-        Coffee findCoffee = coffeeService.findById(id);
-
-        List<String> coffeeImages = coffeeService.findCoffeeImages(findCoffee);
-
-        CoffeeResponseDto coffeeResponseDto = CoffeeResponseDto.builder()
-                .id(findCoffee.getId())
-                .name(findCoffee.getName())
-                .price(findCoffee.getPrice())
-                .images(coffeeImages)
-                .build();
+        CoffeeResponseDto coffeeResponseDto = coffeeService.findByIdAndMapToDto(id);
 
         return ResponseEntity.ok(new ApiResponse<>(coffeeResponseDto,"조회 성공",200));
     }

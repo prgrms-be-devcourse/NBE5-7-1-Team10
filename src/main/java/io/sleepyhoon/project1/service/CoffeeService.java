@@ -28,6 +28,18 @@ public class CoffeeService {
                .orElseThrow(() -> new CoffeeNotFoundException(id));
     }
 
+    public CoffeeResponseDto findByIdAndMapToDto(Long id) {
+        Coffee findCoffee = findById(id);
+        List<String> coffeeImages = findCoffeeImages(findCoffee);
+
+        return CoffeeResponseDto.builder()
+                .id(findCoffee.getId())
+                .name(findCoffee.getName())
+                .price(findCoffee.getPrice())
+                .images(coffeeImages)
+                .build();
+    }
+
     public Coffee findFirstCoffeeByName(String coffeeName) {
         return coffeeRepository.findFirstByName(coffeeName)
                 .orElseThrow(() -> new CoffeeNotFoundException(coffeeName));
@@ -41,7 +53,7 @@ public class CoffeeService {
     }
 
     //Coffee가 가지고 있는 CoffeeImg에서 Url을 뽑아 List로 변환
-    public List<String> findCoffeeImages(Coffee coffee) {
+    private List<String> findCoffeeImages(Coffee coffee) {
         return coffee.getImages().stream()
                 .map(CoffeeImg::getUrl)
                 .toList();
