@@ -5,6 +5,7 @@ spring:
     password: ${MYSQL_PASSWORD}
     url: jdbc:mysql://localhost:3306/TEAM_IO_PROJECT
 
+
   jpa:
     hibernate:
       ddl-auto: create-drop
@@ -12,6 +13,20 @@ spring:
       hibernate:
         show_sql: true
         format_sql: true
+
+
+  mail:
+    host: smtp.naver.com
+    port: 465
+    username: ${NAVER_ID}
+    password: ${NAVER_APP_PW}
+    default-encoding: UTF-8
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.ssl.enable: true
+      mail.smtp.ssl.trust: smtp.naver.com
+      mail.smtp.starttls.enable: false
+
 
 
 file:

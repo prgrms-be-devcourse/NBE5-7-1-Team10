@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>회원가입 | Grid & Circles</title>
+</head>
+<body>
+<h1>회원가입 페이지</h1>
+
+<form action="" method="POST">
+  <div>
+    <label for="username">아이디: </label>
+    <input id="username" type="text" name="username">
+  </div>
+  <div>
+    <label for="password">비밀번호: </label>
+    <input id="password" type="password" name="password">
+  </div>
+  <div>
+    <label for="email">이메일: </label>
+    <input id="email" type="email" name="email">
+  </div>
+
+  <div>
+    <button id="register-btn">가입</button>
+    <br>
+    <a href="/login">로그인 페이지로 돌아가기</a>
+
+  </div>
+
+</form>
+
+<script>
+
+  // const formData = new FormData();
+  // formData.append('username', document.getElementById('username').value);
+  // formData.append('password', document.getElementById('password').value);
+  // formData.append('email', document.getElementById('email').value);
+  //
+  // document.getElementById('register-btn').addEventListener('click', () => {
+  //   fetch('/signup', {
+  //     method: 'POST',
+  //     body: formData
+  //   })
+  //       .then(response => {
+  //         if (!response.ok) {
+  //           return response.json().then(err => { throw err; });
+  //         }
+  //         return response.json();
+  //       })
+  //       .then(data => {
+  //         alert(`회원가입 완료!`);
+  //       })
+  //       .catch(err => {
+  //         // alert(err.message); // 팝업으로 에러 메시지 보여줌
+  //       });
+  // });
+
+
+</script>
+
+</body>
+</html>

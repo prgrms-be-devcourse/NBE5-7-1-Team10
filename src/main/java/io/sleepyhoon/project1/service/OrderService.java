@@ -4,22 +4,22 @@ package io.sleepyhoon.project1.service;
 
 import io.sleepyhoon.project1.dao.OrderRepository;
 import io.sleepyhoon.project1.dto.CoffeeListDto;
-import io.sleepyhoon.project1.dto.OrderDto;
 import io.sleepyhoon.project1.dto.OrderRequestDto;
+import io.sleepyhoon.project1.dto.OrderResponseDto;
 import io.sleepyhoon.project1.entity.CoffeeOrder;
 import io.sleepyhoon.project1.entity.Order;
+import io.sleepyhoon.project1.event.OrderCreatedEvent;
 import io.sleepyhoon.project1.exception.OrderNotFoundException;
+import io.sleepyhoon.project1.exception.OrderOwnerMismatchException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 
-@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -28,8 +28,10 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final CoffeeOrderService coffeeOrderService;
+    private final ApplicationEventPublisher publisher;
 
-    public OrderRequestDto save(OrderRequestDto request)    {
+
+    public OrderResponseDto save(OrderRequestDto request)    {
         Order order = orderRepository.save(
                 Order.builder()
                         .email(request.getEmail())
@@ -43,41 +45,72 @@ public class OrderService {
 
         order.setCoffeeOrders(coffeeOrders);
 
-        OrderRequestDto orderRequestDto = new OrderRequestDto(order.getPrice(), order.getEmail(), order.getAddress(), order.getPostNum());
-        List<CoffeeListDto> coffeeList = orderRequestDto.getCoffeeList();
+        publisher.publishEvent(new OrderCreatedEvent(order));
+
+        return OrderResponseDto.builder()
+                 .id(order.getId())
+                 .price(order.getPrice())
+                 .email(order.getEmail())
+                 .address(order.getAddress())
+                 .postNum(order.getPostNum())
+                 .coffeeList(convertToDtoList(coffeeOrders))
+                 .build();
+
+    }
+
+    private List<CoffeeListDto> convertToDtoList(List<CoffeeOrder> coffeeOrders) {
+        List<CoffeeListDto> coffeeListDtos = new ArrayList<>();
 
         for (CoffeeOrder coffeeOrder : coffeeOrders) {
-            coffeeList.add(new CoffeeListDto(coffeeOrder.getCoffee().getName(), coffeeOrder.getQuantity()));
+            coffeeListDtos.add(new CoffeeListDto(coffeeOrder.getCoffee().getName(), coffeeOrder.getQuantity()));
         }
-        return orderRequestDto;
+
+        return coffeeListDtos;
     }
 
-    public List<OrderRequestDto> findAllOrdersByEmail(String email) {
+    public List<OrderResponseDto> findAllOrdersByEmail(String email) {
         List<Order> orderList = orderRepository.findByEmail(email);
 
-        List<OrderRequestDto> orderRequestDtoList = new ArrayList<>();
+        List<OrderResponseDto> orderResponseDtoList = new ArrayList<>();
 
         for (Order order : orderList) {
-            OrderRequestDto orderRequestDto = new OrderRequestDto(order.getPrice(), order.getEmail(), order.getAddress(), order.getPostNum());
-            orderRequestDto.setCoffeeList(orderRepository.findCoffeeListByOrderId(order.getId()));
-            log.info("orderRepository.findCoffeeListByOrderId(order.getId()) = {}", orderRepository.findCoffeeListByOrderId(order.getId()));
-            orderRequestDtoList.add(orderRequestDto);
+            orderResponseDtoList.add(
+                    OrderResponseDto.builder()
+                        .id(order.getId())
+                        .email(order.getEmail())
+                        .address(order.getAddress())
+                        .postNum(order.getPostNum())
+                        .price(order.getPrice())
+                        .coffeeList(convertToDtoList(order.getCoffeeOrders()))
+                        .build());
         }
 
-        return orderRequestDtoList;
+        return orderResponseDtoList;
     }
 
-    public OrderRequestDto findById(Long id) {
-        return orderRepository.findDtoById(id)
+    public OrderResponseDto findById(Long id) {
+        Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new OrderNotFoundException("Order not found"));
+
+        return OrderResponseDto.builder()
+                .id(order.getId())
+                .email(order.getEmail())
+                .address(order.getAddress())
+                .postNum(order.getPostNum())
+                .price(order.getPrice())
+                .coffeeList(convertToDtoList(order.getCoffeeOrders()))
+                .build();
     }
 
-    public void delete(String email, String address) {
+    public void delete(Long id, String email) {
 
-        Order findOrder = orderRepository.findByEmailAndAddress(email, address)
+        Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new OrderNotFoundException("Order not found"));
+        if ( !order.getEmail().equals(email) ) {
+            throw new OrderOwnerMismatchException("OrderOwner Mismatch: " + email + " != " + order.getEmail());
+        }
 
-        orderRepository.deleteById(findOrder.getId());
+        orderRepository.delete(order);
     }
 
 }

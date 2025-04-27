@@ -6,7 +6,7 @@ import lombok.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderRequestDto {
@@ -18,14 +18,6 @@ public class OrderRequestDto {
     private String email;
     private String address;
     private String postNum;
-
-    public OrderRequestDto(Integer price, String email, String address, String postNum) {
-        this.price = price;
-        this.email = email;
-        this.address = address;
-        this.postNum = postNum;
-    }
-
 
 }
 
