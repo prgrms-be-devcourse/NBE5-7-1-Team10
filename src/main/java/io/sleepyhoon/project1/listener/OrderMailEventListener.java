@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionalEventListener;
 import org.springframework.transaction.event.TransactionPhase;
 
+import java.io.UnsupportedEncodingException;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -27,7 +29,7 @@ public class OrderMailEventListener {
 
         try {
             mailService.sendOrderConfirmation(event.order());
-        } catch (MessagingException e) {
+        } catch (MessagingException | UnsupportedEncodingException e) {
             log.error("주문 확인 메일 발송 실패 – orderId={}, 에러={}",
                     event.order().getId(), e.getMessage(), e);
         }

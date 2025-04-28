@@ -1,7 +1,7 @@
-# [NBES5-7-1-Team10] 대충제목 
+# [NBES5-7-1-Team10] 1차 프로젝트
 프로그래머스 백엔드 5기 7회차 10팀 1차 프로젝트
 
-# ☕ 싱글벙글카페(가제)
+# ☕ 싱글벙글카페
 ## 프로젝트 개요
 커피 원두 패키지를 판매하는 온라인 웹사이트를 구현
 고객이 주문을 하면 해당 주문들을 바로 처리하지 않고
@@ -79,8 +79,8 @@ MVP외의 추가 구현한 기능
   
 |이 름|GitHub|역할|
 |:---:|---|---|
-|[TL]한승훈|[gitHub](https://github.com/sleepyhoon)|-**기능**: 관리자페이지, 이메일 스케쥴링|
-|배문성|[gitHub](https://github.com/heets-blue)|-**문서**: readme  <br>   -**기능**: CoffeeCRUD, CoffeeOrder저장|                                
+|[TL]한승훈|[gitHub](https://github.com/sleepyhoon)|-**문서**: OpenAPI(Swagger) <br> -**기능**: 관리자페이지, 이메일 스케쥴링 |
+|배문성|[gitHub](https://github.com/heets-blue)|-**문서**: readme  <br>   -**기능**: CoffeeCRUD, CoffeeOrder저장, Coffee이미지 구현, Coffee 재고 기능 구현|                                
 |탁서윤|[gitHub](https://github.com/peng255/)|-**기능**: 고객페이지, 로그인(Spring Security)|
 |최희웅|[gitHub](https://github.com/chw0912)|-**기능**: OrderCRUD|
 |이예원|[gitHub]()|-**기능**: email전송기능|
