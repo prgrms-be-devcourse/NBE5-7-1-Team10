@@ -20,7 +20,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class CoffeeOrderService {
     private final CoffeeService coffeeService;
-    private final CoffeeOrderRepository coffeeOrderRepository;
 
     public List<CoffeeOrder> genCoffeeOrderList(List<CoffeeListDto> requestCoffeeList, Order orderRequest) {
 
@@ -30,7 +29,8 @@ public class CoffeeOrderService {
             String coffeeName = coffeeListDto.getCoffeeName();
             Integer coffeeQuantity = coffeeListDto.getQuantity();
 
-            Coffee coffeeInOrder = coffeeService.findFirstCoffeeByName(coffeeName);
+            Coffee coffeeInOrder = coffeeService.updateStock(coffeeName, coffeeQuantity);
+
 
             CoffeeOrder coffeeOrder = CoffeeOrder.builder()
                     .coffee(coffeeInOrder)
@@ -38,7 +38,6 @@ public class CoffeeOrderService {
                     .quantity(coffeeQuantity)
                     .build();
 
-            //CoffeeOrder saved = coffeeOrderRepository.save(coffeeOrder);
             responseCoffeeOrderList.add(coffeeOrder);
         }
         return responseCoffeeOrderList;

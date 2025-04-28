@@ -68,6 +68,7 @@ public class CoffeeService {
                     .id(coffee.getId())
                     .name(coffee.getName())
                     .price(coffee.getPrice())
+                    .stock(coffee.getStock())
                     .images(images)
                     .build();
 
@@ -89,6 +90,7 @@ public class CoffeeService {
         Coffee newCoffee = Coffee.builder()
                 .name(requestDto.getName())
                 .price(requestDto.getPrice())
+                .stock(requestDto.getStock())
                 .build();
 
         List<CoffeeImg> coffeeImgs = coffeeImgService.saveImg(requestDto.getImages(), newCoffee);
@@ -120,6 +122,10 @@ public class CoffeeService {
             targetCoffee.setPrice(requestDto.getPrice());
         }
 
+        if (requestDto.getStock() != null) {
+            targetCoffee.setStock(requestDto.getStock());
+        }
+
         if (requestDto.getImages() != null) {
             List<CoffeeImg> coffeeImgs = coffeeImgService.saveImg(requestDto.getImages(), targetCoffee);
             targetCoffee.getImages().clear();
@@ -132,7 +138,18 @@ public class CoffeeService {
                 .id(targetCoffee.getId())
                 .name(targetCoffee.getName())
                 .price(targetCoffee.getPrice())
+                .stock(targetCoffee.getStock())
                 .images(coffeeImages)
                 .build();
+    }
+
+    public Coffee updateStock(String coffeeName, Integer quantity) {
+        Coffee coffee = findFirstCoffeeByName(coffeeName);
+
+        if (coffee.getStock() < quantity) {
+            throw new IllegalArgumentException("재고가 부족합니다.");
+        }
+        coffee.setStock(coffee.getStock() - quantity);
+        return coffee;
     }
 }
