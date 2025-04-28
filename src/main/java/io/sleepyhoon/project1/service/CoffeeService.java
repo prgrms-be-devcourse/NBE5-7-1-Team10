@@ -8,6 +8,7 @@ import io.sleepyhoon.project1.entity.CoffeeImg;
 import io.sleepyhoon.project1.exception.CoffeeInvalidRequestException;
 import io.sleepyhoon.project1.exception.CoffeeDuplicationException;
 import io.sleepyhoon.project1.exception.CoffeeNotFoundException;
+import io.sleepyhoon.project1.exception.InsufficientStockException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -147,7 +148,7 @@ public class CoffeeService {
         Coffee coffee = findFirstCoffeeByName(coffeeName);
 
         if (coffee.getStock() < quantity) {
-            throw new IllegalArgumentException("재고가 부족합니다.");
+            throw new InsufficientStockException(quantity, coffee.getStock());
         }
         coffee.setStock(coffee.getStock() - quantity);
         return coffee;
