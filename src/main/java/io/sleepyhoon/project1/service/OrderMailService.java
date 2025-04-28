@@ -38,13 +38,14 @@ public class OrderMailService {
                 msg, true, StandardCharsets.UTF_8.name());
 
         helper.setFrom(fromAddress, fromName);
-        helper.setTo(order.getEmail());
+        helper.setTo(order.getMember().getEmail());
+
         helper.setSubject("[싱글벙글 카페] 주문이 완료되었습니다 – #" + order.getId());
         helper.setText(templateService.buildOrderConfirmHtml(order), true);
 
         mailSender.send(msg);
         log.info("주문 확인 메일 전송 완료 – orderId={}, email={}",
-                order.getId(), order.getEmail());
+                order.getId(), order.getMember().getEmail());
     }
 
 

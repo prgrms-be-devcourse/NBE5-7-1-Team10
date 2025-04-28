@@ -24,7 +24,7 @@ public record OrderSummaryDto(
 
         return new OrderSummaryDto(
                 order.getId(),
-                order.getEmail(),
+                order.getMember().getEmail(),
                 sum,
                 order.getOrderedAt()
         );
