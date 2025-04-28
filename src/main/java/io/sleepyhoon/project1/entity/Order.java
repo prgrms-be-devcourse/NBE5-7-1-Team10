@@ -17,8 +17,12 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String email;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "email")
+    private Member member;
+
+//    @Column(nullable = false)
+//    private String email;
 
     @Column(nullable = false)
     private String address;
@@ -41,9 +45,17 @@ public class Order {
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CoffeeOrder> coffeeOrders = new ArrayList<>();
 
+//    @Builder
+//    public Order(String email, String address, String postNum, Integer price) {
+//        this.email = email;
+//        this.address = address;
+//        this.postNum = postNum;
+//        this.price = price;
+//    }
+
     @Builder
-    public Order(String email, String address, String postNum, Integer price) {
-        this.email = email;
+    public Order(Member member, String address, String postNum, Integer price) {
+        this.member = member;
         this.address = address;
         this.postNum = postNum;
         this.price = price;

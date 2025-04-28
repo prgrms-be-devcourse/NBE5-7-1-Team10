@@ -16,7 +16,8 @@ import java.util.List;
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
-    List<Order> findByEmail(String email);
+//    List<Order> findByEmail(String email);
+    List<Order> findByMember_Email(String email);
 
     List<Order> findByIsProcessedFalseAndOrderedAtBetween(
             LocalDateTime start, LocalDateTime end);
