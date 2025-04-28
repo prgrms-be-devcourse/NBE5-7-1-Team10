@@ -15,6 +15,7 @@ import io.sleepyhoon.project1.exception.OrderNotFoundException;
 import io.sleepyhoon.project1.exception.OrderOwnerMismatchException;
 import lombok.RequiredArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -34,9 +36,12 @@ public class OrderService {
     private final MemberRepository memberRepository;
 
     public OrderResponseDto save(OrderRequestDto request)    {
+
+        log.info(">>> 확인 : OrderService.save");
         Member member = memberRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("해당 이메일로 가입된 회원이 없습니다."));
 
+        log.info(">>> 확인 : OrderService.save에서 멤버 찾음");
         Order order = orderRepository.save(
                 Order.builder()
                         .member(member)
@@ -51,7 +56,9 @@ public class OrderService {
         Integer totalPrice = getTotalPrice(coffeeOrders);
 
         order.setPrice(totalPrice);
-        order.setCoffeeOrders(coffeeOrders);
+//        order.setCoffeeOrders(coffeeOrders);
+        order.getCoffeeOrders().clear(); // 기존 값 비우고
+        order.getCoffeeOrders().addAll(coffeeOrders); // 새 값 추가
 
         publisher.publishEvent(new OrderCreatedEvent(order));
 

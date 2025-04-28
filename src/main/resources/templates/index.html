@@ -304,11 +304,8 @@
     fetch('http://localhost:8080/orders', {
       method: "POST",
       headers: {
-        //내가 보내는 요청의 본문에는 JSON형식이 들어있다는 걸 알려줘야 함
         "Content-Type": "application/json",
       },
-      // global.js - getPostValues()에 보면 title, content author 모아놓은 json 미리 만들어놨음
-      // 이 내용을 받을 곳은 java라서.. 알아들을 수 있게 객체가 아닌 string으로 보내야 한다
       body: JSON.stringify(data)
     })
             .then(async resp => {
