@@ -1,8 +1,8 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: ${MYSQL_USERNAME:root}
-    password: ${MYSQL_PASSWORD:your_password}
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
     url: jdbc:mysql://localhost:3306/TEAM_IO_PROJECT
 
 
@@ -29,3 +29,6 @@ spring:
     from:
       address: ${MAIL_FROM_ADDRESS}
       name: ${MAIL_FROM_NAME}
+
+file:
+  path: img/
