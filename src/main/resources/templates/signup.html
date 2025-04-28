@@ -32,52 +32,5 @@
   <a href="/login">로그인</a>
 </div>
 
-<!--<script>-->
-
-<!--  const username = document.getElementById('username').value;-->
-<!--  const password = document.getElementById('password').value;-->
-<!--  const email = document.getElementById('email').value;-->
-<!--  console.log(username, password, email);-->
-<!--  const data = {-->
-<!--    "username": username,-->
-<!--    "password": password,-->
-<!--    "email": email,-->
-
-<!--  };-->
-
-<!--  console.log(data);-->
-
-<!--  document.getElementById('register-btn').addEventListener('click', function(event) {-->
-<!--    event.preventDefault();-->
-<!--    fetch('/signup', {-->
-<!--      method: "POST",-->
-<!--      headers: {-->
-<!--        "Content-Type": "application/json",-->
-<!--      },-->
-<!--      body: JSON.stringify(data)-->
-<!--    })-->
-<!--        .then(response => {-->
-<!--          if (!response.ok) {-->
-<!--            return response.json().then(err => { throw err; });-->
-<!--          }-->
-<!--          return response.json();-->
-<!--        })-->
-<!--        .then(data => {-->
-<!--          alert(`회원가입 완료!`);-->
-<!--          window.location.href = '/signin'; //성공하면 로그인 페이지로-->
-<!--        })-->
-<!--        .catch(err => {-->
-<!--          let message = '알 수 없는 오류가 발생했습니다.';-->
-<!--          if (error && error.error && error.error.message) {-->
-<!--            message = error.error.message;-->
-<!--          }-->
-<!--          alert(message);-->
-<!--          window.location.href = '/signup';-->
-<!--        });-->
-<!--  });-->
-
-
-<!--</script>-->
-
 </body>
 </html>
