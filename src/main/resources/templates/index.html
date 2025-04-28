@@ -97,7 +97,7 @@
                     li.setAttribute('data-name', coffee.name.toLowerCase());
 
                     li.innerHTML = `
-                      <div class="col-4 position-relative" style="overflow: hidden; aspect-ratio: 1/1;">
+                      <div class="col-3 position-relative" style="overflow: hidden; aspect-ratio: 1/1;">
                         ${stockWarning}
                         <img id="coffee-img-${coffee.id}" class="img-fluid"
                              src="${coffee.images[0]}"
@@ -189,7 +189,7 @@
 
                     }
 
-                    const imgWrapper = li.querySelector('.col-4');
+                    const imgWrapper = li.querySelector('.col-3');
                     imgWrapper.addEventListener('mouseenter', () => {
                       const prevBtn = imgWrapper.querySelector('button:nth-child(2)');
                       const nextBtn = imgWrapper.querySelector('button:nth-child(3)');
