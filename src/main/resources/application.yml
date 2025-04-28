@@ -26,8 +26,9 @@ spring:
       mail.smtp.ssl.enable: true
       mail.smtp.ssl.trust: smtp.naver.com
       mail.smtp.starttls.enable: false
-
-
+    from:
+      address: ${MAIL_FROM_ADDRESS}
+      name: ${MAIL_FROM_NAME}
 
 file:
   path: img/

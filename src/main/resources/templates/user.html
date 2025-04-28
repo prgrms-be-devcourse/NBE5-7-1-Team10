@@ -36,7 +36,7 @@
       .then(user => {
         console.log(`==============유저정보============`);
         console.log(user);
-        const username = user.name;
+        const username = user.username;
         console.log(username);
         document.querySelector('h3').textContent = `${username} 고객님의 주문목록`;
       });
@@ -51,13 +51,67 @@
 <hr>
 <br>
 <div>
-  <ul class="list-group">
-    <li class="list-group-item">An item</li>
-    <li class="list-group-item">A second item</li>
-    <li class="list-group-item">A third item</li>
-    <li class="list-group-item">A fourth item</li>
-    <li class="list-group-item">And a fifth one</li>
-  </ul>
+  <table class="table">
+  <thead>
+    <tr>
+      <th>번호</th>
+      <th>주문 번호</th>
+      <th>주문 시각</th>
+      <th>주소 </th>
+      <th>상품명</th>
+      <th>수량</th>
+      <th>총 가격</th>
+      <th>주문 상태</th>
+    </tr>
+  </thead>
+  <tbody id="orderTable">
+  </tbody>
+  </table>
 </div>
+
+<script>
+  fetch('http://localhost:8080/auth/me')
+  .then(resp => resp.json())
+  .then(user => {
+    fetch(`http://localhost:8080/orders?email=${user.email}`)
+    .then(resp => resp.json())
+    .then(response => {
+      const orders = response.data;
+
+      const tbody = document.getElementById("orderTable");
+      tbody.innerHTML = '';
+
+
+      orders.forEach((order, index) => {
+        const coffeeList = order['coffee-list'];
+        const dateTime = order.orderedAt;
+        const [date, time] = dateTime.split('T');
+        const formattedTime = time.substring(0, 5);
+        const displayDateTime = `${date}<br>${formattedTime}`;
+
+        const coffeeNames = coffeeList
+                .map(coffee => coffee.coffeeName)
+                .join('<br>');
+        const quantities = coffeeList
+                .map(coffee => coffee.quantity)
+                .join('개<br>');
+        const row = document.createElement('tr');
+        row.innerHTML = `
+              <td>${index + 1}</td>
+              <td>${order.id}</td>
+              <td>${displayDateTime}</td>
+              <td>${order.address}</td>
+              <td>${coffeeNames}</td>
+              <td>${quantities}개</td>
+              <td>${order.price}원</td>
+              <td>${order.isProcessed ? '배달 완료' : '배달 준비중'}</td>
+        `;
+
+        tbody.appendChild(row);
+      })
+
+    });
+  });
+</script>
 </body>
 </html>

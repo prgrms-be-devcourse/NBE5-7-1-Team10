@@ -32,7 +32,6 @@ public class GlobalExceptionHandler {
 
     }
 
-
     @ExceptionHandler(OrderNotFoundException.class)
     public ResponseEntity<ErrorResponseDto> handleOrderNotFound(OrderNotFoundException e) {
         ErrorResponseDto response = new ErrorResponseDto("ORDER_NOT_FOUND", e.getMessage(), 404);
@@ -50,6 +49,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponseDto> soldOutException(InsufficientStockException e) {
         ErrorResponseDto response = new ErrorResponseDto("INSUFFICIENT_STOCK", e.getMessage(), 409);
         return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+    }
+  
+    @ExceptionHandler(MemberDuplicateException.class)
+    public ResponseEntity<ErrorResponseDto> handleMemberDuplicate(MemberDuplicateException e) {
+        ErrorResponseDto response = new ErrorResponseDto("MEMBER_DUPLICATE", e.getMessage(), 400);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
 }

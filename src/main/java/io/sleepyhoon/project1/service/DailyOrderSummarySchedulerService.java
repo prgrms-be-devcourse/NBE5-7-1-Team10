@@ -10,6 +10,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -57,7 +58,7 @@ public class DailyOrderSummarySchedulerService {
             try {
                 orderMailService.sendDailyOrderSummary(email, summaries);
                 log.info("메일 전송 성공 – email={}", email);
-            } catch (MessagingException e) {
+            } catch (MessagingException | UnsupportedEncodingException e) {
                 log.error("전체주문내역 메일 실패 – email={}, error={}", email, e.getMessage(), e);
             }
         });
