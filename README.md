@@ -100,3 +100,22 @@ MVP외의 추가 구현한 기능
 |탁서윤|[gitHub](https://github.com/peng255/)|-**기능**: 주문페이지, 유저페이지, 로그인(Spring Security), UserCR|
 |최희웅|[gitHub](https://github.com/chw0912)|-**기능**: OrderCRUD, 유저페이지 주문목록 조회 및 디자인|
 |이예원|[gitHub]()|-**기능**: 주문 직후/처리 완료 후 email전송기능|
+
+
+---
+## ERD
+![ERD](https://github.com/user-attachments/assets/aff2c7eb-7d15-432d-9344-5804372cd493)
+
+
+
+## Flow Chart
+![Flow-Chart](https://github.com/user-attachments/assets/5b105c2a-443a-4d89-84b6-aa55f6d247c9)
+
+---
+
+# 🚀Troubleshooting
+
+
+
+# 아쉬운점점
+
