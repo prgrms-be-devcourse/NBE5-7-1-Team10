@@ -10,11 +10,13 @@ import io.sleepyhoon.project1.swagger.order.GetAllOrdersDocs;
 import io.sleepyhoon.project1.swagger.order.GetOrderDocs;
 import io.sleepyhoon.project1.swagger.order.SaveOrderDocs;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/orders")
@@ -32,6 +34,7 @@ public class OrderController {
     @PostMapping
     @SaveOrderDocs
     public ResponseEntity<ApiResponse<OrderResponseDto>> saveOrder(@RequestBody OrderRequestDto request) {
+        log.info("주문 저장 saveOrder");
         OrderResponseDto order = orderService.save(request);
         return ResponseEntity.ok(new ApiResponse<>(order, "주문 성공", 201));
     }

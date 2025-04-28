@@ -61,12 +61,12 @@ function loadCoffees() {
             tbody.innerHTML = ""
             data.forEach(coffee => {
                 tbody.innerHTML += `
-                    <tr id="coffee-${coffee.id}">
+                    <tr id="coffee-${coffee.id}" style="height: 200px; width: auto;">
                         <td class="name">${coffee.name}</td>
                         <td class="price">${coffee.price}원</td>
                         <td class="img">
                             ${coffee.images.length > 1 ? `<button onclick="prevImage(${coffee.id})">◀</button>` : ''}
-                            <img id="coffee-img-${coffee.id}" src="${coffee.images[0]}" height="300" width="300" alt="">
+                            <img id="coffee-img-${coffee.id}" src="${coffee.images[0]}" height="100" width="auto" alt="">
                             ${coffee.images.length > 1 ? `<button onclick="nextImage(${coffee.id})">▶</button>` : ''}
                         </td>      
                         <td class="stock">${coffee.stock}</td>                                                                      
