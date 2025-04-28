@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -46,6 +45,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
+    @ExceptionHandler(InsufficientStockException.class)
+    public ResponseEntity<ErrorResponseDto> soldOutException(InsufficientStockException e) {
+        ErrorResponseDto response = new ErrorResponseDto("INSUFFICIENT_STOCK", e.getMessage(), 409);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+    }
+  
     @ExceptionHandler(MemberDuplicateException.class)
     public ResponseEntity<ErrorResponseDto> handleMemberDuplicate(MemberDuplicateException e) {
         ErrorResponseDto response = new ErrorResponseDto("MEMBER_DUPLICATE", e.getMessage(), 400);

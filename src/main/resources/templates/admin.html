@@ -35,6 +35,10 @@
         <input type="number" id="newCoffeePrice" placeholder="가격 (원)" />
     </label>
 
+    <label for="newCoffeeStock">
+        <input type="number" id="newCoffeeStock" placeholder="재고" />
+    </label>
+
     <label for="newCoffeeImage">
         <input type="file" id="newCoffeeImage" multiple />
     </label>
@@ -50,6 +54,7 @@
         <th>이름</th>
         <th>가격</th>
         <th>이미지</th>
+        <th>재고</th>
     </tr>
     </thead>
     <tbody id="coffeeTable">
@@ -65,6 +70,9 @@
     </label>
     <label>
         <input type="number" id="updateCoffeePrice" min="0" placeholder="가격 (원)" />
+    </label>
+    <label>
+        <input type="number" id="updateCoffeeStock" min="0" placeholder="재고" />
     </label>
     <label>
         <input type="file" id="updateCoffeeImageUrl" multiple />

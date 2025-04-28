@@ -30,12 +30,16 @@ public class Coffee {
     @OneToMany(mappedBy = "coffee", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CoffeeImg> images = new ArrayList<>();
 
+    @Setter
+    @Column(nullable = false)
+    private Integer stock;
 
     @Builder
-    public Coffee(String name, Integer price, List<CoffeeImg> images) {
+    public Coffee(String name, Integer price, List<CoffeeImg> images, Integer stock) {
         this.name = name;
         this.price = price;
         this.images = images != null ? images : new ArrayList<>();
+        this.stock = stock;
     }
 
 }

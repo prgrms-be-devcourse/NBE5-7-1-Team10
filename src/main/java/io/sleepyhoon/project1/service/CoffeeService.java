@@ -8,6 +8,7 @@ import io.sleepyhoon.project1.entity.CoffeeImg;
 import io.sleepyhoon.project1.exception.CoffeeInvalidRequestException;
 import io.sleepyhoon.project1.exception.CoffeeDuplicationException;
 import io.sleepyhoon.project1.exception.CoffeeNotFoundException;
+import io.sleepyhoon.project1.exception.InsufficientStockException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -68,6 +69,7 @@ public class CoffeeService {
                     .id(coffee.getId())
                     .name(coffee.getName())
                     .price(coffee.getPrice())
+                    .stock(coffee.getStock())
                     .images(images)
                     .build();
 
@@ -89,6 +91,7 @@ public class CoffeeService {
         Coffee newCoffee = Coffee.builder()
                 .name(requestDto.getName())
                 .price(requestDto.getPrice())
+                .stock(requestDto.getStock())
                 .build();
 
         List<CoffeeImg> coffeeImgs = coffeeImgService.saveImg(requestDto.getImages(), newCoffee);
@@ -120,6 +123,10 @@ public class CoffeeService {
             targetCoffee.setPrice(requestDto.getPrice());
         }
 
+        if (requestDto.getStock() != null) {
+            targetCoffee.setStock(requestDto.getStock());
+        }
+
         if (requestDto.getImages() != null) {
             List<CoffeeImg> coffeeImgs = coffeeImgService.saveImg(requestDto.getImages(), targetCoffee);
             targetCoffee.getImages().clear();
@@ -132,7 +139,18 @@ public class CoffeeService {
                 .id(targetCoffee.getId())
                 .name(targetCoffee.getName())
                 .price(targetCoffee.getPrice())
+                .stock(targetCoffee.getStock())
                 .images(coffeeImages)
                 .build();
+    }
+
+    public Coffee updateStock(String coffeeName, Integer quantity) {
+        Coffee coffee = findFirstCoffeeByName(coffeeName);
+
+        if (coffee.getStock() < quantity) {
+            throw new InsufficientStockException(quantity, coffee.getStock());
+        }
+        coffee.setStock(coffee.getStock() - quantity);
+        return coffee;
     }
 }

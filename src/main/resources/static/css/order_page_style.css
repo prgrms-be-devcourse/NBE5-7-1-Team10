@@ -13,6 +13,20 @@ body {
     background: #f5f5f5;
 }
 
+.stock-label {
+    background-color: #da3442; /* 완전 불투명한 Bootstrap 빨강 */
+    color: white;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 0.5rem;
+    font-size: 16px; /* 글자 살짝 키움 */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); /* 테두리 그림자 추가(더 선명하게) */
+}
+
+.hidden {
+    display: none !important;
+}
+
 .card {
     margin: auto;
     max-width: 950px;

@@ -2,6 +2,7 @@ package io.sleepyhoon.project1.service;
 
 import io.sleepyhoon.project1.dao.CoffeeRepository;
 import io.sleepyhoon.project1.dto.CoffeeRequestDto;
+import io.sleepyhoon.project1.dto.CoffeeResponseDto;
 import io.sleepyhoon.project1.entity.Coffee;
 import io.sleepyhoon.project1.exception.CoffeeInvalidRequestException;
 import io.sleepyhoon.project1.exception.CoffeeNotFoundException;
@@ -136,7 +137,7 @@ class CoffeeServiceTest {
         when(coffeeRepository.findById(coffeeId)).thenReturn(Optional.of(existingCoffee));
 
         // when
-        Coffee result = coffeeService.update(coffeeId, requestDto);
+        CoffeeResponseDto result = coffeeService.update(coffeeId, requestDto);
 
         // then
         assertEquals("newLatte", result.getName());

@@ -68,7 +68,8 @@ function loadCoffees() {
                             ${coffee.images.length > 1 ? `<button onclick="prevImage(${coffee.id})">◀</button>` : ''}
                             <img id="coffee-img-${coffee.id}" src="${coffee.images[0]}" height="300" width="300" alt="">
                             ${coffee.images.length > 1 ? `<button onclick="nextImage(${coffee.id})">▶</button>` : ''}
-                        </td>                                                                               
+                        </td>      
+                        <td class="stock">${coffee.stock}</td>                                                                      
                         <td><button class="btn btn-dark col-12 order-btn" onclick="showEditForm(${coffee.id})">수정</button></td>
                         <td><button class="btn btn-dark col-12 order-btn" onclick="deleteCoffee(${coffee.id})">삭제</button></td>
                     </tr>
@@ -98,11 +99,13 @@ function showEditForm(id) {
 function addCoffee() {
     const name = document.getElementById("newCoffeeName").value;
     const price = document.getElementById("newCoffeePrice").value;
+    const stock = document.getElementById("newCoffeeStock").value;
     const images = document.getElementById("newCoffeeImage").files;
 
     const formData = new FormData();
     formData.append('name', name);
     formData.append('price', price);
+    formData.append('stock', stock)
 
     for (let i = 0; i < images.length; i++) {
         formData.append('images', images[i]);
@@ -131,6 +134,7 @@ function updateCoffee() {
     const formData = new FormData();
     formData.append('name', document.getElementById('updateCoffeeName').value);
     formData.append('price', document.getElementById('updateCoffeePrice').value);
+    formData.append('stock', document.getElementById('updateCoffeeStock').value);
 
     const imageInput = document.getElementById('updateCoffeeImageUrl');
     for (let i = 0; i < imageInput.files.length; i++) {
@@ -146,6 +150,7 @@ function updateCoffee() {
             const updateCoffee = response.data;
             document.querySelector(`#coffee-${updateCoffee.id} td.name`).innerText = updateCoffee.name;
             document.querySelector(`#coffee-${updateCoffee.id} td.price`).innerText = updateCoffee.price + "원";
+            document.querySelector(`#coffee-${updateCoffee.id} td.stock`).innerText = updateCoffee.stock;
             document.querySelector(`#coffee-${updateCoffee.id} td.img`).innerHTML = `
             ${updateCoffee.images.length > 1 ? `<button onclick="prevImage(${updateCoffee.id})">◀</button>` : ''}
             <img id="coffee-img-${updateCoffee.id}" src="${updateCoffee.images[0]}" height="300" width="300" alt="">
