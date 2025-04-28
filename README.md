@@ -17,7 +17,6 @@
     <img src="https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white">
     <img src="https://img.shields.io/badge/jpa-F2302F?style=for-the-badge&logo=data&logoColor=white">
     <img src="https://img.shields.io/badge/lombok-EA7600?style=for-the-badge&logo=lombok&logoColor=white">
-    <img src="https://img.shields.io/badge/jwt-000000?style=for-the-badge&logo=jwt&logoColor=white">   
 <img src = "https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E">
 
   
@@ -81,6 +80,6 @@ MVP외의 추가 구현한 기능
 |:---:|---|---|
 |[TL]한승훈|[gitHub](https://github.com/sleepyhoon)|-**문서**: OpenAPI(Swagger) <br> -**기능**: 관리자페이지, 이메일 스케쥴링 |
 |배문성|[gitHub](https://github.com/heets-blue)|-**문서**: readme  <br>   -**기능**: CoffeeCRUD, CoffeeOrder저장, Coffee이미지 구현, Coffee 재고 기능 구현|                                
-|탁서윤|[gitHub](https://github.com/peng255/)|-**기능**: 고객페이지, 로그인(Spring Security)|
-|최희웅|[gitHub](https://github.com/chw0912)|-**기능**: OrderCRUD|
-|이예원|[gitHub]()|-**기능**: email전송기능|
+|탁서윤|[gitHub](https://github.com/peng255/)|-**기능**: 주문페이지, 유저페이지, 로그인(Spring Security), UserCR|
+|최희웅|[gitHub](https://github.com/chw0912)|-**기능**: OrderCRUD, 유저페이지 주문목록 조회 및 디자인|
+|이예원|[gitHub]()|-**기능**: 주문 직후/처리 완료 후 email전송기능|
