@@ -91,7 +91,6 @@
                       ? `<div class="stock-label position-absolute top-0 start-0 m-2 fw-bold">품절임박!</div>`
                       : '';
 
-                    const priceDisplay = coffee.stock <= 0 ? 'Sold Out' : `${coffee.price}원`;
                     const isSoldOut = coffee.stock <= 0;
                     const li = document.createElement('li');
                     li.className = 'list-group-item d-flex align-items-center mt-3 position-relative';
@@ -104,23 +103,25 @@
                              src="${coffee.images[0]}"
                              style="border-radius: 12px; width: 100%; height: 100%; object-fit: cover;">
                         ${coffee.images.length > 1 ? `
-                        <button onclick="prevImage(${coffee.id})"
-                         style="position: absolute; top: 50%; left: 10px; transform: translateY(-50%); background: transparent; border: none; color: gray; font-size: 12px; display: none;">◀</button>
-                        <button onclick="nextImage(${coffee.id})"
-                         style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); background: transparent; border: none; color: gray; font-size: 12px; display: none;">▶</button>
+                          <button onclick="prevImage(${coffee.id})"
+                           style="position: absolute; top: 50%; left: 10px; transform: translateY(-50%); background: transparent; border: none; color: gray; font-size: 12px; display: none;">◀</button>
+                          <button onclick="nextImage(${coffee.id})"
+                           style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); background: transparent; border: none; color: gray; font-size: 12px; display: none;">▶</button>
                         ` : ''}
                       </div>
 
-              <div class="col">
-                <div class="row text-muted">제품명</div>
-                <div class="row">${coffee.name}</div>
-              </div>
-              <div class="col text-center price">${priceDisplay}</div>
-              <div class="col text-end action">
-                <a class="btn btn-small btn-outline-dark del-button ${isSoldOut ? 'hidden' : ''}" href="#">-</a>
-                <a class="btn btn-small btn-outline-dark add-button ${isSoldOut ? 'hidden' : ''}" href="#">+</a>
-              </div>
-            `;
+                      <div class="col">
+                        <div class="row text-muted">제품명</div>
+                        <div class="row">${coffee.name}</div>
+                      </div>
+                      <div class="col text-center price">${coffee.price}원</div>
+
+                      <div class="col text-end action d-flex justify-content-end align-items-center" style="height: 100%;">
+                        <a class="btn btn-small btn-outline-dark del-button ${isSoldOut ? 'd-none' : ''}" href="#">-</a>
+                        <a class="btn btn-small btn-outline-dark add-button ${isSoldOut ? 'd-none' : ''}" href="#">+</a>
+                        ${isSoldOut ? `<span class="fw-bold text-danger ms-2" style="font-size: 20px;">Sold Out</span>` : ''}
+                      </div>
+                    `;
                     const coffeeCounts = {};
                     const summaryList = document.getElementById('summary-list');
                     const name = coffee.name.toLowerCase();
