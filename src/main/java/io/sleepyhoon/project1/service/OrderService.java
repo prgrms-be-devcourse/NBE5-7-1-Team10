@@ -58,6 +58,8 @@ public class OrderService {
                  .address(order.getAddress())
                  .postNum(order.getPostNum())
                  .coffeeList(convertToDtoList(coffeeOrders))
+                 .orderedAt(order.getOrderedAt())
+                 .isProcessed(order.getIsProcessed())
                  .build();
 
     }
@@ -94,6 +96,8 @@ public class OrderService {
                         .postNum(order.getPostNum())
                         .price(order.getPrice())
                         .coffeeList(convertToDtoList(order.getCoffeeOrders()))
+                        .orderedAt(order.getOrderedAt())
+                        .isProcessed(order.getIsProcessed())
                         .build());
         }
 
@@ -111,6 +115,8 @@ public class OrderService {
                 .postNum(order.getPostNum())
                 .price(order.getPrice())
                 .coffeeList(convertToDtoList(order.getCoffeeOrders()))
+                .orderedAt(order.getOrderedAt())
+                .isProcessed(order.getIsProcessed())
                 .build();
     }
 

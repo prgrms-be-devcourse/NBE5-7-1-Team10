@@ -36,5 +36,5 @@ function getPostValues() {
 function clearPostForm() {
     document.getElementById("newCoffeeName").value = "";
     document.getElementById("newCoffeePrice").value = "";
-    document.getElementById("newCoffeeImageUrl").value = "";
+    document.getElementById("newCoffeeImage").value = "";
 }

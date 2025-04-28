@@ -1,30 +1,23 @@
-package io.sleepyhoon.project1.coffeeordertests;
+package io.sleepyhoon.project1.service;
 
 import io.sleepyhoon.project1.dao.CoffeeOrderRepository;
 import io.sleepyhoon.project1.dao.CoffeeRepository;
 import io.sleepyhoon.project1.dao.OrderRepository;
 import io.sleepyhoon.project1.dto.CoffeeListDto;
-import io.sleepyhoon.project1.dto.CoffeeOrderDto;
-import io.sleepyhoon.project1.dto.CoffeeRequestDto;
 import io.sleepyhoon.project1.entity.Coffee;
 import io.sleepyhoon.project1.entity.CoffeeOrder;
 import io.sleepyhoon.project1.entity.Order;
-import io.sleepyhoon.project1.service.CoffeeOrderService;
-import io.sleepyhoon.project1.service.CoffeeService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.stubbing.OngoingStubbing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
 
 @Slf4j
 @SpringBootTest
@@ -46,11 +39,12 @@ public class CoffeeOrderServiceTest {
 
 
     private Coffee genCoffee(String coffeeName) {
+        List<String> test = List.of("imalsl");
 
         Coffee coffee = Coffee.builder()
                 .name(coffeeName)
                 .price((int) (Math.random() * 10000))
-                .img("imgLink")
+//                .images(test)
                 .build();
 
         return coffeeRepository.save(coffee);
