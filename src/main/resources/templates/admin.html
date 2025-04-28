@@ -34,8 +34,8 @@
         <input type="number" id="newCoffeePrice" placeholder="가격 (원)" />
     </label>
 
-    <label for="newCoffeeImageUrl">
-        <input type="text" id="newCoffeeImageUrl" placeholder="파일 경로" />
+    <label for="newCoffeeImage">
+        <input type="file" id="newCoffeeImage" multiple />
     </label>
 
     <button class="btn btn-dark col-12 order-btn" onclick="addCoffee()">추가</button>
@@ -66,7 +66,7 @@
         <input type="number" id="updateCoffeePrice" min="0" placeholder="가격 (원)" />
     </label>
     <label>
-        <input type="text" id="updateCoffeeImageUrl" placeholder="커피 사진" />
+        <input type="file" id="updateCoffeeImageUrl" multiple />
     </label>
     <button class="btn btn-dark col-12 order-btn" onclick="updateCoffee()">수정</button>
     <button class="btn btn-dark col-12 order-btn" onclick="cancelUpdate()">취소</button>

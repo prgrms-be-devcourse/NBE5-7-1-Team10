@@ -1,7 +1,11 @@
 package io.sleepyhoon.project1.entity;
 
+import io.sleepyhoon.project1.service.CoffeeImgService;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -12,7 +16,6 @@ public class Coffee {
     @Id
     @Column(name = "coffee_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    //@Setter 테스트용 Setter입니다.
     private Long id;
 
     @Setter
@@ -24,14 +27,15 @@ public class Coffee {
     private Integer price;
 
     @Setter
-    private String img;
+    @OneToMany(mappedBy = "coffee", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CoffeeImg> images = new ArrayList<>();
 
 
     @Builder
-    public Coffee(String name, Integer price, String img) {
+    public Coffee(String name, Integer price, List<CoffeeImg> images) {
         this.name = name;
         this.price = price;
-        this.img = img;
+        this.images = images != null ? images : new ArrayList<>();
     }
 
 }
