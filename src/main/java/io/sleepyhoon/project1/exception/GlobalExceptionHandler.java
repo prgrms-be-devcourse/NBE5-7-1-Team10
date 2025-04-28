@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.HashMap;
-import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -35,7 +33,6 @@ public class GlobalExceptionHandler {
 
     }
 
-
     @ExceptionHandler(OrderNotFoundException.class)
     public ResponseEntity<ErrorResponseDto> handleOrderNotFound(OrderNotFoundException e) {
         ErrorResponseDto response = new ErrorResponseDto("ORDER_NOT_FOUND", e.getMessage(), 404);
@@ -46,6 +43,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(OrderOwnerMismatchException.class)
     public ResponseEntity<ErrorResponseDto> handleOrderOwnerMismatch(OrderOwnerMismatchException e) {
         ErrorResponseDto response = new ErrorResponseDto("ORDER_OWNER_MISMATCH", e.getMessage(), 400);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(MemberDuplicateException.class)
+    public ResponseEntity<ErrorResponseDto> handleMemberDuplicate(MemberDuplicateException e) {
+        ErrorResponseDto response = new ErrorResponseDto("MEMBER_DUPLICATE", e.getMessage(), 400);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 

@@ -30,12 +30,12 @@ public class MemberService implements UserDetailsService {
     public void save(SignupDto signupDto) {
 
 ////         중복된 이메일, username으로 가입 불가
-//        if (memberRepository.findByEmail(signupDto.getEmail()).isPresent()){
-//            throw new MemberDuplicateException("이미 가입된 이메일입니다.");
-//        }
-//        if (memberRepository.findByUsername(signupDto.getUsername()).isPresent()) {
-//            throw new MemberDuplicateException("이미 사용 중인 이름입니다.");
-//        }
+        if (memberRepository.findByEmail(signupDto.getEmail()).isPresent()){
+            throw new MemberDuplicateException("이미 가입된 이메일입니다.");
+        }
+        if (memberRepository.findByUsername(signupDto.getUsername()).isPresent()) {
+            throw new MemberDuplicateException("이미 사용 중인 이름입니다.");
+        }
 
         Member member = Member.builder()
                 .username(signupDto.getUsername())

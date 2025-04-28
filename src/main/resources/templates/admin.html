@@ -13,11 +13,15 @@
     <link rel="stylesheet" href="/css/admin_style.css" />
 </head>
 <body>
-<div class="d-flex justify-content-end align-items-center mt-2 me-2" id="top-buttons">
-  <a href="/index" class="btn btn-small btn-outline-dark del-button" style="text-decoration: none; width: auto; height: auto; white-space: nowrap; margin-right: 10px">주문 페이지로 돌아가기</a>
-  <a href="/logout" class="btn btn-small btn-outline-dark del-button" style="text-decoration: none; width: auto; height: auto; white-space: nowrap;">로그아웃 하기</a>
+<div class="d-flex justify-content-between align-items-center mt-2 mb-4 px-4" id="top-bar">
+  <h1 class="mb-0">카페 관리자 페이지 | Grid & Circles</h1>
+  <div>
+    <a href="/index" class="btn btn-small btn-outline-dark me-2 del-button" style="text-decoration: none; width: auto; height: auto; white-space: nowrap; margin-right: 10px">주문 페이지로 돌아가기</a>
+    <a href="/logout" class="btn btn-small btn-outline-dark del-button" style="text-decoration: none; width: auto; height: auto; white-space: nowrap;">로그아웃 하기</a>
+  </div>
+
 </div>
-<h1>카페 관리자 페이지 | Grid & Circles</h1>
+
 
 <!-- 새로운 커피 추가 -->
 <div class="coffee-form">
@@ -31,8 +35,8 @@
         <input type="number" id="newCoffeePrice" placeholder="가격 (원)" />
     </label>
 
-    <label for="newCoffeeImageUrl">
-        <input type="text" id="newCoffeeImageUrl" placeholder="파일 경로" />
+    <label for="newCoffeeImage">
+        <input type="file" id="newCoffeeImage" multiple />
     </label>
 
     <button class="btn btn-dark col-12 order-btn" onclick="addCoffee()">추가</button>
@@ -63,7 +67,7 @@
         <input type="number" id="updateCoffeePrice" min="0" placeholder="가격 (원)" />
     </label>
     <label>
-        <input type="text" id="updateCoffeeImageUrl" placeholder="커피 사진" />
+        <input type="file" id="updateCoffeeImageUrl" multiple />
     </label>
     <button class="btn btn-dark col-12 order-btn" onclick="updateCoffee()">수정</button>
     <button class="btn btn-dark col-12 order-btn" onclick="cancelUpdate()">취소</button>
