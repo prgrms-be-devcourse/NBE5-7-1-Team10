@@ -35,11 +35,22 @@
 <script>
   document.getElementById('register-btn').addEventListener('click', function(event) {
     event.preventDefault();
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-    const email = document.getElementById('email').value;
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
+    const email = document.getElementById('email').value.trim();
     console.log("data");
     console.log(username, password, email);
+
+    // 👇 입력값 검증 추가
+    if (!username || !password || !email) {
+      alert("모든 항목을 입력해주세요.");
+      return; // 요청 보내지 않고 여기서 끝냄
+    }
+
+    if (!email.includes('@')) {
+      alert(`올바른 이메일 형식이 아닙니다.`);
+      return;
+    }
 
     const data = {
       "username": username,
