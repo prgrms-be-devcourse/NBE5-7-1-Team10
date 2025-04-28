@@ -85,32 +85,40 @@
                     coffeeMap[coffee.id] = coffee;
                     coffeeImageIndex[coffee.id] = 0;
 
+                    const stockWarning = coffee.stock <= 0
+                      ? `<div class="stock-label position-absolute top-0 start-0 m-2 fw-bold">품절</div>`
+                      : coffee.stock < 5
+                      ? `<div class="stock-label position-absolute top-0 start-0 m-2 fw-bold">품절임박!</div>`
+                      : '';
+
+                    const priceDisplay = coffee.stock <= 0 ? 'Sold Out' : `${coffee.price}원`;
+                    const isSoldOut = coffee.stock <= 0;
                     const li = document.createElement('li');
                     li.className = 'list-group-item d-flex align-items-center mt-3 position-relative';
                     li.setAttribute('data-name', coffee.name.toLowerCase());
 
                     li.innerHTML = `
-              <div class="col-5 position-relative" style="overflow: hidden; aspect-ratio: 1/1;">
-                <img id="coffee-img-${coffee.id}" class="img-fluid"
-                     src="${coffee.images[0]}"
-                     style="width: 100%; height: 100%; object-fit: cover;">
-                ${coffee.images.length > 1 ? `
-                <button onclick="prevImage(${coffee.id})"
-                 style="position: absolute; top: 50%; left: 10px; transform: translateY(-50%); background: transparent; border: none; color: gray; font-size: 12px; display: none;">◀</button>
-
-                <button onclick="nextImage(${coffee.id})"
-                style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); background: transparent; border: none; color: gray; font-size: 12px; display: none;">▶</button>
-                ` : ''}
-              </div>
+                      <div class="col-4 position-relative" style="overflow: hidden; aspect-ratio: 1/1;">
+                        ${stockWarning}
+                        <img id="coffee-img-${coffee.id}" class="img-fluid"
+                             src="${coffee.images[0]}"
+                             style="border-radius: 12px; width: 100%; height: 100%; object-fit: cover;">
+                        ${coffee.images.length > 1 ? `
+                        <button onclick="prevImage(${coffee.id})"
+                         style="position: absolute; top: 50%; left: 10px; transform: translateY(-50%); background: transparent; border: none; color: gray; font-size: 12px; display: none;">◀</button>
+                        <button onclick="nextImage(${coffee.id})"
+                         style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); background: transparent; border: none; color: gray; font-size: 12px; display: none;">▶</button>
+                        ` : ''}
+                      </div>
 
               <div class="col">
                 <div class="row text-muted">제품명</div>
                 <div class="row">${coffee.name}</div>
               </div>
-              <div class="col text-center price">${coffee.price}원</div>
+              <div class="col text-center price">${priceDisplay}</div>
               <div class="col text-end action">
-                <a class="btn btn-small btn-outline-dark del-button" href="#">-</a>
-                <a class="btn btn-small btn-outline-dark add-button" href="#">+</a>
+                <a class="btn btn-small btn-outline-dark del-button ${isSoldOut ? 'hidden' : ''}" href="#">-</a>
+                <a class="btn btn-small btn-outline-dark add-button ${isSoldOut ? 'hidden' : ''}" href="#">+</a>
               </div>
             `;
                     const coffeeCounts = {};
@@ -180,7 +188,7 @@
 
                     }
 
-                    const imgWrapper = li.querySelector('.col-5');
+                    const imgWrapper = li.querySelector('.col-4');
                     imgWrapper.addEventListener('mouseenter', () => {
                       const prevBtn = imgWrapper.querySelector('button:nth-child(2)');
                       const nextBtn = imgWrapper.querySelector('button:nth-child(3)');
@@ -229,6 +237,7 @@
     </div>
   </div>
 </div>
+
 
 <script>
   document.querySelector('.order-btn').addEventListener('click', function() {
@@ -308,6 +317,7 @@
               console.log("createOrder()");
               console.log(data);
               alert(orderJson);
+              location.reload();
             })
             .catch(err => console.log(err)); //요청처리 에러났을때 실행
 
