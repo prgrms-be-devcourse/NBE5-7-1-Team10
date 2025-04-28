@@ -1,13 +1,9 @@
 package io.sleepyhoon.project1.controller;
 
-import io.sleepyhoon.project1.dto.SignupDto;
-import io.sleepyhoon.project1.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 
 
 @Slf4j
@@ -15,21 +11,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 @RequiredArgsConstructor
 public class ViewController {
 
-    private final MemberService memberService;
-
     @GetMapping("/signup")
     public String showSignUpPage() {
         return "signup";
     }
 
-    @PostMapping("/signup")
-    public String processSignUp(@ModelAttribute SignupDto signupDto) {
-        // form data라서 ModelAttribute 써야함
-        log.info("폼에 입력된 회원가입 정보 = {}", signupDto);
-        memberService.save(signupDto);
-
-        return "redirect:/signin";
-    }
+//    @PostMapping("/signup")
+//    public String processSignUp(@ModelAttribute SignupDto signupDto) {
+//        // form data라서 ModelAttribute 써야함
+//        log.info("폼에 입력된 회원가입 정보 = {}", signupDto);
+//        memberService.save(signupDto);
+//
+//        return "redirect:/signin";
+//    }
 
     @GetMapping("/signin")
     public String showSignInPage() {
