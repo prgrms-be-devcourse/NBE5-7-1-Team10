@@ -21,9 +21,6 @@ public class Order {
     @JoinColumn(name = "email")
     private Member member;
 
-//    @Column(nullable = false)
-//    private String email;
-
     @Column(nullable = false)
     private String address;
 
@@ -44,14 +41,6 @@ public class Order {
     @Setter
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CoffeeOrder> coffeeOrders = new ArrayList<>();
-
-//    @Builder
-//    public Order(String email, String address, String postNum, Integer price) {
-//        this.email = email;
-//        this.address = address;
-//        this.postNum = postNum;
-//        this.price = price;
-//    }
 
     @Builder
     public Order(Member member, String address, String postNum, Integer price) {

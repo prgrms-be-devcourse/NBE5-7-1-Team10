@@ -4,9 +4,7 @@ import io.sleepyhoon.project1.dao.OrderRepository;
 import io.sleepyhoon.project1.dto.CoffeeListDto;
 import io.sleepyhoon.project1.dto.OrderRequestDto;
 import io.sleepyhoon.project1.dto.OrderResponseDto;
-import io.sleepyhoon.project1.entity.Coffee;
-import io.sleepyhoon.project1.entity.CoffeeOrder;
-import io.sleepyhoon.project1.entity.Order;
+import io.sleepyhoon.project1.entity.*;
 import io.sleepyhoon.project1.event.OrderCreatedEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,13 +46,21 @@ class OrderServiceTests {
     @DisplayName("email에 해당하는 주문 리스트 읽기")
     void readAllOrders() throws Exception {
 
-        // given
-        Coffee americano = genCoffee("아메리카노", 1500, "1");
-        Coffee cappuccino = genCoffee("카푸치노", 3000, "2");
+        Member member1 = genMember("ex@example.com", "ex", "ex");
+        Member member2 = genMember("test@test.com", "test", "test");
+        Member member3 = genMember("user@user.com", "user", "user");
 
-        Order order1 = genOrder("ex@example.com", "경기도", "12345", 4500);
-        Order order2 = genOrder("test@test.com", "서울", "12242", 9000);
-        Order order3 = genOrder("ex@example.com", "부산", "14442", 13500);
+        CoffeeImg coffeeImg = genCoffeeImg("1", "url", null);
+        List<CoffeeImg> coffeeImages = genImages(coffeeImg, coffeeImg, coffeeImg);
+
+
+        // given
+        Coffee americano = genCoffee("아메리카노", 1500, coffeeImages, 100);
+        Coffee cappuccino = genCoffee("카푸치노", 3000, coffeeImages,100);
+
+        Order order1 = genOrder(member1, "경기도", "12345", 4500);
+        Order order2 = genOrder(member2, "서울", "12242", 9000);
+        Order order3 = genOrder(member3, "부산", "14442", 13500);
 
         Field idField = Order.class.getDeclaredField("id");
         idField.setAccessible(true);
@@ -72,7 +78,7 @@ class OrderServiceTests {
 
         List<Order> orderList = List.of(order1, order3);
 
-        when(orderRepository.findByEmail("ex@example.com")).thenReturn(orderList);
+        when(orderRepository.findByMember_Email("ex@example.com")).thenReturn(orderList);
 
         // when
         List<OrderResponseDto> orders = orderService.findAllOrdersByEmail("ex@example.com");
@@ -84,17 +90,30 @@ class OrderServiceTests {
         assertThat(order1.getPrice()).isEqualTo(getPrice(coffeeOrders1));
 
         assertThat(orders.get(1).getAddress()).isNotEqualTo(order1.getAddress());
-        assertThat(orders.get(1).getEmail()).isNotEqualTo(order2.getEmail());
+        assertThat(orders.get(1).getEmail()).isNotEqualTo(order2.getMember().getEmail());
 
     }
 
 
-    private Coffee genCoffee(String coffeeName, Integer price, String img) {
+    private Coffee genCoffee(String coffeeName, Integer price, List<CoffeeImg> images, Integer stock) {
         return Coffee.builder()
                 .name(coffeeName)
                 .price(price)
-                .img(img)
+                .images(images)
+                .stock(stock)
                 .build();
+    }
+
+    private CoffeeImg genCoffeeImg(String title, String url, Coffee coffee) {
+        return CoffeeImg.builder()
+                .title(title)
+                .url(url)
+                .coffee(coffee)
+                .build();
+    }
+
+    private List<CoffeeImg> genImages(CoffeeImg... coffeeIamges) {
+        return List.of(coffeeIamges);
     }
 
     private CoffeeOrder genCoffeeOrder(Coffee coffee, Order order, Integer quantity) {
@@ -109,12 +128,20 @@ class OrderServiceTests {
         return List.of(coffeeOrders);
     }
 
-    private Order genOrder(String email, String address, String postNum, Integer price) {
+    private Order genOrder(Member member, String address, String postNum, Integer price) {
         return Order.builder()
-                .email(email)
+                .member(member)
                 .address(address)
                 .postNum(postNum)
                 .price(price)
+                .build();
+    }
+
+    private Member genMember(String email, String username, String password) {
+        return Member.builder()
+                .email(email)
+                .username(username)
+                .password(password)
                 .build();
     }
 
@@ -141,8 +168,10 @@ class OrderServiceTests {
                 "12345"
         );
 
+        Member member = genMember(requestDto.getEmail(), "ex", "ex");
+
         Order fakeOrder = Order.builder()
-                .email(requestDto.getEmail())
+                .member(member)
                 .address(requestDto.getAddress())
                 .postNum(requestDto.getPostNum())
                 .price(3000)
@@ -164,7 +193,7 @@ class OrderServiceTests {
         // then
         verify(publisher).publishEvent(eventCaptor.capture());
         OrderCreatedEvent capturedEvent = eventCaptor.getValue();
-        assertThat(capturedEvent.order().getEmail()).isEqualTo("ex@example.com");
+        assertThat(capturedEvent.order().getMember().getEmail()).isEqualTo("ex@example.com");
         assertThat(capturedEvent.order().getAddress()).isEqualTo("경기도");
 
         log.info("이벤트 발행 및 주문 정보 검증 완료");
