@@ -5,6 +5,7 @@ spring:
     password: ${MYSQL_PASSWORD}
     url: jdbc:mysql://localhost:3306/TEAM_IO_PROJECT
 
+
   jpa:
     hibernate:
       ddl-auto: create-drop
@@ -12,6 +13,7 @@ spring:
       hibernate:
         show_sql: true
         format_sql: true
+
 
   mail:
     host: smtp.naver.com
