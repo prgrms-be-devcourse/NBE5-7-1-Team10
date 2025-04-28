@@ -38,7 +38,8 @@ public class SecurityConfig {
                         auth
                             .requestMatchers("/signin", "/signup")
                                 .anonymous()
-                            .requestMatchers("/css/**", "/js/**", "/img/**", "/error")
+                            .requestMatchers("/css/**", "/js/**", "/img/**", "/error",
+                                    "/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**")
                                 .permitAll()
                             .requestMatchers("/index/**, /user/**")
                                 .hasAnyAuthority(Role.ADMIN.name(), Role.MEMBER.name())
