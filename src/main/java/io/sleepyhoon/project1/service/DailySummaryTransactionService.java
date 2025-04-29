@@ -24,9 +24,10 @@ public class DailySummaryTransactionService {
     public void sendMailAndMarkProcessed(String email, List<OrderSummaryDto> summaries) throws Exception {
         orderMailService.sendDailyOrderSummary(email, summaries);
 
-        if(true) {
-            throw new Exception();
-        }
+// 실패용 에외 ㅋㅋ응 실패~
+//        if(true) {
+//            throw new Exception();
+//        }
         // 메일이 성공적으로 전송된 경우, 해당 주문들의 isProcessed를 true로 변경
         List<Long> ids = summaries.stream()
                 .map(OrderSummaryDto::id)

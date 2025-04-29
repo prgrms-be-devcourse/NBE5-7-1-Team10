@@ -25,9 +25,14 @@ public class MailRetryService {
 
 
     // 30분마다 실패한 메일 재시도 (최대 1회)
-    @Scheduled(cron = "0 */2 * * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 * */1 * * *", zone = "Asia/Seoul")
     public void retryFailedMails() {
         Map<String, MailRetryQueue.FailedMail> failed = new HashMap<>(retryQueue.getFailedEmails());
+
+        if(retryQueue.getFailedEmails().size() <= 0) {
+            log.info("응 없어~");
+            return;
+        }
 
         for (Map.Entry<String, MailRetryQueue.FailedMail> entry : failed.entrySet()) {
             String email = entry.getKey();
@@ -35,7 +40,7 @@ public class MailRetryService {
             List<OrderSummaryDto> summaries = failedMail.getSummaries();
 
             // 최대 재시도 1회
-            if (failedMail.getRetryCount() >= 2) {
+            if (failedMail.getRetryCount() >= 1) {
                 log.warn("최대 재시도 초과 – 관리자에게 알림 예정, email={}", email);
                 notifyAdmin(email, summaries);
                 continue;

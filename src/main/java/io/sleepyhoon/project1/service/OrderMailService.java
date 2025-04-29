@@ -74,7 +74,7 @@ public class OrderMailService {
         MimeMessageHelper helper = new MimeMessageHelper(msg, true, StandardCharsets.UTF_8.name());
 
         helper.setFrom(fromAddress, fromName);
-        helper.setTo(fromName);
+        helper.setTo(fromAddress);
         helper.setSubject("[싱글벙글 카페] 실패한 메일 알림 - " + failedEmail);
         helper.setText(templateService.buildFailureReportHtml(failedEmail, summaries), true); // 실패한 이메일과 요약 정보를 포함
 

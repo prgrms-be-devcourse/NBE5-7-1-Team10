@@ -27,7 +27,7 @@ public class DailyOrderSummarySchedulerService {
     private final MailRetryQueue mailRetryQueue;
 
     //14 시에 메일 전송하도록 스케쥴링 설정
-    @Scheduled(cron = "0 03 6 * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 50 7 * * *", zone = "Asia/Seoul")
     @Transactional
     public void sendAllDailySummaries() {
         ZoneId zone = ZoneId.of("Asia/Seoul");

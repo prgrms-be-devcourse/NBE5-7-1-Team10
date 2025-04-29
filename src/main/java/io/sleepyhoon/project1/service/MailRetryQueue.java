@@ -27,7 +27,7 @@ public class MailRetryQueue {
     }
 
     public Map<String, FailedMail> getFailedEmails() {
-        return Collections.unmodifiableMap(failedEmails);
+        return failedEmails;
     }
 
     public void clear() {
