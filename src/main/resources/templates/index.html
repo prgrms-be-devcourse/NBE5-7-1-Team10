@@ -7,7 +7,8 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
   <link rel="stylesheet" href="/css/order_page_style.css">
-
+  <!-- 다음 주소 검색 API -->
+  <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
   <title>주문 페이지 | 싱글벙글 카페</title>
 </head>
 
@@ -86,10 +87,10 @@
                     coffeeImageIndex[coffee.id] = 0;
 
                     const stockWarning = coffee.stock <= 0
-                      ? `<div class="stock-label position-absolute top-0 start-0 m-2 fw-bold">품절</div>`
-                      : coffee.stock < 5
-                      ? `<div class="stock-label position-absolute top-0 start-0 m-2 fw-bold">품절임박!</div>`
-                      : '';
+                            ? `<div class="stock-label position-absolute top-0 start-0 m-2 fw-bold">품절</div>`
+                            : coffee.stock < 5
+                                    ? `<div class="stock-label position-absolute top-0 start-0 m-2 fw-bold">품절임박!</div>`
+                                    : '';
 
                     const isSoldOut = coffee.stock <= 0;
                     const li = document.createElement('li');
@@ -216,11 +217,15 @@
       <hr>
       <div id="summary-list"></div>
 
+      <!-- 주소 입력 필드 수정 -->
       <form id="delivery-info" style="padding-top: 10%">
         <div id="user-info"></div>
         <div class="mb-3">
           <label for="address" class="form-label">주소</label>
-          <input type="text" class="form-control mb-1" id="address">
+          <div class="input-group">
+            <input type="text" class="form-control" id="address" readonly>
+            <button type="button" class="btn btn-outline-secondary" id="search-address">주소 검색</button>
+          </div>
         </div>
         <div class="mb-3">
           <label for="postnum" class="form-label">우편번호</label>
@@ -238,6 +243,19 @@
     </div>
   </div>
 </div>
+
+<!-- 주소 검색 스크립트 -->
+<script>
+  document.getElementById('search-address').addEventListener('click', function () {
+    new daum.Postcode({
+      oncomplete: function (data) {
+        // 선택한 주소 정보를 해당 필드에 입력
+        document.getElementById('address').value = data.address;
+        document.getElementById('postnum').value = data.zonecode;
+      }
+    }).open();
+  });
+</script>
 
 
 <script>

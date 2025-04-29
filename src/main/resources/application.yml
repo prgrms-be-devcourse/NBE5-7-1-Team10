@@ -8,7 +8,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: create-drop
     properties:
       hibernate:
         show_sql: true
@@ -16,16 +16,16 @@ spring:
 
 
   mail:
-    host: smtp.naver.com
-    port: 465
-    username: ${NAVER_ID}
-    password: ${NAVER_APP_PW}
-    default-encoding: UTF-8
+    host: smtp.gmail.com
+    port: 587
+    username: ${GMAIL_ID}
+    password: ${GMAIL_APP_PASSWORD}
     properties:
-      mail.smtp.auth: true
-      mail.smtp.ssl.enable: true
-      mail.smtp.ssl.trust: smtp.naver.com
-      mail.smtp.starttls.enable: false
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
     from:
       address: ${MAIL_FROM_ADDRESS}
       name: ${MAIL_FROM_NAME}
