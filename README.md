@@ -449,7 +449,7 @@ order.getCoffeeOrders().addAll(newCoffeeOrderList); // 새 값 추가
  
 ## PR코멘트 규칙
 - 코드에 제안사항이 있을 경우 왜 그렇게 생각했는지 이유를 달기
-PR코멘트 템플릿
+
 <details>
 <summary>PR코멘트 템플릿</summary>
     
