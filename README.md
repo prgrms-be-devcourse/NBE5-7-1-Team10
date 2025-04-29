@@ -105,7 +105,7 @@ MVP외의 추가 구현한 기능
 |이 름|GitHub|역할|
 |:---:|---|---|
 |[TL]한승훈|[gitHub](https://github.com/sleepyhoon)|-**문서**: OpenAPI(Swagger) <br> -**기능**: 로그인, 회원가입 페이지 CSS, 관리자페이지, 이메일 스케쥴링 |
-|배문성|[gitHub](https://github.com/heets-blue)|-**문서**: Readme  <br>   -**기능**: CoffeeCRUD, CoffeeOrder저장, Coffee이미지 구현, Coffee 재고 기능 구현|                                
+|배문성|[gitHub](https://github.com/heets-blue)|-**문서**: Readme  <br>   -**기능**: CoffeeCRUD, CoffeeOrder저장, Coffee이미지 구현, Coffee 재고 기능 구현, email일괄전송 협업|                                
 |탁서윤|[gitHub](https://github.com/peng255/)|-**기능**: 주문페이지, 유저페이지, 로그인(Spring Security), UserCR|
 |최희웅|[gitHub](https://github.com/chw0912)|-**기능**: OrderCRUD, 유저페이지 주문목록 조회 및 디자인|
 |이예원|[gitHub]()|-**기능**: 주문 직후/처리 완료 후/주문접수 실패시  email전송기능, 메일본문 페이지, 이메일 스케쥴링|
