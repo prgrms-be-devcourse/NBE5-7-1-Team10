@@ -30,4 +30,18 @@ public class MailTemplateService {
                 list.stream().mapToInt(OrderSummaryDto::totalPrice).sum());
         return thymeleaf.process("order-summary", ctx);
     }
+
+    public String buildFailureReportHtml(String failedEmail, List<OrderSummaryDto> summaries) {
+        Context ctx = new Context();
+        ctx.setVariable("failedEmail", failedEmail);
+        ctx.setVariable("summaries", summaries);
+
+        // 실패한 주문에 대한 요약 정보 계산
+        int totalPrice = summaries.stream().mapToInt(OrderSummaryDto::totalPrice).sum();
+        ctx.setVariable("totalPrice", totalPrice);
+
+        return thymeleaf.process("failure-report", ctx);
+    }
+
+
 }

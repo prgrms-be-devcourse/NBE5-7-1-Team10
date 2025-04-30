@@ -32,6 +32,7 @@ public class OrderMailService {
     private String fromName;
 
 
+
     public void sendOrderConfirmation(Order order) throws MessagingException, UnsupportedEncodingException {
         MimeMessage msg = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(
@@ -50,7 +51,7 @@ public class OrderMailService {
 
 
     public void sendDailyOrderSummary(String email,
-                                  List<OrderSummaryDto> summaries) throws  MessagingException, UnsupportedEncodingException {
+                                  List<OrderSummaryDto> summaries) throws  MessagingException, UnsupportedEncodingException, Exception {
         if (summaries.isEmpty()) return;
 
         MimeMessage msg = mailSender.createMimeMessage();
@@ -67,5 +68,19 @@ public class OrderMailService {
                 email, summaries.size());
 
     }
+    public void sendFailureReportToAdmin(String failedEmail, List<OrderSummaryDto> summaries) throws MessagingException, UnsupportedEncodingException {
+        // 관리자에게 보낼 이메일 내용 설정
+        MimeMessage msg = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(msg, true, StandardCharsets.UTF_8.name());
+
+        helper.setFrom(fromAddress, fromName);
+        helper.setTo(fromAddress);
+        helper.setSubject("[싱글벙글 카페] 실패한 메일 알림 - " + failedEmail);
+        helper.setText(templateService.buildFailureReportHtml(failedEmail, summaries), true); // 실패한 이메일과 요약 정보를 포함
+
+        mailSender.send(msg);
+        log.info("관리자에게 실패한 메일 보고 – 대상: {}", failedEmail);
+    }
+
 
 }

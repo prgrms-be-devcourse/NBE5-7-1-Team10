@@ -23,10 +23,10 @@
         </tr>
         </thead>
         <tbody>
-        <tr style="text-align: center;">
-            <td style="padding: 12px; border: 1px solid #dee2e6; font-size: 16px; color: #333;" th:text="${o.id}"></td>
-            <td style="padding: 12px; border: 1px solid #dee2e6; font-size: 16px; color: #333;" th:text="${o.orderedAt}"></td>
-            <td style="padding: 12px; border: 1px solid #dee2e6; font-size: 16px; color: #333;" th:text="${o.totalPrice}"></td>
+        <tr th:each="o : ${orders}">
+            <td th:text="${o.id}"></td>
+            <td th:text="${o.orderedAt}"></td>
+            <td th:text="${o.totalPrice}"></td>
         </tr>
         </tbody>
     </table>

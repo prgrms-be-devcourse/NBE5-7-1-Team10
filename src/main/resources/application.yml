@@ -30,5 +30,7 @@ spring:
       address: ${MAIL_FROM_ADDRESS}
       name: ${MAIL_FROM_NAME}
 
+
 file:
   path: img/
+
