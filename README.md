@@ -127,7 +127,7 @@ MVP외의 추가 구현한 기능
 
 ## API Spec
 - Swagger API 문서화
-- 문서를 링크해주세요 ㅠㅠ
+- 본 프로젝트를 로컬에서 실행한 후 http://localhost:8080/swagger-ui/index.html 에 접속하면 볼 수 있다.
 
 <br>
 
